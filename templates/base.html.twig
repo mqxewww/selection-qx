@@ -8,12 +8,13 @@
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
-<body>
+<body class="min-h-screen">
 {% block body %}{% endblock %}
 </body>
 </html>
