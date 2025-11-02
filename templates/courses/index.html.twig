@@ -7,8 +7,8 @@
         {% block button %}
             <div
                 class="focus:outline-none rounded-md inline-flex items-center text-sm px-4 py-2 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer">
-                {{ ux_icon('ph:plus', {class: 'w-5 h-5 -mb-0.5 mr-1.5'}) }}
-                <span>Ajouter une formation</span>
+                {{ ux_icon('ph:plus', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                <span class="hidden lg:block">Ajouter une formation</span>
             </div>
         {% endblock %}
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3 items-start">
@@ -31,12 +31,22 @@
                             </p>
                         </div>
 
-                        <div class="text-center inline-flex items-center text-sm">
-                            {{ ux_icon('ph:user', {class: 'w-5 h-5 mr-1.5'}) }}
-                            <p>
-                                <span class="font-semibold">{{ course.applications_count }}</span>
-                                candidatures
-                            </p>
+                        <div class="flex flex-col space-y-1">
+                            <div class="text-center inline-flex items-center text-sm">
+                                {{ ux_icon('ph:calendar-dots', {class: 'w-5 h-5 mr-1.5'}) }}
+                                <p>
+                                    <span class="font-semibold">01 octobre 2025 - 30 juin 2027</span>
+                                </p>
+                            </div>
+
+                            <div class="text-center inline-flex items-center text-sm">
+                                {{ ux_icon('ph:user', {class: 'w-5 h-5 mr-1.5'}) }}
+                                <p>
+                                    <span class="font-semibold">{{ course.applications_count }}</span>
+                                    candidatures
+                                </p>
+                            </div>
+
                         </div>
 
                         <div class="flex justify-center">
