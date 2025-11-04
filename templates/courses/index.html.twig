@@ -35,7 +35,7 @@
                             <div class="text-center inline-flex items-center text-sm">
                                 {{ ux_icon('ph:calendar-dots', {class: 'w-5 h-5 mr-1.5'}) }}
                                 <p>
-                                    <span class="font-semibold">01 octobre 2025 - 30 juin 2027</span>
+                                    <span class="font-semibold">{{ course.period }}</span>
                                 </p>
                             </div>
 
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="flex justify-center">
-                            <a href="/courses/{{ course.id }}"
+                            <a href="{{ path('app_courses_show', {'id': course.id}) }}"
                                class="focus:outline-none rounded-md inline-flex items-center text-sm px-4 py-2 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600">
                                 {{ ux_icon('ph:eye', {class: 'w-5 h-5 -mb-0.5 mr-1.5'}) }}
                                 <span>Voir les détails</span>

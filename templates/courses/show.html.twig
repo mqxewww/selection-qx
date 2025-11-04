@@ -4,53 +4,17 @@
 
 {% block content %}
     <twig:Card title="{{ course.title }}" description="{{ course.description }}">
+        {% block backwards %}
+            <a
+                href="{{ path('app_courses_index') }}"
+                class="focus:outline-none rounded-md inline-flex items-center text-sm mb-4 hover:pl-3 pr-3 py-1.5 transition-all duration-300 hover:bg-gray-200 hover:cursor-pointer">
+                {{ ux_icon('ph:arrow-left', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                <span class="hidden lg:block">Retour aux formations</span>
+            </a>
+        {% endblock %}
         <div class="flex flex-col space-y-6">
-            <twig:SubContent title="Informations">
-                {% block button %}
-                    <div>
-                        <div
-                            class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer">
-                            {{ ux_icon('ph:pencil', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
-                            <span class="hidden lg:block">Modifier</span>
-                        </div>
-                        <div
-                            class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-red-600 text-white hover:bg-red-400 hover:cursor-pointer">
-                            {{ ux_icon('ph:trash', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
-                            <span class="hidden lg:block">Supprimer</span>
-                        </div>
-                    </div>
-                {% endblock %}
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 items-start">
-                    <div>
-                        <p class="text-sm text-gray-600 inline-flex items-center">
-                            {{ ux_icon('ph:calendar-dots', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
-                            <span>Période</span>
-                        </p>
-                        <p class="font-semibold text-gray-900">01 octobre 2025 - 30 juin 2027</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600 inline-flex items-center">
-                            {{ ux_icon('ph:door-open', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
-                            <span>Capacité</span>
-                        </p>
-                        <p class="font-semibold text-gray-900">30 places (25 disponibles)</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600 inline-flex items-center">
-                            {{ ux_icon('ph:user', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
-                            <span>Candidatures</span>
-                        </p>
-                        <p class="font-semibold text-gray-900">3 candidatures</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600 inline-flex items-center">
-                            {{ ux_icon('ph:calendar', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
-                            <span>Date de création</span>
-                        </p>
-                        <p class="font-semibold text-gray-900">02 novembre 2025</p>
-                    </div>
-                </div>
-            </twig:SubContent>
+            <twig:CourseInfo :courseId="course.id" :period="course.period" :capacity="course.capacity"
+                             :applicationsCount="course.applications_count" :createdAt="course.created_at"/>
 
             <twig:SubContent title="Critères">
                 {% block button %}

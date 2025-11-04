@@ -70,35 +70,50 @@ class CoursesController extends AbstractController
             'image_url' => "https://picsum.photos/800/400",
             'title' => 'BTS Services Informatiques aux Organisations (SIO)',
             'description' => "Diplôme niveau BAC+2 dans le domaine de l'informatique.",
-            'applications_count' => 3
+            'period' => '01 octobre 2025 - 30 juin 2027',
+            'applications_count' => 3,
+            'capacity' => 30,
+            'created_at' => '02/07/2025'
         ],
         [
             'id' => 2,
             'image_url' => "https://picsum.photos/800/400",
             'title' => "Bachelor Concepteur Développeur d'Applications",
             'description' => "Diplôme niveau BAC+3 dans le domaine de l'informatique.",
-            'applications_count' => 8
+            'period' => '01 octobre 2025 - 30 juin 2027',
+            'applications_count' => 8,
+            'capacity' => 18,
+            'created_at' => '02/07/2025'
         ],
         [
             'id' => 3,
             'image_url' => "https://picsum.photos/800/400",
             'title' => 'Master of Science Data/IA',
             'description' => "Diplôme niveau BAC+5 dans le domaine de l'informatique.",
-            'applications_count' => 12
+            'period' => '01 octobre 2025 - 30 juin 2027',
+            'applications_count' => 12,
+            'capacity' => 40,
+            'created_at' => '02/07/2025'
         ],
         [
             'id' => 4,
             'image_url' => "https://picsum.photos/800/400",
             'title' => 'BAC STI2D',
             'description' => "Baccalauréat technologique.",
-            'applications_count' => 0
+            'period' => '01 octobre 2025 - 30 juin 2027',
+            'applications_count' => 0,
+            'capacity' => 27,
+            'created_at' => '02/07/2025'
         ],
         [
             'id' => 5,
             'image_url' => "https://picsum.photos/800/400",
             'title' => 'Bachelor Mathématiques',
             'description' => "Diplôme niveau BAC+3 en mathématiques fondamentales et appliquées.",
-            'applications_count' => 7
+            'period' => '01 octobre 2025 - 30 juin 2027',
+            'applications_count' => 7,
+            'capacity' => 12,
+            'created_at' => '02/07/2025'
         ]
     ];
 
@@ -111,9 +126,15 @@ class CoursesController extends AbstractController
     #[Route('/{id}', name: 'app_courses_show')]
     public function show(int $id): Response
     {
-        return $this->render(
-            'courses/show.html.twig',
-            ['course' => $this->courses[$id], 'criteria' => $this->criteria]
-        );
+        $course = $this->courses[$id - 1] ?? null;
+
+        if (!$course) {
+            throw $this->createNotFoundException('Formation non trouvée');
+        }
+
+        return $this->render('courses/show.html.twig', [
+            'course' => $course,
+            'criteria' => $this->criteria
+        ]);
     }
 }

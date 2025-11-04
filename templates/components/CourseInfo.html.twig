@@ -1,0 +1,80 @@
+<div {{ attributes }}>
+    <twig:SubContent title="Informations">
+        {% block button %}
+            <div>
+                {% if not isEditMode %}
+                    <button
+                        data-action="live#action" data-live-action-param="enableEdit"
+                        class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer">
+                        {{ ux_icon('ph:pencil', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                        <span class="hidden lg:block">Modifier {{ isEditMode }}</span>
+                    </button>
+                    <button
+                        data-action="live#action" data-live-action-param="delete"
+                        class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-red-600 text-white hover:bg-red-400 hover:cursor-pointer">
+                        {{ ux_icon('ph:trash', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                        <span class="hidden lg:block">Supprimer</span>
+                    </button>
+                {% else %}
+                    <button
+                        data-action="live#action" data-live-action-param="save"
+                        class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 border border-[#24292F] hover:bg-gray-200 hover:border-gray-400 hover:cursor-pointer">
+                        {{ ux_icon('ph:arrow-u-down-left', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                        <span class="hidden lg:block">Annuler</span>
+                    </button>
+                    <button
+                        data-action="live#action" data-live-action-param="cancel"
+                        class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer">
+                        {{ ux_icon('ph:floppy-disk', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                        <span class="hidden lg:block">Enregistrer</span>
+                    </button>
+                {% endif %}
+            </div>
+        {% endblock %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 items-start">
+            <div>
+                <p class="text-sm text-gray-600 inline-flex items-center">
+                    {{ ux_icon('ph:calendar-dots', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
+                    <span>Période</span>
+                </p>
+                <p class="font-semibold text-gray-900">{{ period }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 inline-flex items-center">
+                    {{ ux_icon('ph:door-open', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
+                    <label for="capacity">Capacité</label>
+                </p>
+
+                {% if isEditMode %}
+                    <div class="flex items-center gap-2">
+                        <input
+                            id="capacity"
+                            type="number"
+                            data-model="capacity"
+                            value="{{ capacity }}"
+                            min="1"
+                            max="99"
+                            class="w-[5rem] border border-gray-300 rounded px-3 py-2 font-semibold">
+                        <span class="text-gray-600">places</span>
+                    </div>
+                {% else %}
+                    <p class="font-semibold text-gray-900">{{ capacity }} places</p>
+                {% endif %}
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 inline-flex items-center">
+                    {{ ux_icon('ph:user', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
+                    <span>Candidatures</span>
+                </p>
+                <p class="font-semibold text-gray-900">{{ applicationsCount }} candidatures</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 inline-flex items-center">
+                    {{ ux_icon('ph:calendar', {class: 'w-4 h-4 -mb-0.5 mr-1.5'}) }}
+                    <span>Date de création</span>
+                </p>
+                <p class="font-semibold text-gray-900">{{ createdAt }}</p>
+            </div>
+        </div>
+    </twig:SubContent>
+</div>
