@@ -1,0 +1,76 @@
+{% extends 'layouts/main_layout.html.twig' %}
+
+{% block title %}Formations • {{ course.title }}{% endblock %}
+
+{% block content %}
+    <twig:Card title="{{ course.title }}" description="{{ course.description }}">
+        {% block backwards %}
+            <a
+                href="{{ path('app_courses_index') }}"
+                class="focus:outline-none rounded-md inline-flex items-center text-sm mb-4 hover:pl-3 pr-3 py-1.5 transition-all duration-300 hover:bg-gray-200 hover:cursor-pointer">
+                {{ ux_icon('ph:arrow-left', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                <span class="hidden lg:block">Retour aux formations</span>
+            </a>
+        {% endblock %}
+        <div class="flex flex-col space-y-6">
+            <twig:CourseInfo :courseId="course.id" :period="course.period" :capacity="course.capacity"
+                             :applicationsCount="course.applications_count" :createdAt="course.created_at"/>
+
+            <twig:SubContent title="Critères">
+                {% block button %}
+                    <div
+                        class="focus:outline-none rounded-md inline-flex items-center text-sm px-3 py-1.5 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer">
+                        {{ ux_icon('ph:plus', {class: 'w-5 h-5 -mb-0.5 lg:mr-1.5'}) }}
+                        <span class="hidden lg:block">Ajouter</span>
+                    </div>
+                {% endblock %}
+                <div class="shadow-sm rounded-lg">
+                    <table class="min-w-full text-left border-collapse">
+                        <thead>
+                        <tr class="text-gray-700 uppercase text-sm text-center lg:text-left leading-normal bg-gray-50">
+                            <th class="p-1 lg:py-3 lg:px-4 font-semibold border-b border-gray-300">Nom</th>
+                            <th class="p-1 lg:py-3 lg:px-4 font-semibold border-b border-gray-300">Notes
+                            </th>
+                            <th class="p-1 lg:py-3 lg:px-4 font-semibold border-b border-gray-300 text-center">Actions
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="text-gray-800 text-sm">
+                        {% for criterion in criteria %}
+                            <tr class="border-b border-gray-300 hover:bg-gray-50 transition">
+                                <td class="p-1 lg:py-3 lg:px-4 font-medium">
+                                    {{ criterion.title }}
+                                </td>
+
+                                <td class="py-3 px-4">
+                                    <div class="flex flex-wrap gap-2">
+                                        {% for mark in criterion.marks %}
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                                    {{ mark.label }}
+                                                    <span class="ml-1 text-gray-500 text-xs">({{ mark.mark }})</span>
+                                                </span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+
+                                <td class="py-3 px-4 text-center flex flex-col lg:flex-row justify-center gap-2">
+                                    <div
+                                        class="focus:outline-none rounded-md inline-flex items-center justify-center text-sm px-2 py-1 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 cursor-pointer">
+                                        {{ ux_icon('ph:pencil', {class: 'w-4 h-4'}) }}
+                                    </div>
+                                    <div
+                                        class="focus:outline-none rounded-md inline-flex items-center justify-center text-sm px-2 py-1 transition duration-300 bg-red-600 text-white hover:bg-red-400 cursor-pointer">
+                                        {{ ux_icon('ph:trash', {class: 'w-4 h-4'}) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </twig:SubContent>
+        </div>
+    </twig:Card>
+{% endblock %}

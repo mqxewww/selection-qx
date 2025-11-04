@@ -18,13 +18,15 @@ class Header
                     'label' => 'Formations',
                     'icon' => 'ph:graduation-cap',
                     'url' => '/courses',
-                    'route' => 'app_courses_index'
+                    'route' => 'app_courses_index',
+                    'route_prefix' => 'app_courses',
                 ],
                 [
                     'label' => 'Candidatures',
                     'icon' => 'ph:file-text',
                     'url' => '/applications',
-                    'route' => 'app_applications_index'
+                    'route' => 'app_applications_index',
+                    'route_prefix' => 'app_applications',
                 ],
             ];
         }
