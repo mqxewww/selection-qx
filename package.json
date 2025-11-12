@@ -10,6 +10,7 @@
         "eslint-plugin-prettier": "^5.5.4",
         "eslint-plugin-vue": "^10.5.1",
         "prettier": "^3.6.2",
+        "prettier-plugin-tailwindcss": "^0.7.1",
         "regenerator-runtime": "^0.13.9",
         "ts-loader": "^9.5.4",
         "typescript": "^5.9.3",
@@ -26,9 +27,13 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress",
         "lint": "eslint --config assets/eslint.config.mjs",
-        "format": "prettier --config ./assets/.prettierrc --write \"assets/**/*.{js,ts,vue,css,scss,json,html}\""
+        "format": "prettier --config assets/.prettierrc.json --write \"assets/**/*.{js,ts,vue,css,scss,json,html}\""
     },
     "dependencies": {
+        "@tailwindcss/postcss": "^4.1.17",
+        "postcss": "^8.5.6",
+        "postcss-loader": "^8.2.0",
+        "tailwindcss": "^4.1.17",
         "vue": "^3.5.24",
         "vue-router": "^4.6.3"
     }
