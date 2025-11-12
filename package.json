@@ -2,11 +2,18 @@
     "devDependencies": {
         "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.0",
+        "@eslint/js": "^9.39.1",
         "@symfony/webpack-encore": "^5.1.0",
         "core-js": "^3.38.0",
+        "eslint": "^9.39.1",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-vue": "^10.5.1",
+        "prettier": "^3.6.2",
         "regenerator-runtime": "^0.13.9",
         "ts-loader": "^9.5.4",
         "typescript": "^5.9.3",
+        "typescript-eslint": "^8.46.4",
         "vue-loader": "^17.4.2",
         "webpack": "^5.74.0",
         "webpack-cli": "^5.1.0"
@@ -17,7 +24,9 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "lint": "eslint --config assets/eslint.config.mjs",
+        "format": "prettier --config ./assets/.prettierrc --write \"assets/**/*.{js,ts,vue,css,scss,json,html}\""
     },
     "dependencies": {
         "vue": "^3.5.24",
