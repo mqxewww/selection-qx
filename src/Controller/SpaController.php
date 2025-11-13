@@ -8,11 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class HomeController extends AbstractController
+class SpaController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/app/{route}', name: 'spa', requirements: ['route' => '.*'])]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig');
+        return $this->render('app/index.html.twig');
     }
 }
