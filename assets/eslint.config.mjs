@@ -19,9 +19,7 @@ export default typescriptEslint.config(
                 parser: typescriptEslint.parser,
             },
         },
-        rules: {
-            // your rules
-        },
+        rules: {},
     },
     eslintConfigPrettier
 );

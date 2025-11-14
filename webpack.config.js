@@ -1,4 +1,5 @@
 const Encore = require("@symfony/webpack-encore");
+const { DefinePlugin } = require("webpack");
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -8,16 +9,10 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore.setOutputPath("public/build/")
   .setPublicPath("/build")
-  .enableVueLoader()
-  .enablePostCssLoader()
-
-  /*
-   * ENTRY CONFIG
-   *
-   * Each entry will result in one JavaScript file (e.g. app.ts)
-   * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
-   */
   .addEntry("app", "./assets/app.ts")
+  .enableVueLoader()
+  .enableTypeScriptLoader()
+  .enablePostCssLoader()
   .splitEntryChunks()
   .enableSingleRuntimeChunk()
   .cleanupOutputBeforeBuild()
@@ -27,6 +22,12 @@ Encore.setOutputPath("public/build/")
     config.useBuiltIns = "usage";
     config.corejs = "3.38";
   })
-  .enableTypeScriptLoader();
+  .addPlugin(
+    new DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(false),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    }),
+  );
 
 module.exports = Encore.getWebpackConfig();
