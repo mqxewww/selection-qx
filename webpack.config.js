@@ -1,8 +1,7 @@
 const Encore = require("@symfony/webpack-encore");
 const { DefinePlugin } = require("webpack");
+const path = require("node:path");
 
-// Manually configure the runtime environment if not already configured yet by the "encore" command.
-// It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
   Encore.configureRuntimeEnvironment(process.env.NODE_ENV || "dev");
 }
@@ -28,6 +27,9 @@ Encore.setOutputPath("public/build/")
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
     }),
-  );
+  )
+  .addAliases({
+    "~": path.resolve(__dirname, "assets"),
+  });
 
 module.exports = Encore.getWebpackConfig();

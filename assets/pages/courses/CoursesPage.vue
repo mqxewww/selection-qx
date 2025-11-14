@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { PhCalendarDots, PhEye, PhPlus, PhUser } from "@phosphor-icons/vue";
+import { CalendarDays, Eye, FilePlusCorner, UserRound } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
+import { Button } from "~/components/ui/button";
+import { Course, getCoursesList } from "~/services/course.service";
 import ContainerComponent from "../../components/ContainerComponent.vue";
-import { Course, getCoursesList } from "../../services/course.service";
 
 const courses = ref<Course[]>([]);
 
@@ -14,12 +15,10 @@ onMounted(async () => {
 <template>
   <ContainerComponent description="Voir et modifier les formations disponibles" title="Formations">
     <template #button>
-      <div
-        class="focus:outline-none rounded-md inline-flex items-center text-sm px-4 py-2 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600 hover:cursor-pointer"
-      >
-        <PhPlus class="w-5 h-5 -mb-0.5 lg:mr-1.5" />
+      <Button class="hover:cursor-pointer">
+        <FilePlusCorner class="w-4 h-4 mt-0.5" />
         <span class="hidden lg:block">Ajouter une formation</span>
-      </div>
+      </Button>
     </template>
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3 items-start">
@@ -43,14 +42,14 @@ onMounted(async () => {
 
           <div class="flex flex-col space-y-1">
             <div class="text-center inline-flex items-center text-sm">
-              <PhCalendarDots class="w-5 h-5 mr-1.5" />
+              <CalendarDays class="w-5 h-5 mr-1.5" />
               <p>
                 <span class="font-semibold">{{ course.period }}</span>
               </p>
             </div>
 
             <div class="text-center inline-flex items-center text-sm">
-              <PhUser class="w-5 h-5 mr-1.5" />
+              <UserRound class="w-5 h-5 mr-1.5" />
               <p>
                 <span class="font-semibold">{{ course.applications_count }}</span>
                 candidatures
@@ -59,13 +58,10 @@ onMounted(async () => {
           </div>
 
           <div class="flex justify-center">
-            <router-link
-              :to="`/courses/${course.id}`"
-              class="focus:outline-none rounded-md inline-flex items-center text-sm px-4 py-2 transition duration-300 bg-[#24292F] text-white hover:bg-gray-600"
-            >
-              <PhEye class="w-5 h-5 -mb-0.5 mr-1.5" />
-              <span>Voir les détails</span>
-            </router-link>
+            <Button class="hover:cursor-pointer" @click="$router.push(`courses/${course.id}`)">
+              <Eye class="w-4 h-4 mt-0.5" />
+              Voir les détails
+            </Button>
           </div>
         </div>
       </div>

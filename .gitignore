@@ -19,3 +19,7 @@ yarn-error.log
 ###> phpstorm ###
 /.idea/
 ###< phpstorm ###
+
+###> shadcn-vue components ###
+assets/components/ui/*
+###< shadcn-vue components ###

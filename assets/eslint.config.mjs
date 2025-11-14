@@ -4,7 +4,7 @@ import eslintPluginVue from "eslint-plugin-vue";
 import typescriptEslint from "typescript-eslint";
 
 export default typescriptEslint.config(
-    { ignores: ["**/*.d.ts", "**/coverage", "**/dist", "public/build"] },
+    { ignores: ["**/*.d.ts", "**/coverage", "**/dist", "public/build", "assets/components/ui/*"] },
     {
         extends: [
             eslint.configs.recommended,

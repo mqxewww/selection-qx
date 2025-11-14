@@ -1,18 +1,26 @@
 <script lang="ts" setup>
-import { PhFileText, PhGraduationCap, PhUser } from "@phosphor-icons/vue";
+import { FileText, GraduationCap, LogOut, UserRound } from "lucide-vue-next";
 import { useRoute } from "vue-router";
-import { HeaderRoute } from "../types/header-route";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { HeaderRoute } from "~/types/header-route";
 
 const routes: HeaderRoute[] = [
   {
     label: "Formations",
-    iconComponent: PhGraduationCap,
+    iconComponent: GraduationCap,
     url: "/courses",
     urlPrefix: "courses",
   },
   {
     label: "Candidatures",
-    iconComponent: PhFileText,
+    iconComponent: FileText,
     url: "/applications",
     urlPrefix: "applications",
   },
@@ -29,24 +37,32 @@ function isActive(prefix: string) {
     <nav class="flex justify-between items-center">
       <ul class="flex gap-2">
         <li v-for="route in routes" :key="route.urlPrefix">
-          <router-link
-            :class="[
-              'focus:outline-none font-medium rounded-md text-center inline-flex items-center text-sm px-4 py-2 transition duration-300',
-              isActive(route.urlPrefix) ? 'bg-[#24292F] text-white' : 'hover:bg-gray-300',
-            ]"
-            :to="route.url"
+          <Button
+            :variant="isActive(route.urlPrefix) ? 'default' : 'ghost'"
+            class="hover:cursor-pointer"
+            @click="$router.push(route.url)"
           >
-            <component :is="route.iconComponent" class="w-5 h-5 lg:mr-1.5" />
-            <span class="hidden lg:block">{{ route.label }}</span>
-          </router-link>
+            <component :is="route.iconComponent" class="w-4 h-4" />
+            {{ route.label }}
+          </Button>
         </li>
       </ul>
-      <div
-        class="font-semibold border border-gray-200 rounded-md text-center inline-flex items-center text-sm px-3 py-1.5"
-      >
-        <PhUser class="w-5 h-5 mr-1.5" />
-        <p>John Doe</p>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Avatar class="cursor-pointer hover:opacity-90 transition">
+            <AvatarFallback>
+              <UserRound class="w-5 h-5" />
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent class="w-fit mt-1.5 mr-4">
+          <DropdownMenuItem class="text-red-600 hover:cursor-pointer">
+            <LogOut class="w-4 h-4" />
+            Déconnexion
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </nav>
   </header>
 </template>
