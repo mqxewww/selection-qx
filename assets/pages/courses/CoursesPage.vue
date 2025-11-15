@@ -54,14 +54,6 @@ onMounted(async () => {
                 >
               </p>
             </div>
-
-            <!--            <div class="text-center inline-flex items-center text-sm">-->
-            <!--              <UserRound class="w-5 h-5 mr-1.5" />-->
-            <!--              <p>-->
-            <!--                <span class="font-semibold">{{ course.applications_count }}</span>-->
-            <!--                candidatures-->
-            <!--              </p>-->
-            <!--            </div>-->
           </div>
 
           <div class="flex justify-center">

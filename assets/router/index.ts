@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../pages/HomePage.vue";
-import ApplicationsPage from "../pages/applications/ApplicationsPage.vue";
-import CourseDetailPage from "../pages/courses/CourseDetailPage.vue";
-import CoursesPage from "../pages/courses/CoursesPage.vue";
+import HomePage from "~/pages/HomePage.vue";
+import ApplicationsPage from "~/pages/applications/ApplicationsPage.vue";
+import CourseDetailPage from "~/pages/courses/CourseDetailPage.vue";
+import CoursesPage from "~/pages/courses/CoursesPage.vue";
 
 export default createRouter({
   history: createWebHistory("/app/"),

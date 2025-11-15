@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import api from "~/lib/api";
-import { HydraResponse } from "~/types/hydra-response";
+import type { HydraResponse } from "~/types/hydra-response";
 
 export type CourseListDTO = {
   id: number;

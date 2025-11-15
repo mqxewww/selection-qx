@@ -54,6 +54,7 @@ onMounted(async () => {
         Retour aux formations
       </Button>
     </template>
+
     <div class="flex flex-col space-y-6">
       <SubContainerComponent title="Informations">
         <template #button>
@@ -129,6 +130,7 @@ onMounted(async () => {
             <span class="hidden lg:block">Nouveau critère</span>
           </Button>
         </template>
+
         <div class="w-full max-w-full overflow-x-auto">
           <Table>
             <TableHeader>

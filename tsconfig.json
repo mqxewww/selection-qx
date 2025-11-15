@@ -1,16 +1,36 @@
 {
     "compilerOptions": {
+        // ###> Environment setup & latest features ###
+        "lib": ["ESNext", "DOM"],
         "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "node",
-        "strict": true,
+        "module": "Preserve",
+        "moduleDetection": "force",
         "jsx": "preserve",
-        "esModuleInterop": true,
+        "allowJs": true,
+        // ###< Environment setup & latest features ###
+
+        // ###> Bundler mode ###
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": false,
+        "noEmit": true,
+        // ###< Bundler mode ###
+
+        // ###> Best practices ###
+        "strict": true,
         "skipLibCheck": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        // ###< Best practices ###
+
+        // ###> Project ###
+        "esModuleInterop": true,
         "baseUrl": ".",
         "paths": {
             "~/*": ["assets/*"]
         }
+        // ###< Project ###
     },
     "include": ["assets/**/*.ts", "assets/**/*.vue"],
     "exclude": ["node_modules"]

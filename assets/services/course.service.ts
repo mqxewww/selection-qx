@@ -32,12 +32,6 @@ const courses: Course[] = [
   },
 ];
 
-export async function getCoursesList(): Promise<Course[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
-  return courses;
-}
-
 export async function getCourse(id: number): Promise<Course | null> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
