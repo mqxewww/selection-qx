@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { CalendarDays, Eye, FilePlusCorner, UserRound } from "lucide-vue-next";
-import { onMounted, ref } from "vue";
+import { CalendarDays, Eye, FilePlusCorner } from "lucide-vue-next";
+import { onMounted } from "vue";
+import ContainerComponent from "~/components/ContainerComponent.vue";
 import { Button } from "~/components/ui/button";
-import { Course, getCoursesList } from "~/services/course.service";
-import ContainerComponent from "../../components/ContainerComponent.vue";
+import { useCourseList } from "~/composables/courses/useCourseList";
+import { isoToDate } from "~/lib/isoToDate";
 
-const courses = ref<Course[]>([]);
+const { courses, fetchCoursesList } = useCourseList();
 
 onMounted(async () => {
-  courses.value = await getCoursesList();
+  await fetchCoursesList();
 });
 </script>
 
@@ -27,7 +28,11 @@ onMounted(async () => {
         :key="course.id"
         class="rounded-lg shadow-lg overflow-hidden flex flex-col"
       >
-        <img :src="course.image_url" alt="Image de la carte" class="w-full h-48 object-cover" />
+        <img
+          alt="Image de la carte"
+          class="w-full h-48 object-cover"
+          src="https://picsum.photos/800/400"
+        />
 
         <div class="p-4 flex flex-col space-y-4 flex-grow">
           <div class="flex flex-col space-y-1">
@@ -44,17 +49,19 @@ onMounted(async () => {
             <div class="text-center inline-flex items-center text-sm">
               <CalendarDays class="w-5 h-5 mr-1.5" />
               <p>
-                <span class="font-semibold">{{ course.period }}</span>
+                <span class="font-semibold"
+                  >{{ isoToDate(course.periodStart) }} - {{ isoToDate(course.periodEnd) }}</span
+                >
               </p>
             </div>
 
-            <div class="text-center inline-flex items-center text-sm">
-              <UserRound class="w-5 h-5 mr-1.5" />
-              <p>
-                <span class="font-semibold">{{ course.applications_count }}</span>
-                candidatures
-              </p>
-            </div>
+            <!--            <div class="text-center inline-flex items-center text-sm">-->
+            <!--              <UserRound class="w-5 h-5 mr-1.5" />-->
+            <!--              <p>-->
+            <!--                <span class="font-semibold">{{ course.applications_count }}</span>-->
+            <!--                candidatures-->
+            <!--              </p>-->
+            <!--            </div>-->
           </div>
 
           <div class="flex justify-center">
