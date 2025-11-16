@@ -1,0 +1,54 @@
+name: Build Symfony + Vite in prod environment
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        env:
+            APP_ENV: prod
+            APP_DEBUG: 0
+            SYMFONY_ENV: prod
+            NODE_ENV: production
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Install Bun
+                uses: oven-sh/setup-bun@v2
+                with:
+                    bun-version: latest
+
+            -   name: Install bun dependencies
+                run: bun install --frozen-lockfile
+
+            -   name: Build vite project
+                run: bun -b run build
+
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.2'
+                    extensions: mbstring, intl, pdo_mysql, pdo_sqlite
+                    tools: composer:v2
+                    coverage: none
+
+            -   name: Install composer dependencies
+                run: |
+                    composer install \
+                        --no-dev \
+                        --optimize-autoloader \
+                        --no-interaction \
+                        --no-progress \
+                        --no-scripts
+
+            -   name: Symfony cache warmup
+                run: |
+                    APP_ENV=prod APP_DEBUG=0 DATABASE_URL=sqlite:///:memory: php bin/console cache:clear
+                    APP_ENV=prod APP_DEBUG=0 DATABASE_URL=sqlite:///:memory: php bin/console cache:warmup
