@@ -3,7 +3,7 @@
     "description": "Web solution intended for school staff, designed to make it easier to manage applications received for courses.",
     "type": "project",
     "license": "proprietary",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
