@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import api from "~/lib/api";
-import type { HydraResponse } from "~/types/hydra-response";
 
 export type CourseListDTO = {
   id: number;
@@ -19,10 +18,12 @@ export function useCourseList() {
     loading.value = true;
     error.value = null;
 
-    try {
-      const response = await api.get<HydraResponse<CourseListDTO>>("/courses");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      courses.value = response.data.member;
+    try {
+      const response = await api.get<CourseListDTO[]>("/courses");
+
+      courses.value = response.data;
     } catch (e) {
       error.value = (e as Error).message;
     } finally {
