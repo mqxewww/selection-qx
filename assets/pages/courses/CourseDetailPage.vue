@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { parseDate } from "@internationalized/date";
 import {
   ArrowLeftToLine,
   Calendar1,
@@ -12,15 +13,33 @@ import {
   Trash,
   UserRound,
 } from "lucide-vue-next";
+import { DateValue } from "reka-ui";
 import { onMounted, ref } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
+import DatePicker from "~/components/DatePicker.vue";
 import SubContainerComponent from "~/components/SubContainerComponent.vue";
 import { Button } from "~/components/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle, } from "~/components/ui/empty";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
 import { NumberField, NumberFieldContent, NumberFieldInput } from "~/components/ui/number-field";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "~/components/ui/table";
+import { Spinner } from "~/components/ui/spinner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
 import { useCourseById } from "~/composables/courses/useCourseById.ts";
-import { isoToDate } from "~/lib/isoToDate.ts";
+import { CourseUpdateDTO, useCourseUpdate } from "~/composables/courses/useCourseUpdate.ts";
+import { isoToDate } from "~/lib/utils.ts";
 
 type Props = {
   idCourse: string;
@@ -28,14 +47,60 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const periodStartRef = ref<DateValue>();
+const periodEndRef = ref<DateValue>();
+const capacityRef = ref<number>(0);
 const isEditMode = ref<boolean>(false);
 
 const { course, fetchCourseById, loading } = useCourseById();
+const {
+  loading: courseUpdateLoading,
+  success: courseUpdateSuccess,
+  updateCourse,
+} = useCourseUpdate();
+
+const initRefs = () => {
+  if (course.value) {
+    periodStartRef.value = parseDate(course.value.periodStart);
+    periodEndRef.value = parseDate(course.value.periodEnd);
+    capacityRef.value = course.value.capacity;
+  }
+};
+
+const closeEditMode = () => {
+  isEditMode.value = false;
+
+  initRefs();
+};
+
+const saveCourse = async () => {
+  if (
+    courseUpdateLoading.value ||
+    !periodStartRef.value ||
+    !periodEndRef.value ||
+    !capacityRef.value
+  )
+    return;
+
+  const payload: CourseUpdateDTO = {
+    periodStart: periodStartRef.value.toString(),
+    periodEnd: periodEndRef.value.toString(),
+    capacity: capacityRef.value,
+  };
+
+  await updateCourse(Number(props.idCourse), payload);
+
+  if (courseUpdateSuccess) {
+    isEditMode.value = false;
+  }
+};
 
 onMounted(async () => {
   if (!props.idCourse || isNaN(Number(props.idCourse))) return;
 
   await fetchCourseById(Number(props.idCourse));
+
+  initRefs();
 });
 </script>
 
@@ -83,13 +148,19 @@ onMounted(async () => {
                 v-if="isEditMode"
                 class="hover:cursor-pointer"
                 variant="outline"
-                @click="isEditMode = false"
+                @click="closeEditMode"
               >
                 <CornerDownLeft class="w-4 h-4" />
                 <span class="hidden lg:block">Annuler</span>
               </Button>
-              <Button v-if="isEditMode" class="hover:cursor-pointer">
-                <SaveAll class="w-4 h-4" />
+              <Button
+                v-if="isEditMode"
+                :disabled="courseUpdateLoading"
+                class="hover:cursor-pointer"
+                @click="saveCourse"
+              >
+                <SaveAll v-if="!courseUpdateLoading" class="w-4 h-4" />
+                <Spinner v-else class="w-4 h-4" />
                 <span class="hidden lg:block">Enregistrer</span>
               </Button>
             </div>
@@ -101,8 +172,11 @@ onMounted(async () => {
                 <CalendarDays class="w-4 h-4 mr-1.5" />
                 <span>Période</span>
               </p>
-              <p class="font-semibold text-gray-900">
-                {{ isoToDate(course.periodStart) }} - {{ isoToDate(course.periodEnd) }}
+              <p class="font-semibold text-gray-900 space-x-2">
+                <span>Du</span>
+                <DatePicker v-model="periodStartRef" :is-disabled="!isEditMode" />
+                <span>au</span>
+                <DatePicker v-model="periodEndRef" :is-disabled="!isEditMode" />
               </p>
             </div>
             <div>
@@ -112,7 +186,7 @@ onMounted(async () => {
               </p>
 
               <div class="flex items-center gap-2">
-                <NumberField :default-value="course.capacity" :disabled="!isEditMode">
+                <NumberField v-model="capacityRef" :disabled="!isEditMode">
                   <NumberFieldContent>
                     <NumberFieldInput class="w-[6ch]" />
                   </NumberFieldContent>

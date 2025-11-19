@@ -1,31 +1,28 @@
 import { ref } from "vue";
 import api from "~/lib/api";
 
-export type CourseListDTO = {
-  id: number;
-  title: string;
-  description: string;
-  capacity: number;
+export type CourseUpdateDTO = {
   periodStart: string;
   periodEnd: string;
-  applicationsCount: number;
+  capacity: number;
 };
 
-export function useCourseList() {
-  const courses = ref<CourseListDTO[]>([]);
+export function useCourseUpdate() {
   const loading = ref<boolean>(false);
   const error = ref<string | null>(null);
+  const success = ref<boolean>(false);
 
-  const fetchCoursesList = async () => {
+  const updateCourse = async (id: number, payload: CourseUpdateDTO) => {
     loading.value = true;
     error.value = null;
+    success.value = false;
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const response = await api.get<CourseListDTO[]>("/courses");
+      await api.patch(`/courses/${id}`, payload);
 
-      courses.value = response.data;
+      success.value = true;
     } catch (e) {
       error.value = (e as Error).message;
     } finally {
@@ -33,5 +30,5 @@ export function useCourseList() {
     }
   };
 
-  return { courses, loading, error, fetchCoursesList };
+  return { loading, error, success, updateCourse };
 }

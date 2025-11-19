@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-import { CalendarDays, Eye, FilePlusCorner, FileQuestionMark } from "lucide-vue-next";
+import {
+  CalendarDays,
+  DoorOpen,
+  Eye,
+  FilePlusCorner,
+  FileQuestionMark,
+  UserRound,
+} from "lucide-vue-next";
 import { onMounted } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
 import { Button } from "~/components/ui/button";
@@ -13,7 +20,6 @@ import {
 } from "~/components/ui/empty";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useCourseList } from "~/composables/courses/useCourseList";
-import { isoToDate } from "~/lib/isoToDate";
 
 const { courses, fetchCoursesList, loading } = useCourseList();
 
@@ -79,7 +85,15 @@ onMounted(async () => {
                 </div>
               </div>
 
-              <div class="flex flex-col space-y-1">
+              <div class="flex flex-col space-y-2">
+                <div class="text-center inline-flex items-center text-sm">
+                  <Skeleton class="h-5 w-5 rounded-full mr-1.5" />
+                  <Skeleton class="h-4 w-28 rounded-md" />
+                </div>
+                <div class="text-center inline-flex items-center text-sm">
+                  <Skeleton class="h-5 w-5 rounded-full mr-1.5" />
+                  <Skeleton class="h-4 w-28 rounded-md" />
+                </div>
                 <div class="text-center inline-flex items-center text-sm">
                   <Skeleton class="h-5 w-5 rounded-full mr-1.5" />
                   <Skeleton class="h-4 w-28 rounded-md" />
@@ -115,13 +129,27 @@ onMounted(async () => {
                 </p>
               </div>
 
-              <div class="flex flex-col space-y-1">
+              <div class="flex flex-col space-y-2">
                 <div class="text-center inline-flex items-center text-sm">
                   <CalendarDays class="w-5 h-5 mr-1.5" />
                   <p>
+                    Année scolaire
                     <span class="font-semibold"
-                      >{{ isoToDate(course.periodStart) }} - {{ isoToDate(course.periodEnd) }}</span
+                      >{{ course.periodStart }} - {{ course.periodEnd }}</span
                     >
+                  </p>
+                </div>
+                <div class="text-center inline-flex items-center text-sm">
+                  <DoorOpen class="w-5 h-5 mr-1.5" />
+                  <p>
+                    <span class="font-semibold">{{ course.capacity }}</span> étudiants max.
+                  </p>
+                </div>
+                <div class="text-center inline-flex items-center text-sm">
+                  <UserRound class="w-5 h-5 mr-1.5" />
+                  <p>
+                    <span class="font-semibold">{{ course.applicationsCount }}</span> candidatures
+                    enregistrées
                   </p>
                 </div>
               </div>
