@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { useApiRequest } from "~/composables/useApiRequest.ts";
 import api from "~/lib/api.ts";
 
 type Mark = {
@@ -26,26 +26,21 @@ export type CourseByIdDTO = {
 };
 
 export function useCourseById() {
-  const course = ref<CourseByIdDTO | null>(null);
-  const loading = ref<boolean>(false);
-  const error = ref<string | null>(null);
+  const { loading, error, success, data, execute } = useApiRequest<CourseByIdDTO>();
 
   const fetchCourseById = async (id: number) => {
-    loading.value = true;
-    error.value = null;
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    try {
+    return await execute(async () => {
       const response = await api.get<CourseByIdDTO>(`/courses/${id}`);
 
-      course.value = response.data;
-    } catch (e) {
-      error.value = (e as Error).message;
-    } finally {
-      loading.value = false;
-    }
+      return response.data;
+    });
   };
 
-  return { course, loading, error, fetchCourseById };
+  return {
+    loading,
+    error,
+    success,
+    data,
+    fetchCourseById,
+  };
 }

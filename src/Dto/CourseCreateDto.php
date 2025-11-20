@@ -4,8 +4,14 @@ namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints;
 
-class CourseUpdateDto
+class CourseCreateDto
 {
+    #[Constraints\NotBlank]
+    public ?string $title = null;
+
+    #[Constraints\NotBlank]
+    public ?string $description = null;
+
     #[Constraints\NotBlank]
     #[Constraints\Positive]
     public ?int $capacity = null;

@@ -1,17 +1,19 @@
 import { useApiRequest } from "~/composables/useApiRequest.ts";
 import api from "~/lib/api";
 
-export type CourseUpdateDTO = {
+export type CourseCreateDTO = {
+  title: string;
+  description: string;
   capacity: number;
   periodStart: string;
   periodEnd: string;
 };
 
-export function useCourseUpdate() {
+export function useCourseCreate() {
   const { loading, error, success, data, execute } = useApiRequest<void>();
 
-  const updateCourse = async (id: number, body: CourseUpdateDTO) => {
-    return await execute(async () => await api.patch(`/courses/${id}`, body));
+  const createCourse = async (body: CourseCreateDTO) => {
+    return await execute(async () => await api.post("/courses", body));
   };
 
   return {
@@ -19,6 +21,6 @@ export function useCourseUpdate() {
     error,
     success,
     data,
-    updateCourse,
+    createCourse,
   };
 }

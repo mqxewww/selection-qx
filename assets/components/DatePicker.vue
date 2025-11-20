@@ -8,7 +8,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { df } from "~/lib/utils.ts";
 
 type Props = {
-  isDisabled: boolean;
+  hideIcon?: boolean;
+  isDisabled?: boolean;
   placeholder?: string;
 };
 
@@ -24,7 +25,7 @@ const date = defineModel<DateValue>();
         :disabled="props.isDisabled"
         variant="outline"
       >
-        <CalendarIcon />
+        <CalendarIcon v-if="!props.hideIcon" />
         {{ date ? df(date) : placeholder || "Choisissez une date" }}
       </Button>
     </PopoverTrigger>

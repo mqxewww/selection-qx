@@ -17,6 +17,7 @@ import { DateValue } from "reka-ui";
 import { onMounted, ref } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
 import DatePicker from "~/components/DatePicker.vue";
+import CourseDeleteDialog from "~/components/dialogs/CourseDeleteDialog.vue";
 import SubContainerComponent from "~/components/SubContainerComponent.vue";
 import { Button } from "~/components/ui/button";
 import {
@@ -51,8 +52,9 @@ const periodStartRef = ref<DateValue>();
 const periodEndRef = ref<DateValue>();
 const capacityRef = ref<number>(0);
 const isEditMode = ref<boolean>(false);
+const isDeleteDialogOpen = ref(false);
 
-const { course, fetchCourseById, loading } = useCourseById();
+const { loading: courseListLoading, data: course, fetchCourseById } = useCourseById();
 const {
   loading: courseUpdateLoading,
   success: courseUpdateSuccess,
@@ -90,9 +92,7 @@ const saveCourse = async () => {
 
   await updateCourse(Number(props.idCourse), payload);
 
-  if (courseUpdateSuccess) {
-    isEditMode.value = false;
-  }
+  if (courseUpdateSuccess) isEditMode.value = false;
 };
 
 onMounted(async () => {
@@ -107,7 +107,7 @@ onMounted(async () => {
 <template>
   <ContainerComponent
     :description="course?.description"
-    :is-loading="loading"
+    :is-loading="courseListLoading"
     :title="course?.title"
   >
     <template #backwards>
@@ -117,7 +117,7 @@ onMounted(async () => {
       </Button>
     </template>
 
-    <template v-if="!loading && !course">
+    <template v-if="!courseListLoading && !course">
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
@@ -140,7 +140,12 @@ onMounted(async () => {
                 <PencilLine class="w-4 h-4" />
                 <span class="hidden lg:block">Modifier</span>
               </Button>
-              <Button v-if="!isEditMode" class="hover:cursor-pointer" variant="destructive">
+              <Button
+                v-if="!isEditMode"
+                class="hover:cursor-pointer"
+                variant="destructive"
+                @click="isDeleteDialogOpen = true"
+              >
                 <Trash class="w-4 h-4" />
                 <span class="hidden lg:block">Supprimer</span>
               </Button>
@@ -275,6 +280,7 @@ onMounted(async () => {
           </template>
         </SubContainerComponent>
       </div>
+      <CourseDeleteDialog :id="props.idCourse" v-model="isDeleteDialogOpen" :title="course.title" />
     </template>
   </ContainerComponent>
 </template>

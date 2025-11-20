@@ -7,8 +7,9 @@ import {
   FileQuestionMark,
   UserRound,
 } from "lucide-vue-next";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
+import CourseCreateDialog from "~/components/dialogs/CourseCreateDialog.vue";
 import { Button } from "~/components/ui/button";
 import {
   Empty,
@@ -21,7 +22,9 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import { useCourseList } from "~/composables/courses/useCourseList";
 
-const { courses, fetchCoursesList, loading } = useCourseList();
+const { data: courses, fetchCoursesList, loading } = useCourseList();
+
+const isCreateDialogOpen = ref(false);
 
 onMounted(async () => {
   await fetchCoursesList();
@@ -34,16 +37,16 @@ onMounted(async () => {
       <template v-if="loading">
         <Skeleton class="h-10 w-48 rounded-2xl" />
       </template>
-      <template v-else-if="courses.length === 0" />
+      <template v-else-if="courses?.length === 0" />
       <template v-else>
-        <Button class="hover:cursor-pointer">
+        <Button class="hover:cursor-pointer" @click="isCreateDialogOpen = true">
           <FilePlusCorner class="w-4 h-4 mt-0.5" />
           <span class="hidden lg:block">Ajouter une formation</span>
         </Button>
       </template>
     </template>
 
-    <template v-if="!loading && courses.length === 0">
+    <template v-if="!loading && courses?.length === 0">
       <div class="grid grid-cols-1 items-center">
         <Empty>
           <EmptyHeader>
@@ -57,7 +60,7 @@ onMounted(async () => {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button class="hover:cursor-pointer">
+            <Button class="hover:cursor-pointer" @click="isCreateDialogOpen = true">
               <FilePlusCorner class="w-4 h-4 mt-0.5" />
               <span class="hidden lg:block">Ajouter une formation</span>
             </Button>
@@ -166,4 +169,5 @@ onMounted(async () => {
       </div>
     </template>
   </ContainerComponent>
+  <CourseCreateDialog v-model="isCreateDialogOpen" :fetch-courses="fetchCoursesList" />
 </template>

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\CourseCreateDto;
 use App\Dto\CourseUpdateDto;
+use App\Entity\Course;
 use App\Repository\CourseRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CoursesController extends AbstractController
 {
     #[Route('/api/courses', methods: ['GET'])]
-    public function getCourses(CourseRepository $courseRepository): JsonResponse
+    public function getAll(CourseRepository $courseRepository): JsonResponse
     {
         $courses = $courseRepository->findAll();
 
@@ -39,11 +41,11 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/api/courses/{id}', methods: ['GET'])]
-    public function getCourseById(int $id, CourseRepository $courseRepository): JsonResponse
+    public function getById(int $id, CourseRepository $courseRepository): JsonResponse
     {
         $course = $courseRepository->find($id);
 
-        if (!$course) {
+        if (!$course || !is_null($course->getDeletedAt())) {
             return new JsonResponse(['error' => 'Course not found'], 404);
         }
 
@@ -66,16 +68,57 @@ class CoursesController extends AbstractController
                             'label' => $mark->getLabel(),
                             'mark' => $mark->getMark()
                         ];
-                    }, $criteria->getCriterionMarks()->toArray())
+                    },
+                        array_filter(
+                            $criteria->getCriterionMarks()->toArray(),
+                            fn($mark) => is_null($mark->getDeletedAt())
+                        )),
                 ];
-            }, $course->getCriterias()->toArray()),
+            }, array_filter($course->getCriterias()->toArray(), fn($criteria) => is_null($criteria->getDeletedAt()))),
         ];
 
         return new JsonResponse($data);
     }
 
+    #[Route('/api/courses', methods: ['POST'])]
+    public function create(
+        Request $request,
+        ValidatorInterface $validator,
+        EntityManagerInterface $em,
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+
+        $dto = new CourseCreateDto();
+
+        $dto->title = $data['title'];
+        $dto->description = $data['description'];
+        $dto->capacity = $data['capacity'] ?? null;
+        $dto->periodStart = $data['periodStart'] ?? null;
+        $dto->periodEnd = $data['periodEnd'] ?? null;
+
+        $errors = $validator->validate($dto);
+
+        if (count($errors) > 0) {
+            return new JsonResponse(['errors' => (string)$errors], 400);
+        }
+
+        $course = new Course();
+
+        $course->setTitle($data['title']);
+        $course->setDescription($data['description']);
+        $course->setCapacity($data['capacity']);
+        $course->setPeriodStart(new DateTime($dto->periodStart));
+        $course->setPeriodEnd(new DateTime($dto->periodEnd));
+        $course->setCreatedAt(new DateTime());
+
+        $em->persist($course);
+        $em->flush();
+
+        return new JsonResponse([]);
+    }
+
     #[Route('/api/courses/{id}', methods: ['PATCH'])]
-    public function update(
+    public function updateById(
         int $id,
         Request $request,
         CourseRepository $courseRepository,
@@ -84,7 +127,7 @@ class CoursesController extends AbstractController
     ): JsonResponse {
         $course = $courseRepository->find($id);
 
-        if (!$course) {
+        if (!$course || !is_null($course->getDeletedAt())) {
             return new JsonResponse(['error' => 'Course not found'], 404);
         }
 
@@ -92,9 +135,9 @@ class CoursesController extends AbstractController
 
         $dto = new CourseUpdateDto();
 
+        $dto->capacity = $data['capacity'] ?? null;
         $dto->periodStart = $data['periodStart'] ?? null;
         $dto->periodEnd = $data['periodEnd'] ?? null;
-        $dto->capacity = $data['capacity'] ?? null;
 
         $errors = $validator->validate($dto);
 
@@ -102,9 +145,28 @@ class CoursesController extends AbstractController
             return new JsonResponse(['errors' => (string)$errors], 400);
         }
 
+        $course->setCapacity($dto->capacity);
         $course->setPeriodStart(new DateTime($dto->periodStart));
         $course->setPeriodEnd(new DateTime($dto->periodEnd));
-        $course->setCapacity($dto->capacity);
+
+        $em->flush();
+
+        return new JsonResponse([]);
+    }
+
+    #[Route('/api/courses/{id}', methods: ['DELETE'])]
+    public function deleteById(
+        int $id,
+        CourseRepository $courseRepository,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $course = $courseRepository->find($id);
+
+        if (!$course || !is_null($course->getDeletedAt())) {
+            return new JsonResponse(['error' => 'Course not found'], 404);
+        }
+
+        $course->setDeletedAt(new DateTime());
 
         $em->flush();
 
