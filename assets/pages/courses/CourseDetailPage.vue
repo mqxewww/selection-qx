@@ -18,6 +18,7 @@ import { onMounted, ref } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
 import DatePicker from "~/components/DatePicker.vue";
 import CourseDeleteDialog from "~/components/dialogs/CourseDeleteDialog.vue";
+import CriteriaCreateDialog from "~/components/dialogs/CriteriaCreateDialog.vue";
 import SubContainerComponent from "~/components/SubContainerComponent.vue";
 import { Button } from "~/components/ui/button";
 import {
@@ -29,6 +30,7 @@ import {
   EmptyTitle,
 } from "~/components/ui/empty";
 import { NumberField, NumberFieldContent, NumberFieldInput } from "~/components/ui/number-field";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { Spinner } from "~/components/ui/spinner";
 import {
   Table,
@@ -40,6 +42,7 @@ import {
 } from "~/components/ui/table";
 import { useCourseById } from "~/composables/courses/useCourseById.ts";
 import { CourseUpdateDTO, useCourseUpdate } from "~/composables/courses/useCourseUpdate.ts";
+import { useCriteriaDelete } from "~/composables/criteria/useCriteriaDelete.ts";
 import { isoToDate } from "~/lib/utils.ts";
 
 type Props = {
@@ -52,7 +55,9 @@ const periodStartRef = ref<DateValue>();
 const periodEndRef = ref<DateValue>();
 const capacityRef = ref<number>(0);
 const isEditMode = ref<boolean>(false);
-const isDeleteDialogOpen = ref(false);
+
+const isDeleteCourseDialogOpen = ref<boolean>(false);
+const isCreateCriteriaDialogOpen = ref<boolean>(false);
 
 const { loading: courseListLoading, data: course, fetchCourseById } = useCourseById();
 const {
@@ -60,6 +65,11 @@ const {
   success: courseUpdateSuccess,
   updateCourse,
 } = useCourseUpdate();
+const {
+  loading: criteriaDeleteLoading,
+  success: criteriaDeleteSuccess,
+  deleteCriteria,
+} = useCriteriaDelete();
 
 const initRefs = () => {
   if (course.value) {
@@ -93,6 +103,16 @@ const saveCourse = async () => {
   await updateCourse(Number(props.idCourse), payload);
 
   if (courseUpdateSuccess) isEditMode.value = false;
+};
+
+const confirmDeleteCriteria = async (id: number) => {
+  if (criteriaDeleteLoading.value) return;
+
+  await deleteCriteria(id);
+
+  if (criteriaDeleteSuccess) {
+    await fetchCourseById(Number(props.idCourse));
+  }
 };
 
 onMounted(async () => {
@@ -144,7 +164,7 @@ onMounted(async () => {
                 v-if="!isEditMode"
                 class="hover:cursor-pointer"
                 variant="destructive"
-                @click="isDeleteDialogOpen = true"
+                @click="isDeleteCourseDialogOpen = true"
               >
                 <Trash class="w-4 h-4" />
                 <span class="hidden lg:block">Supprimer</span>
@@ -218,7 +238,11 @@ onMounted(async () => {
 
         <SubContainerComponent title="Critères">
           <template #button>
-            <Button v-if="course.criterias.length > 0" class="hover:cursor-pointer">
+            <Button
+              v-if="course.criterias.length > 0"
+              class="hover:cursor-pointer"
+              @click="isCreateCriteriaDialogOpen = true"
+            >
               <SquarePlus class="mt-0.5" />
               <span class="hidden lg:block">Nouveau critère</span>
             </Button>
@@ -233,7 +257,7 @@ onMounted(async () => {
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button class="hover:cursor-pointer">
+                <Button class="hover:cursor-pointer" @click="isCreateCriteriaDialogOpen = true">
                   <SquarePlus class="mt-0.5" />
                   <span class="hidden lg:block">Nouveau critère</span>
                 </Button>
@@ -269,9 +293,30 @@ onMounted(async () => {
                       <Button class="w-8 h-8 hover:cursor-pointer">
                         <PencilLine class="w-4 h-4" />
                       </Button>
-                      <Button class="w-8 h-8 hover:cursor-pointer" variant="destructive">
-                        <Trash class="w-4 h-4" />
-                      </Button>
+                      <Popover>
+                        <PopoverTrigger>
+                          <Button class="w-8 h-8 hover:cursor-pointer" variant="destructive">
+                            <Trash class="w-4 h-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          class="mr-10 text-base w-fit space-y-2 shadow-2xl rounded-xl"
+                        >
+                          <div class="text-gray-900 font-semibold">
+                            Supprimer le critère '{{ criterion.title }}' ?
+                          </div>
+                          <div class="flex flex-row justify-end">
+                            <Button
+                              :disabled="criteriaDeleteLoading"
+                              class="hover:cursor-pointer"
+                              @click="confirmDeleteCriteria(criterion.id)"
+                            >
+                              <Spinner :class="`w-4 h-4 ${!criteriaDeleteLoading && 'hidden'}`" />
+                              <span class="hidden lg:block">Confirmer</span>
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -280,7 +325,16 @@ onMounted(async () => {
           </template>
         </SubContainerComponent>
       </div>
-      <CourseDeleteDialog :id="props.idCourse" v-model="isDeleteDialogOpen" :title="course.title" />
+      <CourseDeleteDialog
+        v-model="isDeleteCourseDialogOpen"
+        :course-id="props.idCourse"
+        :title="course.title"
+      />
+      <CriteriaCreateDialog
+        v-model="isCreateCriteriaDialogOpen"
+        :course-id="props.idCourse"
+        :fetch-course="fetchCourseById"
+      />
     </template>
   </ContainerComponent>
 </template>

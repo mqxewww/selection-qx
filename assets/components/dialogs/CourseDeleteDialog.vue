@@ -9,7 +9,7 @@ import { useCourseDelete } from "~/composables/courses/useCourseDelete.ts";
 
 type Props = {
   title: string;
-  id: string;
+  courseId: string;
 };
 
 const router = useRouter();
@@ -22,7 +22,7 @@ const { loading, success, deleteCourse } = useCourseDelete();
 const confirmDelete = async () => {
   if (loading.value) return;
 
-  await deleteCourse(Number(props.id));
+  await deleteCourse(Number(props.courseId));
 
   if (success) {
     isOpen.value = false;
@@ -61,7 +61,12 @@ const confirmDelete = async () => {
           Annuler
         </Button>
 
-        <Button class="hover:cursor-pointer" variant="destructive" @click="confirmDelete">
+        <Button
+          :disabled="loading"
+          class="hover:cursor-pointer"
+          variant="destructive"
+          @click="confirmDelete"
+        >
           <Spinner :class="`w-4 h-4 ${!loading && 'hidden'}`" />
           Supprimer
         </Button>

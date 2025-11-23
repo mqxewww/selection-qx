@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CriteriaRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CriteriaRepository::class)]
@@ -19,14 +21,11 @@ class Criteria
     #[ORM\Column(length: 31)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $displayOrder = null;
-
     #[ORM\Column]
-    private ?\DateTime $createdAt = null;
+    private ?DateTime $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $deletedAt = null;
+    private ?DateTime $deletedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'criterias')]
     #[ORM\JoinColumn(nullable: false)]
@@ -60,36 +59,24 @@ class Criteria
         return $this;
     }
 
-    public function getDisplayOrder(): ?int
-    {
-        return $this->displayOrder;
-    }
-
-    public function setDisplayOrder(int $displayOrder): static
-    {
-        $this->displayOrder = $displayOrder;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): static
+    public function setCreatedAt(DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTime
+    public function getDeletedAt(): ?DateTime
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTime $deletedAt): static
+    public function setDeletedAt(?DateTime $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CoursesController extends AbstractController
+class CourseController extends AbstractController
 {
     #[Route('/api/courses', methods: ['GET'])]
     public function getAll(CourseRepository $courseRepository): JsonResponse
@@ -69,12 +69,18 @@ class CoursesController extends AbstractController
                             'mark' => $mark->getMark()
                         ];
                     },
-                        array_filter(
-                            $criteria->getCriterionMarks()->toArray(),
-                            fn($mark) => is_null($mark->getDeletedAt())
+                        array_values(
+                            array_filter(
+                                $criteria->getCriterionMarks()->toArray(),
+                                fn($mark) => is_null($mark->getDeletedAt())
+                            )
                         )),
                 ];
-            }, array_filter($course->getCriterias()->toArray(), fn($criteria) => is_null($criteria->getDeletedAt()))),
+            },
+                array_values(
+                    array_filter($course->getCriterias()->toArray(), fn($criteria) => is_null($criteria->getDeletedAt())
+                    )
+                )),
         ];
 
         return new JsonResponse($data);
@@ -92,9 +98,9 @@ class CoursesController extends AbstractController
 
         $dto->title = $data['title'];
         $dto->description = $data['description'];
-        $dto->capacity = $data['capacity'] ?? null;
-        $dto->periodStart = $data['periodStart'] ?? null;
-        $dto->periodEnd = $data['periodEnd'] ?? null;
+        $dto->capacity = $data['capacity'];
+        $dto->periodStart = $data['periodStart'];
+        $dto->periodEnd = $data['periodEnd'];
 
         $errors = $validator->validate($dto);
 
@@ -167,6 +173,14 @@ class CoursesController extends AbstractController
         }
 
         $course->setDeletedAt(new DateTime());
+
+        foreach ($course->getCriterias() as $criteria) {
+            $criteria->setDeletedAt(new DateTime());
+
+            foreach ($criteria->getCriterionMarks() as $mark) {
+                $mark->setDeletedAt(new DateTime());
+            }
+        }
 
         $em->flush();
 

@@ -23,8 +23,8 @@ const { loading, success, createCourse } = useCourseCreate();
 const titleRef = ref<string>("");
 const descriptionRef = ref<string>("");
 const capacityRef = ref<number>(0);
-const periodStartRef = ref<DateValue>();
-const periodEndRef = ref<DateValue>();
+const periodStartRef = ref<DateValue | undefined>();
+const periodEndRef = ref<DateValue | undefined>();
 
 const confirmCreate = async () => {
   if (
@@ -51,6 +51,12 @@ const confirmCreate = async () => {
     isOpen.value = false;
 
     await props.fetchCourses();
+
+    titleRef.value = "";
+    descriptionRef.value = "";
+    capacityRef.value = 0;
+    periodStartRef.value = undefined;
+    periodEndRef.value = undefined;
   }
 };
 </script>
@@ -121,7 +127,7 @@ const confirmCreate = async () => {
           Fermer
         </Button>
 
-        <Button class="hover:cursor-pointer" @click="confirmCreate">
+        <Button :disabled="loading" class="hover:cursor-pointer" @click="confirmCreate">
           <Spinner :class="`w-4 h-4 ${!loading && 'hidden'}`" />
           Créer
         </Button>
