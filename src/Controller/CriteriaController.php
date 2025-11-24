@@ -105,7 +105,7 @@ class CriteriaController extends AbstractController
         $dto->criterionMarks = array_map(function ($item) {
             $mark = new CriterionMarkUpdateDto();
 
-            $mark->id = $item['id'];
+            $mark->id = $item['id'] ?? null;
             $mark->label = $item['label'];
             $mark->mark = $item['mark'];
             $mark->delete = $item['delete'];
@@ -136,10 +136,6 @@ class CriteriaController extends AbstractController
             }
 
             $mark = $criterionMarkRepository->find($itemDto->id);
-
-            if ($mark && is_null($mark->getDeletedAt())) {
-                continue;
-            }
 
             if ($itemDto->delete) {
                 $mark->setDeletedAt(new DateTime());

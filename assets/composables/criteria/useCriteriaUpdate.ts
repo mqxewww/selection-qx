@@ -1,7 +1,7 @@
 import { useApiRequest } from "~/composables/useApiRequest.ts";
 import api from "~/lib/api.ts";
 
-type CriterionMarkUpdateDTO = {
+export type CriterionMarkUpdateDTO = {
   id?: number;
   label: string;
   mark: number;
@@ -10,7 +10,6 @@ type CriterionMarkUpdateDTO = {
 
 export type CriteriaUpdateDTO = {
   title: string;
-  courseId: number;
   criterionMarks: CriterionMarkUpdateDTO[];
 };
 

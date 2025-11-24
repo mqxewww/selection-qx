@@ -19,6 +19,7 @@ import ContainerComponent from "~/components/ContainerComponent.vue";
 import DatePicker from "~/components/DatePicker.vue";
 import CourseDeleteDialog from "~/components/dialogs/CourseDeleteDialog.vue";
 import CriteriaCreateDialog from "~/components/dialogs/CriteriaCreateDialog.vue";
+import CriteriaUpdateDialog from "~/components/dialogs/CriteriaUpdateDialog.vue";
 import SubContainerComponent from "~/components/SubContainerComponent.vue";
 import { Button } from "~/components/ui/button";
 import {
@@ -40,7 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useCourseById } from "~/composables/courses/useCourseById.ts";
+import { Criterion, useCourseById } from "~/composables/courses/useCourseById.ts";
 import { CourseUpdateDTO, useCourseUpdate } from "~/composables/courses/useCourseUpdate.ts";
 import { useCriteriaDelete } from "~/composables/criteria/useCriteriaDelete.ts";
 import { isoToDate } from "~/lib/utils.ts";
@@ -56,8 +57,11 @@ const periodEndRef = ref<DateValue>();
 const capacityRef = ref<number>(0);
 const isEditMode = ref<boolean>(false);
 
+const criteriaToUpdate = ref<Criterion | null>(null);
+
 const isDeleteCourseDialogOpen = ref<boolean>(false);
 const isCreateCriteriaDialogOpen = ref<boolean>(false);
+const isUpdateCriteriaDialogOpen = ref<boolean>(false);
 
 const { loading: courseListLoading, data: course, fetchCourseById } = useCourseById();
 const {
@@ -113,6 +117,12 @@ const confirmDeleteCriteria = async (id: number) => {
   if (criteriaDeleteSuccess) {
     await fetchCourseById(Number(props.idCourse));
   }
+};
+
+const openUpdateCriteriaDialog = (criterion: Criterion) => {
+  isUpdateCriteriaDialogOpen.value = true;
+
+  criteriaToUpdate.value = criterion;
 };
 
 onMounted(async () => {
@@ -290,7 +300,10 @@ onMounted(async () => {
                       </span>
                     </TableCell>
                     <TableCell class="text-right space-x-2">
-                      <Button class="w-8 h-8 hover:cursor-pointer">
+                      <Button
+                        class="w-8 h-8 hover:cursor-pointer"
+                        @click="openUpdateCriteriaDialog(criterion)"
+                      >
                         <PencilLine class="w-4 h-4" />
                       </Button>
                       <Popover>
@@ -333,6 +346,12 @@ onMounted(async () => {
       <CriteriaCreateDialog
         v-model="isCreateCriteriaDialogOpen"
         :course-id="props.idCourse"
+        :fetch-course="fetchCourseById"
+      />
+      <CriteriaUpdateDialog
+        v-model="isUpdateCriteriaDialogOpen"
+        :course-id="props.idCourse"
+        :criteria-data="criteriaToUpdate"
         :fetch-course="fetchCourseById"
       />
     </template>

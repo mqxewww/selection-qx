@@ -7,7 +7,7 @@ type Mark = {
   mark: number;
 };
 
-type Criterion = {
+export type Criterion = {
   id: number;
   title: string;
   marks: Mark[];
