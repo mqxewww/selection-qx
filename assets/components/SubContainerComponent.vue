@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
+  isLoading?: string;
 }
 
 const props = defineProps<Props>();

@@ -1,34 +1,32 @@
-import { ref } from "vue";
+import { useApiRequest } from "~/composables/useApiRequest.ts";
 import api from "~/lib/api";
-import type { HydraResponse } from "~/types/hydra-response";
 
 export type CourseListDTO = {
   id: number;
   title: string;
   description: string;
+  capacity: number;
   periodStart: string;
   periodEnd: string;
+  applicationsCount: number;
 };
 
 export function useCourseList() {
-  const courses = ref<CourseListDTO[]>([]);
-  const loading = ref<boolean>(false);
-  const error = ref<string | null>(null);
+  const { loading, error, success, data, execute } = useApiRequest<CourseListDTO[]>();
 
   const fetchCoursesList = async () => {
-    loading.value = true;
-    error.value = null;
+    return await execute(async () => {
+      const response = await api.get<CourseListDTO[]>("/courses");
 
-    try {
-      const response = await api.get<HydraResponse<CourseListDTO>>("/courses");
-
-      courses.value = response.data.member;
-    } catch (e) {
-      error.value = (e as Error).message;
-    } finally {
-      loading.value = false;
-    }
+      return response.data;
+    });
   };
 
-  return { courses, loading, error, fetchCoursesList };
+  return {
+    loading,
+    error,
+    success,
+    data,
+    fetchCoursesList,
+  };
 }

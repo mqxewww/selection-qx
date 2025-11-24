@@ -1,46 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CourseRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['course:read']]
-)]
 class Course
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['course:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 31)]
-    #[Groups(['course:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['course:read'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['course:read'])]
     private ?int $capacity = null;
 
     #[ORM\Column]
-    #[Groups(['course:read'])]
     private ?DateTime $periodStart = null;
 
     #[ORM\Column]
-    #[Groups(['course:read'])]
     private ?DateTime $periodEnd = null;
 
     #[ORM\Column]
