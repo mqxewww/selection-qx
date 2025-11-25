@@ -37,7 +37,7 @@ onMounted(async () => {
       <template v-if="loading">
         <Skeleton class="h-10 w-48 rounded-2xl" />
       </template>
-      <template v-else-if="courses?.length === 0" />
+      <template v-else-if="!courses || courses.length === 0" />
       <template v-else>
         <Button class="hover:cursor-pointer" @click="isCreateDialogOpen = true">
           <FilePlusCorner class="w-4 h-4 mt-0.5" />
@@ -46,7 +46,7 @@ onMounted(async () => {
       </template>
     </template>
 
-    <template v-if="!loading && courses?.length === 0">
+    <template v-if="!loading && (!courses || courses.length === 0)">
       <div class="grid grid-cols-1 items-center">
         <Empty>
           <EmptyHeader>
