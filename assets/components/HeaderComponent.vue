@@ -9,7 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { HeaderRoute } from "~/types/header-route";
+
+type HeaderRoute = {
+  label: string;
+  iconComponent: unknown;
+  url: string;
+  urlPrefix: string;
+};
 
 const routes: HeaderRoute[] = [
   {
@@ -37,14 +43,15 @@ function isActive(prefix: string) {
     <nav class="flex justify-between items-center">
       <ul class="flex gap-2">
         <li v-for="route in routes" :key="route.urlPrefix">
-          <Button
-            :variant="isActive(route.urlPrefix) ? 'default' : 'ghost'"
-            class="hover:cursor-pointer"
-            @click="$router.push(route.url)"
-          >
-            <component :is="route.iconComponent" class="w-4 h-4" />
-            {{ route.label }}
-          </Button>
+          <RouterLink :to="route.url">
+            <Button
+              :variant="isActive(route.urlPrefix) ? 'default' : 'ghost'"
+              class="hover:cursor-pointer"
+            >
+              <component :is="route.iconComponent" class="w-4 h-4" />
+              {{ route.label }}
+            </Button>
+          </RouterLink>
         </li>
       </ul>
       <DropdownMenu>

@@ -20,5 +20,5 @@ class CriteriaCreateDto
      */
     #[Constraints\Valid]
     #[Constraints\All([new Constraints\Type(type: CriterionMarkCreateDto::class)])]
-    public array $criterionMarks = [];
+    public array $marks = [];
 }

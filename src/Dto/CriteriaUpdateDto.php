@@ -16,5 +16,5 @@ class CriteriaUpdateDto
      */
     #[Constraints\Valid]
     #[Constraints\All([new Constraints\Type(type: CriterionMarkUpdateDto::class)])]
-    public array $criterionMarks = [];
+    public array $marks = [];
 }

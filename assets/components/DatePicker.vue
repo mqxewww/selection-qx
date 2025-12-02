@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { DateValue } from "@internationalized/date";
-
 import { CalendarIcon } from "lucide-vue-next";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
@@ -13,8 +12,8 @@ type Props = {
   placeholder?: string;
 };
 
-const props = defineProps<Props>();
 const date = defineModel<DateValue>();
+const props = defineProps<Props>();
 </script>
 
 <template>

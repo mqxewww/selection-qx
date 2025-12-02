@@ -58,7 +58,7 @@ class CourseController extends AbstractController
             'periodEnd' => $course->getPeriodEnd()->format('Y-m-d'),
             'createdAt' => $course->getCreatedAt()->format('Y-m-d'),
             'applicationsCount' => rand(2, 10),
-            'criterias' => array_map(function ($criteria) {
+            'criteria' => array_map(function ($criteria) {
                 return [
                     'id' => $criteria->getId(),
                     'title' => $criteria->getTitle(),

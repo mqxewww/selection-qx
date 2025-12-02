@@ -37,14 +37,14 @@ class CriteriaController extends AbstractController
         $dto->title = $data['title'];
         $dto->courseId = $data['courseId'];
 
-        $dto->criterionMarks = array_map(function ($item) {
+        $dto->marks = array_map(function ($item) {
             $mark = new CriterionMarkCreateDto();
 
             $mark->label = $item['label'];
             $mark->mark = $item['mark'];
 
             return $mark;
-        }, $data['criterionMarks'] ?? []);
+        }, $data['marks'] ?? []);
 
         $errors = $validator->validate($dto);
 
@@ -64,7 +64,7 @@ class CriteriaController extends AbstractController
         $criteria->setCourse($course);
         $criteria->setCreatedAt(new DateTime());
 
-        foreach ($dto->criterionMarks as $itemDto) {
+        foreach ($dto->marks as $itemDto) {
             $mark = new CriterionMark();
 
             $mark->setLabel($itemDto->label);
@@ -102,7 +102,7 @@ class CriteriaController extends AbstractController
 
         $dto->title = $data['title'];
 
-        $dto->criterionMarks = array_map(function ($item) {
+        $dto->marks = array_map(function ($item) {
             $mark = new CriterionMarkUpdateDto();
 
             $mark->id = $item['id'] ?? null;
@@ -111,7 +111,7 @@ class CriteriaController extends AbstractController
             $mark->delete = $item['delete'];
 
             return $mark;
-        }, $data['criterionMarks'] ?? []);
+        }, $data['marks'] ?? []);
 
         $errors = $validator->validate($dto);
 
@@ -121,7 +121,7 @@ class CriteriaController extends AbstractController
 
         $criteria->setTitle($dto->title);
 
-        foreach ($dto->criterionMarks as $itemDto) {
+        foreach ($dto->marks as $itemDto) {
             if (is_null($itemDto->id)) {
                 $mark = new CriterionMark();
 
