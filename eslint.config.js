@@ -4,7 +4,18 @@ import typescriptEslint from "typescript-eslint";
 
 export default typescriptEslint.config(
   {
-    ignores: ["**/coverage", "**/dist", "public/build", "assets/components/ui/*"],
+    ignores: [
+      "**/assets/components/ui/**",
+      "**/bin/**",
+      "**/config/**",
+      "**/migrations/**",
+      "**/node_modules/**",
+      "**/public/**",
+      "**/src/**",
+      "**/templates/**",
+      "**/var/**",
+      "**/vendor/**",
+    ],
   },
   {
     extends: [
@@ -19,7 +30,14 @@ export default typescriptEslint.config(
         parser: typescriptEslint.parser,
       },
     },
-    rules: {},
+    rules: {
+      "vue/define-macros-order": [
+        "error",
+        {
+          order: ["defineEmits", "defineProps"],
+        },
+      ],
+    },
   },
   eslintConfigPrettier
 );

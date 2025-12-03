@@ -8,7 +8,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="w-full rounded-lg p-3 border border-gray-300 lg:p-4">
+  <div class="w-full rounded-lg border border-gray-300 p-3 lg:p-4">
     <div class="flex items-center justify-between">
       <h2 class="text-xl font-semibold text-gray-900">
         {{ props.title }}

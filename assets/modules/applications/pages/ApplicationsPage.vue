@@ -66,7 +66,7 @@ watch([page, optionSelected], async () => {
       <template v-else-if="!applicationsDto || applicationsDto.applications.length === 0" />
       <template v-else>
         <Button class="hover:cursor-pointer" @click="isCreateDialogOpen = true">
-          <FilePlusCorner class="w-4 h-4 mt-0.5" />
+          <FilePlusCorner class="mt-0.5 h-4 w-4" />
           <span class="hidden lg:block">Ajouter une candidature</span>
         </Button>
       </template>
@@ -89,7 +89,7 @@ watch([page, optionSelected], async () => {
           </EmptyHeader>
           <EmptyContent>
             <Button class="hover:cursor-pointer" @click="isCreateDialogOpen = true">
-              <FilePlusCorner class="w-4 h-4 mt-0.5" />
+              <FilePlusCorner class="mt-0.5 h-4 w-4" />
               <span class="hidden lg:block">Ajouter une candidature</span>
             </Button>
           </EmptyContent>
@@ -144,8 +144,8 @@ watch([page, optionSelected], async () => {
                     <Skeleton class="h-5 w-[12ch] rounded-md" />
                   </TableCell>
                   <TableCell class="text-right">
-                    <Button class="w-8 h-8 hover:cursor-pointer">
-                      <Eye class="w-4 h-4" />
+                    <Button class="h-8 w-8 hover:cursor-pointer">
+                      <Eye class="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -164,7 +164,7 @@ watch([page, optionSelected], async () => {
                   </TableCell>
                   <TableCell>
                     <span
-                      :class="`inline-flex items-center px-2 py-1 rounded-lg text-xs border ${application.status === ApplicationStatus.PENDING ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : application.status === ApplicationStatus.ACCEPTED ? 'bg-green-100 text-green-800 border-green-300' : 'bg-red-100 text-red-800 border-red-300'}`"
+                      :class="`inline-flex items-center rounded-lg border px-2 py-1 text-xs ${application.status === ApplicationStatus.PENDING ? 'border-yellow-300 bg-yellow-100 text-yellow-800' : application.status === ApplicationStatus.ACCEPTED ? 'border-green-300 bg-green-100 text-green-800' : 'border-red-300 bg-red-100 text-red-800'}`"
                     >
                       {{ application.status }}
                     </span>
@@ -173,8 +173,8 @@ watch([page, optionSelected], async () => {
                     {{ application.createdAt }}
                   </TableCell>
                   <TableCell class="text-right">
-                    <Button class="w-8 h-8 hover:cursor-pointer">
-                      <Eye class="w-4 h-4" />
+                    <Button class="h-8 w-8 hover:cursor-pointer">
+                      <Eye class="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>

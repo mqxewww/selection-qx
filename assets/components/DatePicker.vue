@@ -12,8 +12,8 @@ type Props = {
   placeholder?: string;
 };
 
-const date = defineModel<DateValue>();
 const props = defineProps<Props>();
+const date = defineModel<DateValue>();
 </script>
 
 <template>

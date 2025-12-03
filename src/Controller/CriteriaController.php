@@ -13,7 +13,6 @@ use App\Entity\CriterionMark;
 use App\Repository\CourseRepository;
 use App\Repository\CriteriaRepository;
 use App\Repository\CriterionMarkRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,7 +48,7 @@ class CriteriaController extends AbstractController
         $errors = $validator->validate($dto);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string)$errors], 400);
+            return new JsonResponse(['errors' => (string) $errors], 400);
         }
 
         $course = $courseRepository->find($dto->courseId);
@@ -62,7 +61,7 @@ class CriteriaController extends AbstractController
 
         $criteria->setTitle($dto->title);
         $criteria->setCourse($course);
-        $criteria->setCreatedAt(new DateTime());
+        $criteria->setCreatedAt(new \DateTime());
 
         foreach ($dto->marks as $itemDto) {
             $mark = new CriterionMark();
@@ -70,7 +69,7 @@ class CriteriaController extends AbstractController
             $mark->setLabel($itemDto->label);
             $mark->setMark($itemDto->mark);
             $mark->setCriterion($criteria);
-            $mark->setCreatedAt(new DateTime());
+            $mark->setCreatedAt(new \DateTime());
 
             $em->persist($mark);
         }
@@ -88,7 +87,7 @@ class CriteriaController extends AbstractController
         ValidatorInterface $validator,
         CriteriaRepository $criteriaRepository,
         CriterionMarkRepository $criterionMarkRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): JsonResponse {
         $criteria = $criteriaRepository->find($id);
 
@@ -116,7 +115,7 @@ class CriteriaController extends AbstractController
         $errors = $validator->validate($dto);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string)$errors], 400);
+            return new JsonResponse(['errors' => (string) $errors], 400);
         }
 
         $criteria->setTitle($dto->title);
@@ -128,7 +127,7 @@ class CriteriaController extends AbstractController
                 $mark->setLabel($itemDto->label);
                 $mark->setMark($itemDto->mark);
                 $mark->setCriterion($criteria);
-                $mark->setCreatedAt(new DateTime());
+                $mark->setCreatedAt(new \DateTime());
 
                 $em->persist($mark);
 
@@ -138,7 +137,7 @@ class CriteriaController extends AbstractController
             $mark = $criterionMarkRepository->find($itemDto->id);
 
             if ($itemDto->delete) {
-                $mark->setDeletedAt(new DateTime());
+                $mark->setDeletedAt(new \DateTime());
 
                 continue;
             }
@@ -156,7 +155,7 @@ class CriteriaController extends AbstractController
     public function deleteById(
         int $id,
         CriteriaRepository $criteriaRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): JsonResponse {
         $criteria = $criteriaRepository->find($id);
 
@@ -164,10 +163,10 @@ class CriteriaController extends AbstractController
             return new JsonResponse(['error' => 'Course not found'], 404);
         }
 
-        $criteria->setDeletedAt(new DateTime());
+        $criteria->setDeletedAt(new \DateTime());
 
         foreach ($criteria->getCriterionMarks() as $mark) {
-            $mark->setDeletedAt(new DateTime());
+            $mark->setDeletedAt(new \DateTime());
         }
 
         $em->flush();

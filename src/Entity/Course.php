@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CourseRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -29,16 +28,16 @@ class Course
     private ?int $capacity = null;
 
     #[ORM\Column]
-    private ?DateTime $periodStart = null;
+    private ?\DateTime $periodStart = null;
 
     #[ORM\Column]
-    private ?DateTime $periodEnd = null;
+    private ?\DateTime $periodEnd = null;
 
     #[ORM\Column]
-    private ?DateTime $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?DateTime $deletedAt = null;
+    private ?\DateTime $deletedAt = null;
 
     /**
      * @var Collection<int, Criteria>
@@ -92,48 +91,48 @@ class Course
         return $this;
     }
 
-    public function getPeriodStart(): ?DateTime
+    public function getPeriodStart(): ?\DateTime
     {
         return $this->periodStart;
     }
 
-    public function setPeriodStart(DateTime $periodStart): static
+    public function setPeriodStart(\DateTime $periodStart): static
     {
         $this->periodStart = $periodStart;
 
         return $this;
     }
 
-    public function getPeriodEnd(): ?DateTime
+    public function getPeriodEnd(): ?\DateTime
     {
         return $this->periodEnd;
     }
 
-    public function setPeriodEnd(DateTime $periodEnd): static
+    public function setPeriodEnd(\DateTime $periodEnd): static
     {
         $this->periodEnd = $periodEnd;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?DateTime
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTime $deletedAt): static
+    public function setDeletedAt(?\DateTime $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 

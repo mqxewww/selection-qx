@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CriterionMarkRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,10 +23,10 @@ class CriterionMark
     private ?int $mark = null;
 
     #[ORM\Column]
-    private ?DateTime $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?DateTime $deletedAt = null;
+    private ?\DateTime $deletedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'criterionMarks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -62,24 +61,24 @@ class CriterionMark
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?DateTime
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTime $deletedAt): static
+    public function setDeletedAt(?\DateTime $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 

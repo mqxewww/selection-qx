@@ -100,8 +100,8 @@ onMounted(async () => {
   >
     <template #backwards>
       <RouterLink to="/courses">
-        <Button class="hover:cursor-pointer mb-4" variant="ghost" @click="$router.push('/courses')">
-          <ArrowLeftToLine class="w-5 h-5 mt-0.5" />
+        <Button class="mb-4 hover:cursor-pointer" variant="ghost" @click="$router.push('/courses')">
+          <ArrowLeftToLine class="mt-0.5 h-5 w-5" />
           Retour aux formations
         </Button>
       </RouterLink>
@@ -110,7 +110,7 @@ onMounted(async () => {
     <template #button>
       <div class="flex flex-row space-x-1">
         <Button v-if="!isEditMode" class="hover:cursor-pointer" @click="isEditMode = true">
-          <PencilLine class="w-4 h-4" />
+          <PencilLine class="h-4 w-4" />
           <span class="hidden lg:block">Modifier</span>
         </Button>
         <Button
@@ -119,7 +119,7 @@ onMounted(async () => {
           variant="destructive"
           @click="isDeleteCourseDialogOpen = true"
         >
-          <Trash class="w-4 h-4" />
+          <Trash class="h-4 w-4" />
           <span class="hidden lg:block">Supprimer</span>
         </Button>
         <Button
@@ -128,7 +128,7 @@ onMounted(async () => {
           variant="outline"
           @click="closeEditMode"
         >
-          <CornerDownLeft class="w-4 h-4" />
+          <CornerDownLeft class="h-4 w-4" />
           <span class="hidden lg:block">Annuler</span>
         </Button>
         <Button
@@ -137,8 +137,8 @@ onMounted(async () => {
           class="hover:cursor-pointer"
           @click="onSubmit"
         >
-          <SaveAll v-if="!isUpdating" class="w-4 h-4" />
-          <Spinner v-else class="w-4 h-4" />
+          <SaveAll v-if="!isUpdating" class="h-4 w-4" />
+          <Spinner v-else class="h-4 w-4" />
           <span class="hidden lg:block">Enregistrer</span>
         </Button>
       </div>
@@ -148,13 +148,13 @@ onMounted(async () => {
     <template v-else-if="courseDetails && !isFetchingDetails">
       <div class="flex flex-col space-y-6">
         <SubContainerComponent title="Informations">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 items-start">
+          <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2 lg:gap-8">
             <div>
-              <p class="text-sm text-gray-600 inline-flex items-center">
-                <CalendarDays class="w-4 h-4 mr-1.5" />
+              <p class="inline-flex items-center text-sm text-gray-600">
+                <CalendarDays class="mr-1.5 h-4 w-4" />
                 <span>Période</span>
               </p>
-              <p class="font-semibold text-gray-900 space-x-2">
+              <p class="space-x-2 font-semibold text-gray-900">
                 <span>Du</span>
                 <DatePicker v-model="form.periodStart as DateValue" :is-disabled="!isEditMode" />
                 <span>au</span>
@@ -162,8 +162,8 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <label class="text-sm text-gray-600 inline-flex items-center" for="form-capacity">
-                <DoorOpen class="w-4 h-4 mr-1.5" />
+              <label class="inline-flex items-center text-sm text-gray-600" for="form-capacity">
+                <DoorOpen class="mr-1.5 h-4 w-4" />
                 Capacité
               </label>
 
@@ -177,8 +177,8 @@ onMounted(async () => {
               </div>
             </div>
             <div>
-              <p class="text-sm text-gray-600 inline-flex items-center">
-                <UserRound class="w-4 h-4 mr-1.5" />
+              <p class="inline-flex items-center text-sm text-gray-600">
+                <UserRound class="mr-1.5 h-4 w-4" />
                 <span>Candidatures</span>
               </p>
               <p class="font-semibold text-gray-900">
@@ -186,8 +186,8 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <p class="text-sm text-gray-600 inline-flex items-center">
-                <Calendar1 class="w-4 h-4 mr-1.5" />
+              <p class="inline-flex items-center text-sm text-gray-600">
+                <Calendar1 class="mr-1.5 h-4 w-4" />
                 <span>Date de création</span>
               </p>
               <p class="font-semibold text-gray-900">

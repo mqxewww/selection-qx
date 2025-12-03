@@ -8,7 +8,6 @@ use App\Dto\CourseCreateDto;
 use App\Dto\CourseUpdateDto;
 use App\Entity\Course;
 use App\Repository\CourseRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,7 +33,7 @@ class CourseController extends AbstractController
                 'applicationsCount' => rand(2, 10),
             ];
         },
-            array_filter($courses, fn($course) => is_null($course->getDeletedAt()))
+            array_filter($courses, fn ($course) => is_null($course->getDeletedAt()))
         );
 
         return new JsonResponse($data);
@@ -66,19 +65,19 @@ class CourseController extends AbstractController
                         return [
                             'id' => $mark->getId(),
                             'label' => $mark->getLabel(),
-                            'mark' => $mark->getMark()
+                            'mark' => $mark->getMark(),
                         ];
                     },
                         array_values(
                             array_filter(
                                 $criteria->getCriterionMarks()->toArray(),
-                                fn($mark) => is_null($mark->getDeletedAt())
+                                fn ($mark) => is_null($mark->getDeletedAt())
                             )
                         )),
                 ];
             },
                 array_values(
-                    array_filter($course->getCriterias()->toArray(), fn($criteria) => is_null($criteria->getDeletedAt())
+                    array_filter($course->getCriterias()->toArray(), fn ($criteria) => is_null($criteria->getDeletedAt())
                     )
                 )),
         ];
@@ -105,7 +104,7 @@ class CourseController extends AbstractController
         $errors = $validator->validate($dto);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string)$errors], 400);
+            return new JsonResponse(['errors' => (string) $errors], 400);
         }
 
         $course = new Course();
@@ -113,9 +112,9 @@ class CourseController extends AbstractController
         $course->setTitle($data['title']);
         $course->setDescription($data['description']);
         $course->setCapacity($data['capacity']);
-        $course->setPeriodStart(new DateTime($dto->periodStart));
-        $course->setPeriodEnd(new DateTime($dto->periodEnd));
-        $course->setCreatedAt(new DateTime());
+        $course->setPeriodStart(new \DateTime($dto->periodStart));
+        $course->setPeriodEnd(new \DateTime($dto->periodEnd));
+        $course->setCreatedAt(new \DateTime());
 
         $em->persist($course);
         $em->flush();
@@ -129,7 +128,7 @@ class CourseController extends AbstractController
         Request $request,
         CourseRepository $courseRepository,
         ValidatorInterface $validator,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): JsonResponse {
         $course = $courseRepository->find($id);
 
@@ -148,12 +147,12 @@ class CourseController extends AbstractController
         $errors = $validator->validate($dto);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string)$errors], 400);
+            return new JsonResponse(['errors' => (string) $errors], 400);
         }
 
         $course->setCapacity($dto->capacity);
-        $course->setPeriodStart(new DateTime($dto->periodStart));
-        $course->setPeriodEnd(new DateTime($dto->periodEnd));
+        $course->setPeriodStart(new \DateTime($dto->periodStart));
+        $course->setPeriodEnd(new \DateTime($dto->periodEnd));
 
         $em->flush();
 
@@ -164,7 +163,7 @@ class CourseController extends AbstractController
     public function deleteById(
         int $id,
         CourseRepository $courseRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): JsonResponse {
         $course = $courseRepository->find($id);
 
@@ -172,13 +171,13 @@ class CourseController extends AbstractController
             return new JsonResponse(['error' => 'Course not found'], 404);
         }
 
-        $course->setDeletedAt(new DateTime());
+        $course->setDeletedAt(new \DateTime());
 
         foreach ($course->getCriterias() as $criteria) {
-            $criteria->setDeletedAt(new DateTime());
+            $criteria->setDeletedAt(new \DateTime());
 
             foreach ($criteria->getCriterionMarks() as $mark) {
-                $mark->setDeletedAt(new DateTime());
+                $mark->setDeletedAt(new \DateTime());
             }
         }
 

@@ -28,7 +28,7 @@ const isOpen = defineModel<boolean>();
       </EmptyHeader>
       <EmptyContent>
         <Button class="hover:cursor-pointer" @click="isOpen = true">
-          <FilePlusCorner class="w-4 h-4 mt-0.5" />
+          <FilePlusCorner class="mt-0.5 h-4 w-4" />
           <span class="hidden lg:block">Ajouter une formation</span>
         </Button>
       </EmptyContent>

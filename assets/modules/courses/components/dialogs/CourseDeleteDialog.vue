@@ -67,7 +67,7 @@ const onSubmit = async () => {
           variant="destructive"
           @click="onSubmit"
         >
-          <Spinner :class="`w-4 h-4 ${!isDeleting && 'hidden'}`" />
+          <Spinner :class="`h-4 w-4 ${!isDeleting && 'hidden'}`" />
           Supprimer
         </Button>
       </DialogFooter>

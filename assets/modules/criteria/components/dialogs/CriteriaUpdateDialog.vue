@@ -28,9 +28,8 @@ type Props = {
 };
 
 const emit = defineEmits<Emits>();
-const isOpen = defineModel<boolean>();
 const { criterion } = defineProps<Props>();
-
+const isOpen = defineModel<boolean>();
 const { isUpdating, updateCriterion } = useCriteriaActions();
 
 const initialFormState = {
@@ -103,7 +102,7 @@ watch(isOpen, (isOpened) => {
       </DialogHeader>
 
       <div>
-        <label class="text-sm text-gray-600 pb-2" for="form-title">Titre</label>
+        <label class="pb-2 text-sm text-gray-600" for="form-title">Titre</label>
         <Input id="form-title" v-model="form.title" required />
       </div>
 
@@ -143,14 +142,14 @@ watch(isOpen, (isOpened) => {
                 <TableCell class="text-right">
                   <Button
                     v-if="!mark.delete"
-                    class="w-8 h-8 hover:cursor-pointer"
+                    class="h-8 w-8 hover:cursor-pointer"
                     variant="destructive"
                     @click="toggleMarkDelete(i, mark)"
                   >
-                    <Trash class="w-4 h-4" />
+                    <Trash class="h-4 w-4" />
                   </Button>
-                  <Button v-else class="w-8 h-8 hover:cursor-pointer" @click="mark.delete = false">
-                    <CornerDownLeft class="w-4 h-4" />
+                  <Button v-else class="h-8 w-8 hover:cursor-pointer" @click="mark.delete = false">
+                    <CornerDownLeft class="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -165,7 +164,7 @@ watch(isOpen, (isOpened) => {
         </Button>
 
         <Button :disabled="isUpdating" class="hover:cursor-pointer" @click="onSubmit">
-          <Spinner :class="`w-4 h-4 ${!isUpdating && 'hidden'}`" />
+          <Spinner :class="`h-4 w-4 ${!isUpdating && 'hidden'}`" />
           Modifier
         </Button>
       </DialogFooter>

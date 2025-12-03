@@ -30,9 +30,8 @@ type Props = {
 };
 
 const emit = defineEmits<Emits>();
-const isOpen = defineModel<boolean>();
 const { course } = defineProps<Props>();
-
+const isOpen = defineModel<boolean>();
 const { isCreating, createCriterion } = useCriteriaActions();
 
 const initialFormState = {
@@ -81,7 +80,7 @@ const onSubmit = async () => {
       </p>
 
       <div>
-        <label class="text-sm text-gray-600 pb-2" for="form-title">Titre</label>
+        <label class="pb-2 text-sm text-gray-600" for="form-title">Titre</label>
         <Input id="form-title" v-model="form.title" required />
       </div>
 
@@ -122,11 +121,11 @@ const onSubmit = async () => {
                   </TableCell>
                   <TableCell class="text-right">
                     <Button
-                      class="w-8 h-8 hover:cursor-pointer"
+                      class="h-8 w-8 hover:cursor-pointer"
                       variant="destructive"
                       @click="form.marks.splice(i, 1)"
                     >
-                      <Trash class="w-4 h-4" />
+                      <Trash class="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -142,7 +141,7 @@ const onSubmit = async () => {
         </Button>
 
         <Button :disabled="isCreating" class="hover:cursor-pointer" @click="onSubmit">
-          <Spinner :class="`w-4 h-4 ${!isCreating && 'hidden'}`" />
+          <Spinner :class="`h-4 w-4 ${!isCreating && 'hidden'}`" />
           Créer
         </Button>
       </DialogFooter>

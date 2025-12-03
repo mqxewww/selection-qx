@@ -77,18 +77,18 @@ const onSubmit = async () => {
       </p>
 
       <div>
-        <label class="text-sm text-gray-600 pb-2" for="form-title">Titre</label>
+        <label class="pb-2 text-sm text-gray-600" for="form-title">Titre</label>
         <Input id="form-title" v-model="form.title" required />
       </div>
 
       <div>
-        <label class="text-sm text-gray-600 pb-2" for="form-description">Description</label>
+        <label class="pb-2 text-sm text-gray-600" for="form-description">Description</label>
         <Textarea id="form-description" v-model="form.description" required />
       </div>
 
       <div>
-        <label class="text-sm text-gray-600 inline-flex items-center" for="form-capacity">
-          <DoorOpen class="w-4 h-4 mr-1.5" />
+        <label class="inline-flex items-center text-sm text-gray-600" for="form-capacity">
+          <DoorOpen class="mr-1.5 h-4 w-4" />
           Capacité
         </label>
         <div class="flex items-center gap-2">
@@ -102,8 +102,8 @@ const onSubmit = async () => {
       </div>
 
       <div>
-        <label class="text-sm text-gray-600 inline-flex items-center">
-          <CalendarDays class="w-4 h-4 mr-1.5" />
+        <label class="inline-flex items-center text-sm text-gray-600">
+          <CalendarDays class="mr-1.5 h-4 w-4" />
           Début
         </label>
         <!--        <p class="font-semibold text-gray-900">-->
@@ -112,8 +112,8 @@ const onSubmit = async () => {
       </div>
 
       <div>
-        <p class="text-sm text-gray-600 inline-flex items-center">
-          <CalendarDays class="w-4 h-4 mr-1.5" />
+        <p class="inline-flex items-center text-sm text-gray-600">
+          <CalendarDays class="mr-1.5 h-4 w-4" />
           Fin
         </p>
         <!--        <p class="font-semibold text-gray-900">-->
@@ -127,7 +127,7 @@ const onSubmit = async () => {
         </Button>
 
         <Button :disabled="isCreating || !isValid" class="hover:cursor-pointer" @click="onSubmit">
-          <Spinner :class="`w-4 h-4 ${!isCreating && 'hidden'}`" />
+          <Spinner :class="`h-4 w-4 ${!isCreating && 'hidden'}`" />
           Créer
         </Button>
       </DialogFooter>

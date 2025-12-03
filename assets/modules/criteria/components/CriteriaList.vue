@@ -88,27 +88,27 @@ const confirmDelete = async (id: number) => {
                 <span
                   v-for="mark in criterion.marks"
                   :key="mark.label"
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                  class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700"
                 >
                   {{ mark.label }}
-                  <span class="ml-1 text-gray-500 text-xs">({{ mark.mark }})</span>
+                  <span class="ml-1 text-xs text-gray-500">({{ mark.mark }})</span>
                 </span>
               </TableCell>
-              <TableCell class="text-right space-x-2">
+              <TableCell class="space-x-2 text-right">
                 <Button
-                  class="w-8 h-8 hover:cursor-pointer"
+                  class="h-8 w-8 hover:cursor-pointer"
                   @click="openUpdateCriteriaDialog(criterion)"
                 >
-                  <PencilLine class="w-4 h-4" />
+                  <PencilLine class="h-4 w-4" />
                 </Button>
                 <Popover>
                   <PopoverTrigger>
-                    <Button class="w-8 h-8 hover:cursor-pointer" variant="destructive">
-                      <Trash class="w-4 h-4" />
+                    <Button class="h-8 w-8 hover:cursor-pointer" variant="destructive">
+                      <Trash class="h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent class="mr-10 text-base w-fit space-y-2 shadow-2xl rounded-xl">
-                    <div class="text-gray-900 font-semibold">
+                  <PopoverContent class="mr-10 w-fit space-y-2 rounded-xl text-base shadow-2xl">
+                    <div class="font-semibold text-gray-900">
                       Supprimer le critère '{{ criterion.title }}' ?
                     </div>
                     <div class="flex flex-row justify-end">
@@ -117,7 +117,7 @@ const confirmDelete = async (id: number) => {
                         class="hover:cursor-pointer"
                         @click="confirmDelete(criterion.id)"
                       >
-                        <Spinner :class="`w-4 h-4 ${!isDeleting && 'hidden'}`" />
+                        <Spinner :class="`h-4 w-4 ${!isDeleting && 'hidden'}`" />
                         <span class="hidden lg:block">Confirmer</span>
                       </Button>
                     </div>

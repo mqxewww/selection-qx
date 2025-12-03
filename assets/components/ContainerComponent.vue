@@ -14,8 +14,8 @@ const props = defineProps<Props>();
   <div class="w-full rounded-lg bg-white p-4 shadow lg:p-6">
     <slot name="backwards" />
 
-    <div class="flex items-center justify-between mb-1">
-      <Skeleton v-if="isLoading" class="w-32 h-8 rounded-md" />
+    <div class="mb-1 flex items-center justify-between">
+      <Skeleton v-if="isLoading" class="h-8 w-32 rounded-md" />
       <h2 v-else class="text-2xl font-semibold text-gray-900">
         {{ props.title }}
       </h2>
@@ -23,7 +23,7 @@ const props = defineProps<Props>();
       <slot name="button" />
     </div>
 
-    <Skeleton v-if="isLoading" class="w-64 mt-1 h-4 rounded-md" />
+    <Skeleton v-if="isLoading" class="mt-1 h-4 w-64 rounded-md" />
     <p v-else class="mb-6 text-sm text-gray-500">
       {{ props.description }}
     </p>
