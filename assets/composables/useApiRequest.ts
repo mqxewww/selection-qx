@@ -1,28 +1,34 @@
+import { AxiosError } from "axios";
 import { ref } from "vue";
 
-export function useApiRequest<TResponse>() {
-  const loading = ref<boolean>(false);
-  const error = ref<string | null>(null);
-  const success = ref<boolean>(false);
-  const data = ref<TResponse | null>(null);
+type ApiError = {
+  message: string;
+};
 
-  const execute = async (fn: () => Promise<TResponse>) => {
-    loading.value = true;
+export const useApiRequest = () => {
+  const isLoading = ref(false);
+  const error = ref<ApiError | null>(null);
+
+  const execute = async <T>(fn: () => Promise<T>): Promise<T | undefined> => {
+    isLoading.value = true;
     error.value = null;
-    success.value = false;
-    data.value = null;
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     try {
-      data.value = await fn();
-      success.value = true;
+      return await fn();
     } catch (err) {
-      error.value = (err as Error).message;
+      const axiosError = err as AxiosError<unknown>;
+
+      error.value = {
+        message: axiosError.message || "Une erreur est survenue",
+      };
+
+      throw err;
     } finally {
-      loading.value = false;
+      isLoading.value = false;
     }
   };
 
-  return { loading, error, success, data, execute };
-}
+  return { isLoading, error, execute };
+};

@@ -9,7 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { HeaderRoute } from "~/types/header-route";
+
+type HeaderRoute = {
+  label: string;
+  iconComponent: unknown;
+  url: string;
+  urlPrefix: string;
+};
 
 const routes: HeaderRoute[] = [
   {
@@ -34,31 +40,32 @@ function isActive(prefix: string) {
 
 <template>
   <header class="border-b border-gray-200 p-2 lg:p-4">
-    <nav class="flex justify-between items-center">
+    <nav class="flex items-center justify-between">
       <ul class="flex gap-2">
         <li v-for="route in routes" :key="route.urlPrefix">
-          <Button
-            :variant="isActive(route.urlPrefix) ? 'default' : 'ghost'"
-            class="hover:cursor-pointer"
-            @click="$router.push(route.url)"
-          >
-            <component :is="route.iconComponent" class="w-4 h-4" />
-            {{ route.label }}
-          </Button>
+          <RouterLink :to="route.url">
+            <Button
+              :variant="isActive(route.urlPrefix) ? 'default' : 'ghost'"
+              class="hover:cursor-pointer"
+            >
+              <component :is="route.iconComponent" class="h-4 w-4" />
+              {{ route.label }}
+            </Button>
+          </RouterLink>
         </li>
       </ul>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Avatar class="cursor-pointer hover:opacity-90 transition">
+          <Avatar class="cursor-pointer transition hover:opacity-90">
             <AvatarFallback>
-              <UserRound class="w-5 h-5" />
+              <UserRound class="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent class="w-fit mt-1.5 mr-4">
+        <DropdownMenuContent class="mt-1.5 mr-4 w-fit">
           <DropdownMenuItem class="text-red-600 hover:cursor-pointer">
-            <LogOut class="w-4 h-4" />
+            <LogOut class="h-4 w-4" />
             Déconnexion
           </DropdownMenuItem>
         </DropdownMenuContent>

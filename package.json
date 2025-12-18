@@ -8,8 +8,10 @@
     "scripts": {
         "build": "vite build",
         "watch": "vite build --watch",
-        "lint": "eslint --config assets/eslint.config.js",
-        "format": "prettier --config assets/.prettierrc.json --write \"assets/**/*.{js,ts,vue,css,json}\""
+        "lint": "eslint \"assets/**/*.{js,ts,vue,css,json}\"",
+        "lint:fix": "eslint --fix \"assets/**/*.{js,ts,vue,css,json}\"",
+        "format": "prettier --write \"assets/**/*.{js,ts,vue,css,json}\"",
+        "check": "bun -b run lint && bun -b run format"
     },
     "dependencies": {
         "@tanstack/vue-table": "^8.21.3",
