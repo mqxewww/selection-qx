@@ -1,36 +1,45 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CriterionMarkRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CriterionMarkRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [],
+    order: ['createdAt' => 'ASC']
+)]
 class CriterionMark
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['criterion:write', 'course:item'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 31)]
+    #[ORM\Column(length: 255)]
+    #[Groups(['criterion:write', 'course:item'])]
     private ?string $label = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column]
+    #[Groups(['criterion:write', 'course:item'])]
     private ?int $mark = null;
 
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $deletedAt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'criterionMarks')]
+    #[ORM\ManyToOne(inversedBy: 'marks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Criteria $criterion = null;
+    private ?Criterion $criterion = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -73,24 +82,12 @@ class CriterionMark
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTime
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTime $deletedAt): static
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function getCriterion(): ?Criteria
+    public function getCriterion(): ?Criterion
     {
         return $this->criterion;
     }
 
-    public function setCriterion(?Criteria $criterion): static
+    public function setCriterion(?Criterion $criterion): static
     {
         $this->criterion = $criterion;
 

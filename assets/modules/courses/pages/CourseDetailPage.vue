@@ -54,8 +54,8 @@ const refreshForm = () => {
 
   form.value = {
     capacity: courseDetails.value.capacity,
-    periodStart: parseDate(courseDetails.value.periodStart),
-    periodEnd: parseDate(courseDetails.value.periodEnd),
+    periodStart: parseDate(courseDetails.value.periodStart.split("T")[0]!),
+    periodEnd: parseDate(courseDetails.value.periodEnd.split("T")[0]!),
   };
 };
 

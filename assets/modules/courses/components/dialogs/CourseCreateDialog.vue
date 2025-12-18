@@ -106,9 +106,9 @@ const onSubmit = async () => {
           <CalendarDays class="mr-1.5 h-4 w-4" />
           Début
         </label>
-        <!--        <p class="font-semibold text-gray-900">-->
-        <DatePicker v-model="form.periodStart as DateValue" :hide-icon="true" />
-        <!--        </p>-->
+        <div>
+          <DatePicker v-model="form.periodStart as DateValue" :hide-icon="true" />
+        </div>
       </div>
 
       <div>
@@ -116,9 +116,9 @@ const onSubmit = async () => {
           <CalendarDays class="mr-1.5 h-4 w-4" />
           Fin
         </p>
-        <!--        <p class="font-semibold text-gray-900">-->
-        <DatePicker v-model="form.periodEnd as DateValue" :hide-icon="true" />
-        <!--        </p>-->
+        <div class="font-semibold text-gray-900">
+          <DatePicker v-model="form.periodEnd as DateValue" :hide-icon="true" />
+        </div>
       </div>
 
       <DialogFooter>

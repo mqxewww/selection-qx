@@ -11,7 +11,11 @@ export type CriterionMarkListItem = CriterionMark;
 
 export type CriterionMarkCreatePayload = CriterionMarkBase;
 
-export interface CriterionMarkUpdatePayload extends CriterionMarkBase {
+export interface CriterionMarkUpdateItem extends CriterionMarkBase {
   id?: number;
-  delete?: boolean;
+  shouldDelete?: boolean;
+}
+
+export interface CriterionMarkUpdatePayload extends CriterionMarkBase {
+  "@id"?: string;
 }

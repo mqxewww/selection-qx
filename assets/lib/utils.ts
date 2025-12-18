@@ -8,16 +8,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function df(date: DateValue) {
+export const df = (date: DateValue) => {
   const formatter = new DateFormatter("fr-FR", {
     dateStyle: "long",
   });
 
   return formatter.format(date.toDate(getLocalTimeZone()));
-}
+};
 
-export function isoToDate(iso: string) {
+export const isoToDate = (iso: string) => {
   const date = new Date(iso);
 
   return date.toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
-}
+};
+
+export const isoToYear = (iso: string) => {
+  const date = new Date(iso);
+
+  return date.toLocaleDateString("fr-FR", { year: "numeric" });
+};

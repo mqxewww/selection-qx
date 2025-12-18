@@ -17,7 +17,7 @@ export interface CriterionListItem extends Criterion {
 }
 
 export interface CriterionCreatePayload extends CriterionBase {
-  courseId: number;
+  course: string;
   marks: CriterionMarkCreatePayload[];
 }
 

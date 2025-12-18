@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 import ContainerComponent from "~/components/ContainerComponent.vue";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { isoToYear } from "~/lib/utils.ts";
 import {
   CourseCreateDialog,
   CoursesListEmpty,
@@ -71,7 +72,7 @@ onMounted(async () => {
                   <p>
                     Année scolaire
                     <span class="font-semibold">
-                      {{ course.periodStart }} - {{ course.periodEnd }}
+                      {{ isoToYear(course.periodStart) }} - {{ isoToYear(course.periodEnd) }}
                     </span>
                   </p>
                 </div>

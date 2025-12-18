@@ -4,4 +4,10 @@ api_platform:
     defaults:
         stateless: true
         cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
+            vary: [ 'Content-Type', 'Authorization', 'Origin' ]
+    formats:
+        json: [ 'application/json' ]
+        jsonld: [ 'application/ld+json' ]
+    patch_formats:
+        json: [ 'application/json' ]
+        jsonld: [ 'application/ld+json' ]

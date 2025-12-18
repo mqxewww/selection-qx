@@ -17,7 +17,7 @@ import {
 } from "~/components/ui/table";
 import { CriterionListItem, CriterionUpdatePayload } from "~/modules/criteria/types.ts";
 import { useCriteriaActions } from "~/modules/criteria/useCriteriaActions.ts";
-import { CriterionMarkUpdatePayload } from "~/modules/criterion-marks/types.ts";
+import { CriterionMarkUpdateItem } from "~/modules/criterion-marks/types.ts";
 
 type Emits = {
   (e: "success"): void;
@@ -34,7 +34,7 @@ const { isUpdating, updateCriterion } = useCriteriaActions();
 
 const initialFormState = {
   title: "",
-  marks: [] as CriterionMarkUpdatePayload[],
+  marks: [] as CriterionMarkUpdateItem[],
 };
 
 const form = ref({ ...initialFormState });
@@ -48,7 +48,15 @@ const onSubmit = async () => {
 
   const payload: CriterionUpdatePayload = {
     title: form.value.title,
-    marks: form.value.marks,
+    marks: form.value.marks
+      .filter((mark) => !mark.shouldDelete)
+      .map((mark) => {
+        return {
+          "@id": mark.id ? `/api/criterion_marks/${mark.id}` : undefined,
+          label: mark.label,
+          mark: mark.mark,
+        };
+      }),
   };
 
   try {
@@ -63,9 +71,9 @@ const onSubmit = async () => {
   }
 };
 
-const toggleMarkDelete = (i: number, mark: CriterionMarkUpdatePayload) => {
+const toggleMarkDelete = (i: number, mark: CriterionMarkUpdateItem) => {
   if (mark.id) {
-    mark.delete = true;
+    mark.shouldDelete = true;
 
     return;
   }
@@ -84,10 +92,10 @@ watch(isOpen, (isOpened) => {
             id: mark.id,
             label: mark.label,
             mark: mark.mark,
-            delete: false,
+            shouldDelete: false,
           };
-        }) as CriterionMarkUpdatePayload[])
-      : ([] as CriterionMarkUpdatePayload[]),
+        }) as CriterionMarkUpdateItem[])
+      : ([] as CriterionMarkUpdateItem[]),
   };
 });
 </script>
@@ -111,7 +119,7 @@ watch(isOpen, (isOpened) => {
           <Button
             v-if="form.marks.length > 0"
             class="hover:cursor-pointer"
-            @click="form.marks.push({ label: '', mark: 0, delete: false })"
+            @click="form.marks.push({ label: '', mark: 0, shouldDelete: false })"
           >
             <SquarePlus class="mt-0.5" />
             <span class="hidden lg:block">Nouvelle note</span>
@@ -130,10 +138,10 @@ watch(isOpen, (isOpened) => {
             <TableBody>
               <TableRow v-for="(mark, i) in form.marks.values()" :key="`key-${i}`">
                 <TableCell class="font-medium">
-                  <Input v-model="mark.label" :disabled="mark.delete" required />
+                  <Input v-model="mark.label" :disabled="mark.shouldDelete" required />
                 </TableCell>
                 <TableCell class="font-medium">
-                  <NumberField v-model="mark.mark" :disabled="mark.delete">
+                  <NumberField v-model="mark.mark" :disabled="mark.shouldDelete">
                     <NumberFieldContent>
                       <NumberFieldInput class="w-[6ch]" />
                     </NumberFieldContent>
@@ -141,14 +149,18 @@ watch(isOpen, (isOpened) => {
                 </TableCell>
                 <TableCell class="text-right">
                   <Button
-                    v-if="!mark.delete"
+                    v-if="!mark.shouldDelete"
                     class="h-8 w-8 hover:cursor-pointer"
                     variant="destructive"
                     @click="toggleMarkDelete(i, mark)"
                   >
                     <Trash class="h-4 w-4" />
                   </Button>
-                  <Button v-else class="h-8 w-8 hover:cursor-pointer" @click="mark.delete = false">
+                  <Button
+                    v-else
+                    class="h-8 w-8 hover:cursor-pointer"
+                    @click="mark.shouldDelete = false"
+                  >
                     <CornerDownLeft class="h-4 w-4" />
                   </Button>
                 </TableCell>

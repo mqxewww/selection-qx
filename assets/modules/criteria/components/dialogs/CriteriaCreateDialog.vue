@@ -36,21 +36,40 @@ const { isCreating, createCriterion } = useCriteriaActions();
 
 const initialFormState = {
   title: "",
-  marks: [{ label: "", mark: 0 }] as CriterionMarkCreatePayload[],
+  marks: [
+    { label: "", mark: 0 },
+    { label: "", mark: 0 },
+  ] as CriterionMarkCreatePayload[],
 };
 
 const form = ref({ ...initialFormState });
 
 const isValid = computed(() => {
-  return form.value.title && form.value.marks.length > 1;
+  return (
+    form.value.title &&
+    form.value.marks.length > 1 &&
+    !form.value.marks.find((mark) => mark.label === "")
+  );
 });
+
+const onClose = () => {
+  isOpen.value = false;
+
+  form.value = {
+    ...initialFormState,
+    marks: [
+      { label: "", mark: 0 },
+      { label: "", mark: 0 },
+    ] as CriterionMarkCreatePayload[],
+  };
+};
 
 const onSubmit = async () => {
   if (!isValid.value || isCreating.value) return;
 
   const payload: CriterionCreatePayload = {
     title: form.value.title,
-    courseId: course.id,
+    course: `/api/courses/${course.id}`,
     marks: form.value.marks,
   };
 
@@ -77,6 +96,7 @@ const onSubmit = async () => {
       <p class="text-sm text-gray-500">
         Veuillez rentrer les informations nécessaires à la création d'un nouveau critère de
         notation.
+        <span class="font-semibold">Attention, il est nécessaire d'avoir au minimum 2 notes.</span>
       </p>
 
       <div>
@@ -136,11 +156,9 @@ const onSubmit = async () => {
       </SubContainerComponent>
 
       <DialogFooter>
-        <Button class="hover:cursor-pointer" variant="outline" @click="isOpen = false">
-          Fermer
-        </Button>
+        <Button class="hover:cursor-pointer" variant="outline" @click="onClose">Fermer</Button>
 
-        <Button :disabled="isCreating" class="hover:cursor-pointer" @click="onSubmit">
+        <Button :disabled="isCreating || !isValid" class="hover:cursor-pointer" @click="onSubmit">
           <Spinner :class="`h-4 w-4 ${!isCreating && 'hidden'}`" />
           Créer
         </Button>
