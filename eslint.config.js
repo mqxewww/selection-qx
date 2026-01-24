@@ -4,8 +4,8 @@ import { defineConfig } from "eslint/config";
 import eslintPluginVue from "eslint-plugin-vue";
 
 export default defineConfig(
+  { ignores: ["**/dist/**"] },
   {
-    ignores: ["**/dist/**"],
     extends: [
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs["flat/recommended"],

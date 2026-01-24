@@ -11,7 +11,7 @@ const parsedConfig = configSchema.safeParse(process.env);
 
 if (!parsedConfig.success) {
   console.error(
-    "[@brief/api] Invalid environment variables :\n",
+    "[@selection-qx/server] Invalid environment variables :\n",
     z.prettifyError(parsedConfig.error),
   );
   process.exit(1);

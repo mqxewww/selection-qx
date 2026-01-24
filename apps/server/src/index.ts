@@ -1,15 +1,14 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { config } from "./config";
+import { config } from "~/config";
+import coursesRoute from "~/modules/courses/courses.route";
 
-export const app = new Hono().use(cors()).get("/ported", (c) => {
-  return c.json(
-    {
-      port: config.API_PORT,
-    },
-    200,
-  );
-});
+const app = new Hono();
+
+app.use(cors());
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const routes = app.route("/courses", coursesRoute);
 
 Bun.serve({
   port: config.API_PORT,
@@ -19,3 +18,5 @@ Bun.serve({
 console.log(
   `\n${new Date().toLocaleTimeString("fr-FR", { hour12: false })} - Started development server: http://localhost:${config.API_PORT}\n`,
 );
+
+export type AppType = typeof routes;
