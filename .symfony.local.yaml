@@ -1,3 +1,0 @@
-workers:
-    vite-vue-qx:
-        cmd: [ 'bun', '-b', 'run', 'watch' ]

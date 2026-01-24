@@ -1,0 +1,31 @@
+{
+  "name": "@selection-qx/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@selection-qx/server": "workspace:*",
+    "hono": "^4.11.4",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "@types/bun": "latest",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vue-tsc": "^3.2.2"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss",
+      "prettier-plugin-organize-imports"
+    ]
+  }
+}

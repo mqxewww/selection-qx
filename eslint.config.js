@@ -1,35 +1,15 @@
 import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginVue from "eslint-plugin-vue";
 import typescriptEslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
+import eslintPluginVue from "eslint-plugin-vue";
 
-export default typescriptEslint.config(
+export default defineConfig(
   {
-    ignores: [
-      "**/assets/components/ui/**",
-      "**/bin/**",
-      "**/config/**",
-      "**/migrations/**",
-      "**/node_modules/**",
-      "**/public/**",
-      "**/src/**",
-      "**/templates/**",
-      "**/var/**",
-      "**/vendor/**",
-    ],
-  },
-  {
+    ignores: ["**/dist/**"],
     extends: [
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs["flat/recommended"],
     ],
-    files: ["**/*.{ts,vue}"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      parserOptions: {
-        parser: typescriptEslint.parser,
-      },
-    },
     rules: {
       "vue/define-macros-order": [
         "error",
@@ -39,5 +19,5 @@ export default typescriptEslint.config(
       ],
     },
   },
-  eslintConfigPrettier
+  eslintConfigPrettier,
 );

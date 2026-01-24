@@ -1,24 +1,55 @@
+# project & dependencies
+node_modules/
+dist/
+dist-ssr/
+tmp/
+out-tsc/
+coverage/
+*.local
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
+# package managers
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+bun-error.log*
 
-###> pentatrion/vite-bundle ###
-/node_modules/
-/public/build/
-###< pentatrion/vite-bundle ###
+# environment & security
+.env*
+!.env.template
+*.sqlite
+*.sqlite-journal
 
-###> phpstorm ###
-/.idea/
-###< phpstorm ###
+# IDEs and editors
+.idea/
+.vscode/*
+.history/
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.launch
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-###> friendsofphp/php-cs-fixer ###
-/.php-cs-fixer.php
-/.php-cs-fixer.cache
-###< friendsofphp/php-cs-fixer ###
+# system
+.DS_Store
+Thumbs.db
+libpeerconnection.log
+testem.log
+
+# drizzle
+**/drizzle/
+
+# Cypress
+/cypress/videos/
+/cypress/screenshots/
+
+# Vitest
+__screenshots__/
