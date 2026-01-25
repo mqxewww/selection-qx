@@ -4,12 +4,11 @@ import { config } from "~/config";
 import coursesRoute from "~/modules/courses/courses.route";
 import criteriaRoute from "~/modules/criteria/criteria.route";
 
-const app = new Hono();
-
-app.use(cors());
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-const routes = app
+const app = new Hono()
+  .use(cors())
+  .get("/port", (c) => {
+    return c.json({ port: 2900 }, 200);
+  })
   .route("/courses", coursesRoute)
   .route("/criteria", criteriaRoute);
 
@@ -22,4 +21,4 @@ console.log(
   `\n${new Date().toLocaleTimeString("fr-FR", { hour12: false })} - Started development server: http://localhost:${config.API_PORT}\n`,
 );
 
-export type AppType = typeof routes;
+export type AppType = typeof app;
