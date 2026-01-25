@@ -2,13 +2,16 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { config } from "~/config";
 import coursesRoute from "~/modules/courses/courses.route";
+import criteriaRoute from "~/modules/criteria/criteria.route";
 
 const app = new Hono();
 
 app.use(cors());
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-const routes = app.route("/courses", coursesRoute);
+const routes = app
+  .route("/courses", coursesRoute)
+  .route("/criteria", criteriaRoute);
 
 Bun.serve({
   port: config.API_PORT,

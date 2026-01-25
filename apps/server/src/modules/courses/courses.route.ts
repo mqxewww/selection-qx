@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { and, eq, isNull } from "drizzle-orm";
 import { Hono } from "hono";
-import { coursesTable, db } from "~/db";
+import { coursesTable, criteriaTable, criterionMarksTable, db } from "~/db";
 import {
   createCourseSchema,
   getCourseSchema,
@@ -26,23 +26,41 @@ app.get("/", async (c) => {
   return c.json(courses);
 });
 
-app.get("/:id", zValidator("param", getCourseSchema), (c) => {
+app.get("/:id", zValidator("param", getCourseSchema), async (c) => {
   const { id } = c.req.valid("param");
 
-  const course = db
-    .select({
-      id: coursesTable.id,
-      title: coursesTable.title,
-      description: coursesTable.description,
-      capacity: coursesTable.capacity,
-      periodStart: coursesTable.periodStart,
-      periodEnd: coursesTable.periodEnd,
-    })
-    .from(coursesTable)
-    .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-    .get();
+  const course = await db.query.coursesTable.findFirst({
+    where: and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)),
+    columns: {
+      id: true,
+      title: true,
+      description: true,
+      capacity: true,
+      periodStart: true,
+      periodEnd: true,
+    },
+    with: {
+      criteria: {
+        where: isNull(criteriaTable.deletedAt),
+        columns: {
+          id: true,
+          title: true,
+        },
+        with: {
+          marks: {
+            where: isNull(criterionMarksTable.deletedAt),
+            columns: {
+              id: true,
+              label: true,
+              mark: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
-  if (!course) return c.json({}, 404);
+  if (!course) return c.json({ error: { message: "Course not found" } }, 404);
 
   return c.json(course);
 });
@@ -66,26 +84,34 @@ app.patch(
     if (Object.keys(updates).length === 0)
       return c.json({ error: { message: "No changes provided" } }, 400);
 
-    const updatedCourse = await db
-      .update(coursesTable)
-      .set(updates)
-      .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-      .returning();
+    const updatedCourse = (
+      await db
+        .update(coursesTable)
+        .set(updates)
+        .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+        .returning()
+    )[0];
 
-    return updatedCourse[0] ? c.json(updatedCourse[0], 200) : c.json({}, 404);
+    return updatedCourse
+      ? c.json({}, 200)
+      : c.json({ error: { message: "Course not found" } }, 404);
   },
 );
 
 app.delete("/:id", zValidator("param", getCourseSchema), async (c) => {
   const { id } = c.req.valid("param");
 
-  const deletedCourse = await db
-    .update(coursesTable)
-    .set({ deletedAt: new Date() })
-    .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-    .returning();
+  const deletedCourse = (
+    await db
+      .update(coursesTable)
+      .set({ deletedAt: new Date() })
+      .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+      .returning()
+  )[0];
 
-  return deletedCourse[0] ? c.json({}, 200) : c.json({}, 404);
+  return deletedCourse
+    ? c.json({}, 200)
+    : c.json({ error: { message: "Course not found" } }, 404);
 });
 
 export default app;
