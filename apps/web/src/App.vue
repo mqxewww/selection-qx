@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import DashboardLayout from "~/layouts/DashboardLayout.vue";
 import { client } from "~/libs/client.ts";
 
 const message = ref<number>(0);
@@ -21,6 +22,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-red-500">You did it!</h1>
-  <p>API runs on port : {{ message }}</p>
+  <DashboardLayout>
+    <div class="grid grid-cols-3 gap-6">API Port is {{ message }}</div>
+  </DashboardLayout>
 </template>

@@ -9,6 +9,7 @@
   "dependencies": {
     "@selection-qx/server": "workspace:*",
     "hono": "^4.11.4",
+    "lucide-vue-next": "^0.563.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
@@ -24,8 +25,8 @@
   },
   "prettier": {
     "plugins": [
-      "prettier-plugin-tailwindcss",
-      "prettier-plugin-organize-imports"
+      "prettier-plugin-organize-imports",
+      "prettier-plugin-tailwindcss"
     ]
   }
 }

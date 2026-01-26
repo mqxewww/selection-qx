@@ -10,6 +10,14 @@ export default defineConfig(
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs["flat/recommended"],
     ],
+    files: ["**/*.{ts,vue}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parserOptions: {
+        parser: typescriptEslint.parser,
+      },
+    },
     rules: {
       "vue/define-macros-order": [
         "error",
