@@ -23,6 +23,6 @@ onMounted(async () => {
 
 <template>
   <DashboardLayout>
-    <div class="grid grid-cols-3 gap-6">API Port is {{ message }}</div>
+    <router-view />
   </DashboardLayout>
 </template>
