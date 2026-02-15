@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://raw.githubusercontent.com/mqxewww/selection-qx/refs/heads/main/public/favicon.svg" alt="SelectionQX Logo" width="256">
+    <img src="https://raw.githubusercontent.com/mqxewww/selection-qx/refs/heads/main/apps/web/public/favicon.svg" alt="SelectionQX Logo" width="256">
     <br>
     <h1>SelectionQX</h1>
 </div>
