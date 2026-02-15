@@ -9,15 +9,14 @@ for courses.</h4>
 
 <div align="center">
 
-[![Main Stack](https://skillicons.dev/icons?i=phpstorm,symfony,mysql,bun,vite,vuejs,tailwindcss)](https://skillicons.dev)
+[![Main Stack](https://skillicons.dev/icons?i=bun,sqlite,vuejs,tailwindcss,webstorm)](https://skillicons.dev)
 
 </div>
 
 ## How To Use
 
-To run this application, you'll
-need [Composer](https://getcomposer.org/download/), [Symfony](https://symfony.com/doc/current/setup.html)
-and [Bun](https://bun.com/docs/installation). When everything is installed, you can run from your command line:
+To run this application, you’ll
+need [Bun](https://bun.com/docs/installation). When installed, you can run from your command line:
 
 ```bash
 # Clone this repository
@@ -25,16 +24,6 @@ $ git clone https://github.com/mqxewww/selection-qx.git
 
 # Install dependencies
 $ bun install
-$ composer install
-
-# Setup environment variables (update .env.local as needed)
-$ cp .env .env.local
-
-# (Recommended) Build Vite app before running the app for the first time
-$ bun -b run build
-
-# Run the app (When running symfony serve, a separate worker build Vite app and watch for any changes made)
-$ symfony serve
 ```
 
 ---

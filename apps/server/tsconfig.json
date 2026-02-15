@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext"],
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "~drizzle/*": ["drizzle/*"],
+      "~/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}

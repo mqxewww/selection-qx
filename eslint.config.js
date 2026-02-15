@@ -1,22 +1,10 @@
 import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginVue from "eslint-plugin-vue";
 import typescriptEslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
+import eslintPluginVue from "eslint-plugin-vue";
 
-export default typescriptEslint.config(
-  {
-    ignores: [
-      "**/assets/components/ui/**",
-      "**/bin/**",
-      "**/config/**",
-      "**/migrations/**",
-      "**/node_modules/**",
-      "**/public/**",
-      "**/src/**",
-      "**/templates/**",
-      "**/var/**",
-      "**/vendor/**",
-    ],
-  },
+export default defineConfig(
+  { ignores: ["**/dist/**"] },
   {
     extends: [
       ...typescriptEslint.configs.recommended,
@@ -39,5 +27,5 @@ export default typescriptEslint.config(
       ],
     },
   },
-  eslintConfigPrettier
+  eslintConfigPrettier,
 );
