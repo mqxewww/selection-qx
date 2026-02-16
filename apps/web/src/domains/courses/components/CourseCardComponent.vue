@@ -9,7 +9,7 @@ type Props = {
   duration: number;
 };
 
-const p = defineProps<Props>();
+const props = defineProps<Props>();
 </script>
 
 <template>
@@ -19,14 +19,14 @@ const p = defineProps<Props>();
     <div class="relative h-48 w-full overflow-hidden bg-gray-50">
       <img
         src="https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop"
-        :alt="p.title"
+        :alt="props.title"
         class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div class="absolute top-4 left-4">
         <span
           class="rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-extrabold tracking-widest text-gray-700 uppercase shadow-sm backdrop-blur-md"
         >
-          {{ generateTypeCode(p.title) }}
+          {{ generateTypeCode(props.title) }}
         </span>
       </div>
     </div>
@@ -35,13 +35,13 @@ const p = defineProps<Props>();
       <h2
         class="mb-2 text-[16px] font-bold text-gray-800 transition-colors group-hover:text-blue-600"
       >
-        {{ p.title }}
+        {{ props.title }}
       </h2>
 
       <p
         class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-gray-400"
       >
-        {{ p.description }}
+        {{ props.description }}
       </p>
 
       <div
@@ -54,7 +54,9 @@ const p = defineProps<Props>();
           </div>
           <div class="flex items-center gap-1.5">
             <Clock class="h-4 w-4 text-gray-300" />
-            <span class="text-[12px] font-semibold">{{ p.duration }} mois</span>
+            <span class="text-[12px] font-semibold"
+              >{{ props.duration }} mois</span
+            >
           </div>
         </div>
 

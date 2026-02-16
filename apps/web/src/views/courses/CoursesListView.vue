@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import { InferResponseType } from "hono/client";
 import { Plus } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
-import CardComponent from "~/components/CardComponent.vue";
-import { client } from "~/libs/client.ts";
+import { useApi } from "~/composables/useApi.ts";
+import CourseCardComponent from "~/domains/courses/components/CourseCardComponent.vue";
+import {
+  CoursesResponse,
+  coursesService,
+} from "~/domains/courses/courses.service.ts";
+import CourseCreateModal from "~/domains/courses/modals/CourseCreateModal.vue";
 import { getFullMonths } from "~/libs/utils.ts";
 
-type CoursesResponse = InferResponseType<typeof client.courses.$get, 200>;
+const { loading, execute } = useApi<CoursesResponse>();
 
 const courses = ref<CoursesResponse>([]);
+const isModalOpen = ref(false);
 
-onMounted(async () => {
-  const data = await client.courses.$get();
-
-  if (data.ok) {
-    courses.value = await data.json();
+const fetchCourses = async () => {
+  try {
+    courses.value = await execute(() => coursesService.getAll());
+  } finally {
   }
-});
+};
+
+onMounted(fetchCourses);
 </script>
 
 <template>
@@ -32,7 +38,9 @@ onMounted(async () => {
       </div>
 
       <button
+        v-if="!loading"
         class="flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-[13px] font-bold text-blue-600 transition-all outline-none hover:cursor-pointer hover:bg-blue-100 active:scale-95"
+        @click="isModalOpen = true"
       >
         <Plus class="h-4 w-4" />
         Nouvelle formation
@@ -45,7 +53,7 @@ onMounted(async () => {
         :key="course.id"
         :to="`/courses/${course.id}`"
       >
-        <CardComponent
+        <CourseCardComponent
           :title="course.title"
           :description="course.description"
           :student-count="15"
@@ -55,8 +63,14 @@ onMounted(async () => {
               new Date(course.periodEnd),
             )
           "
-        ></CardComponent>
+        ></CourseCardComponent>
       </RouterLink>
     </div>
+
+    <CourseCreateModal
+      :is-open="isModalOpen"
+      @close="isModalOpen = false"
+      @success="fetchCourses"
+    />
   </div>
 </template>
