@@ -14,9 +14,9 @@ const props = defineProps<Props>();
 
 <template>
   <div
-    class="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.05)]"
+    class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
   >
-    <div class="relative h-48 w-full overflow-hidden bg-gray-50">
+    <div class="relative h-48 w-full overflow-hidden bg-zinc-700">
       <img
         src="https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop"
         :alt="props.title"
@@ -24,7 +24,7 @@ const props = defineProps<Props>();
       />
       <div class="absolute top-4 left-4">
         <span
-          class="rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-extrabold tracking-widest text-gray-700 uppercase shadow-sm backdrop-blur-md"
+          class="rounded-md bg-zinc-900/80 px-2.5 py-1 text-[10px] font-bold tracking-widest text-zinc-300 uppercase shadow-sm backdrop-blur-md"
         >
           {{ generateTypeCode(props.title) }}
         </span>
@@ -33,35 +33,35 @@ const props = defineProps<Props>();
 
     <div class="flex flex-1 flex-col p-5">
       <h2
-        class="mb-2 text-[16px] font-bold text-gray-800 transition-colors group-hover:text-blue-600"
+        class="mb-2 text-base font-bold text-zinc-100 transition-colors group-hover:text-blue-300"
       >
         {{ props.title }}
       </h2>
 
       <p
-        class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-gray-400"
+        class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-zinc-400"
       >
         {{ props.description }}
       </p>
 
       <div
-        class="mt-auto flex items-center justify-between border-t border-gray-50 pt-4"
+        class="mt-auto flex items-center justify-between border-t border-zinc-700/50 pt-4"
       >
-        <div class="flex items-center gap-4 text-gray-400">
+        <div class="flex items-center gap-4 text-zinc-500">
           <div class="flex items-center gap-1.5">
-            <Users class="h-4 w-4 text-gray-300" />
-            <span class="text-[12px] font-semibold">15</span>
+            <Users class="h-4 w-4" />
+            <span class="text-xs font-semibold text-zinc-400">15</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <Clock class="h-4 w-4 text-gray-300" />
-            <span class="text-[12px] font-semibold"
-              >{{ props.duration }} mois</span
-            >
+            <Clock class="h-4 w-4" />
+            <span class="text-xs font-semibold text-zinc-400">
+              {{ props.duration }} mois
+            </span>
           </div>
         </div>
 
         <div
-          class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-300 transition-all group-hover:bg-blue-50 group-hover:text-blue-500"
+          class="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700/50 text-zinc-400 transition-colors group-hover:bg-blue-500/10 group-hover:text-blue-300"
         >
           <ChevronRight class="h-4 w-4" />
         </div>

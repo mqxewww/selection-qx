@@ -1,38 +1,54 @@
 <script setup lang="ts">
 import { Calendar } from "lucide-vue-next";
+import { ref } from "vue";
 
 type Props = {
   label: string;
   min?: string;
   max?: string;
+  modelValue: string;
 };
 
 defineProps<Props>();
 const model = defineModel<string>({ required: true });
+
+const inputRef = ref<HTMLInputElement | null>(null);
+
+const openPicker = () => {
+  inputRef.value?.showPicker();
+};
 </script>
 
 <template>
   <div class="space-y-1.5">
     <label
       v-if="label"
-      class="text-[11px] font-bold tracking-wider text-gray-400 uppercase"
+      class="text-[11px] font-bold tracking-wider text-zinc-500 uppercase"
     >
       {{ label }}
     </label>
 
-    <div class="relative">
+    <div class="relative cursor-pointer" @click="openPicker">
       <Calendar
-        class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-300"
+        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500"
       />
 
       <input
+        ref="inputRef"
         v-model="model"
         type="date"
         required
         :min="min"
         :max="max"
-        class="w-full rounded-xl border border-gray-100 bg-gray-50/50 py-2.5 pr-4 pl-10 text-sm transition-all outline-none focus:border-blue-200 focus:bg-white"
+        class="w-full appearance-none rounded-xl border border-zinc-700/50 bg-zinc-900/50 py-2.5 pr-4 pl-10 text-sm text-zinc-200 placeholder-zinc-600 scheme-dark transition-all outline-none focus:border-blue-500/50 focus:bg-zinc-900 focus:ring-1 focus:ring-blue-500/20"
       />
     </div>
   </div>
 </template>
+
+<style scoped>
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none !important;
+  opacity: 0;
+}
+</style>

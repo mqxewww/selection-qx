@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Plus } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
+import ButtonComponent from "~/components/ButtonComponent.vue";
 import { useApi } from "~/composables/useApi.ts";
 import CourseCardComponent from "~/domains/courses/components/CourseCardComponent.vue";
 import {
@@ -16,42 +17,38 @@ const courses = ref<CoursesResponse>([]);
 const isModalOpen = ref(false);
 
 const fetchCourses = async () => {
-  try {
-    courses.value = await execute(() => coursesService.getAll());
-  } finally {
-  }
+  courses.value = await execute(() => coursesService.getAll());
 };
 
 onMounted(fetchCourses);
 </script>
 
 <template>
-  <div class="mx-auto max-w-6xl space-y-6">
-    <div class="flex items-center justify-between">
+  <div class="mx-auto max-w-6xl space-y-8">
+    <div
+      class="flex items-center justify-between border-b border-zinc-800 pb-8"
+    >
       <div>
-        <h1 class="text-xl font-bold tracking-tight text-gray-800">
+        <h1 class="text-2xl font-bold tracking-tight text-zinc-100">
           Formations
         </h1>
-        <p class="text-sm text-gray-400">
-          Gérez le catalogue des programmes et leurs critères.
+        <p class="mt-1 text-sm text-zinc-400">
+          Observez le catalogue des formations disponibles.
         </p>
       </div>
 
-      <button
-        v-if="!loading"
-        class="flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-[13px] font-bold text-blue-600 transition-all outline-none hover:cursor-pointer hover:bg-blue-100 active:scale-95"
-        @click="isModalOpen = true"
-      >
+      <ButtonComponent v-if="!loading" @click="isModalOpen = true">
         <Plus class="h-4 w-4" />
         Nouvelle formation
-      </button>
+      </ButtonComponent>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       <RouterLink
         v-for="course in courses"
         :key="course.id"
         :to="`/courses/${course.id}`"
+        class="block h-full"
       >
         <CourseCardComponent
           :title="course.title"
@@ -63,7 +60,8 @@ onMounted(fetchCourses);
               new Date(course.periodEnd),
             )
           "
-        ></CourseCardComponent>
+          class="h-full"
+        />
       </RouterLink>
     </div>
 

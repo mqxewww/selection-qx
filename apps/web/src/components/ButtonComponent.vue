@@ -1,24 +1,53 @@
 <script setup lang="ts">
-defineProps<{
-  variant?: "primary" | "secondary" | "ghost";
+import { Loader2 } from "lucide-vue-next";
+import { computed } from "vue";
+
+type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
+
+interface Props {
+  variant?: ButtonVariant;
   loading?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-}>();
+  class?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: "primary",
+  loading: false,
+  disabled: false,
+  type: "button",
+  class: "",
+});
+
+const baseClasses =
+  "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-[13px] font-bold transition-all focus:outline-none active:scale-95 disabled:opacity-50 hover:cursor-pointer disabled:hover:cursor-not-allowed";
+
+const variants: Record<ButtonVariant, string> = {
+  primary:
+    "bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30",
+
+  secondary:
+    "bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 hover:bg-zinc-500/20 hover:text-zinc-200 hover:border-zinc-500/30",
+
+  danger:
+    "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/30",
+
+  ghost: "bg-transparent text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800",
+};
+
+const classes = computed(() => {
+  return [baseClasses, variants[props.variant], props.class].join(" ");
+});
 </script>
 
 <template>
   <button
-    :type="type || 'button'"
-    :disabled="disabled || loading"
-    :class="[
-      'flex items-center gap-2 rounded-lg px-6 py-2 text-[13px] font-bold transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50',
-      variant === 'primary' && 'bg-blue-600 text-white hover:bg-blue-700',
-      variant === 'secondary' && 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-      variant === 'ghost' && 'text-gray-400 hover:bg-gray-50',
-      !variant && 'bg-blue-600 text-white hover:bg-blue-700',
-    ]"
+    :type="props.type"
+    :class="classes"
+    :disabled="props.disabled || props.loading"
   >
-    <slot />
+    <Loader2 v-if="props.loading" class="h-4 w-4 animate-spin" />
+    <slot v-else />
   </button>
 </template>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import DashboardLayout from "~/layouts/DashboardLayout.vue";
+import "./app.css";
 </script>
 
 <template>
-  <DashboardLayout>
+  <div
+    class="flex min-h-screen flex-col bg-zinc-900 bg-linear-to-tl from-zinc-900 to-zinc-800"
+  >
     <router-view />
-  </DashboardLayout>
+  </div>
 </template>

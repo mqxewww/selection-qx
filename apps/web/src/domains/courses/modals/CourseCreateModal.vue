@@ -23,100 +23,109 @@ const { loading, execute } = useApi();
 
 const handleSubmit = async () => {
   try {
-    await execute(() => coursesService.create(form), {
-      successMessage: "Cours créé avec succès !",
-      showSuccessToast: true,
-    });
-  } finally {
-    reset();
+    await execute(() => coursesService.create(form));
     emit("success");
     emit("close");
+  } finally {
+    reset();
   }
 };
 </script>
 
 <template>
   <Transition
-    enter-active-class="transition duration-200 ease-out"
+    enter-active-class="transition duration-300 ease-out"
     enter-from-class="opacity-0"
     enter-to-class="opacity-100"
-    leave-active-class="transition duration-150 ease-in"
+    leave-active-class="transition duration-200 ease-in"
     leave-from-class="opacity-100"
     leave-to-class="opacity-0"
   >
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-60 flex items-center justify-center bg-black/20 backdrop-blur-[2px]"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      @click.self="emit('close')"
     >
-      <div
-        class="w-full max-w-lg overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-2xl"
+      <Transition
+        appear
+        enter-active-class="transition duration-300 ease-out delay-75"
+        enter-from-class="opacity-0 scale-95 translate-y-4"
+        enter-to-class="opacity-100 scale-100 translate-y-0"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100 scale-100 translate-y-0"
+        leave-to-class="opacity-0 scale-95 translate-y-4"
       >
         <div
-          class="flex items-center justify-between border-b border-gray-50 px-6 py-4"
+          class="w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-800 shadow-2xl shadow-black/50"
         >
-          <h2 class="text-base font-bold text-gray-800">Nouvelle formation</h2>
-          <button
-            class="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
-            @click="emit('close')"
+          <div
+            class="flex items-center justify-between border-b border-zinc-700/50 px-6 py-4"
           >
-            <X class="h-5 w-5" />
-          </button>
-        </div>
+            <h2 class="text-base font-bold text-zinc-100">
+              Nouvelle formation
+            </h2>
+            <button
+              class="rounded-full p-1 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
+              @click="emit('close')"
+            >
+              <X class="h-5 w-5" />
+            </button>
+          </div>
 
-        <form class="space-y-5 p-6" @submit.prevent="handleSubmit">
-          <div class="space-y-4">
-            <div class="space-y-1.5">
+          <form class="space-y-6 p-6" @submit.prevent="handleSubmit">
+            <div class="space-y-4">
               <InputComponent
                 v-model="form.title"
                 label="Nom de la formation"
                 :icon="Type"
+                placeholder="Ex: Bachelor Développeur..."
               />
-            </div>
 
-            <div class="space-y-1.5">
               <TextareaComponent
                 v-model="form.description"
                 label="Description"
                 :icon="AlignLeft"
+                :rows="3"
+                placeholder="Détails du programme..."
               />
-            </div>
 
-            <div class="space-y-1.5">
               <InputComponent
                 v-model="form.capacity"
                 label="Capacité"
                 type="number"
                 :icon="Type"
               />
-            </div>
 
-            <div class="grid grid-cols-2 gap-4">
-              <div class="space-y-1.5">
+              <div class="grid grid-cols-2 gap-4">
                 <DatePickerComponent
                   v-model="form.periodStart"
                   label="Date de début"
                 />
-              </div>
-              <div class="space-y-1.5">
                 <DatePickerComponent
                   v-model="form.periodEnd"
                   label="Date de fin"
                 />
               </div>
             </div>
-          </div>
 
-          <div class="flex items-center justify-end gap-3 pt-2">
-            <ButtonComponent variant="ghost" @click="emit('close')">
-              Annuler
-            </ButtonComponent>
+            <div
+              class="flex items-center justify-end gap-3 border-t border-zinc-700/30 pt-4"
+            >
+              <ButtonComponent variant="ghost" @click="emit('close')">
+                Annuler
+              </ButtonComponent>
 
-            <ButtonComponent type="submit" variant="primary" :loading="loading">
-              {{ loading ? "Création..." : "Créer la formation" }}
-            </ButtonComponent>
-          </div>
-        </form>
-      </div>
+              <ButtonComponent
+                type="submit"
+                variant="primary"
+                :loading="loading"
+              >
+                {{ loading ? "Création..." : "Créer la formation" }}
+              </ButtonComponent>
+            </div>
+          </form>
+        </div>
+      </Transition>
     </div>
   </Transition>
 </template>
