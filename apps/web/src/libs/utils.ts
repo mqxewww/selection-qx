@@ -1,3 +1,8 @@
+import {
+  ZodValidationErrorMessage,
+  ZodValidationErrorPayload,
+} from "~/libs/client.ts";
+
 /**
  * Converts a character string into a code according to several rules.
  * @param title Character string to convert
@@ -38,4 +43,44 @@ export function getFullMonths(start: Date, end: Date): number {
   if (end.getDate() < start.getDate()) months--;
 
   return Math.max(0, months);
+}
+
+/**
+ * Check if obj is an object.
+ * @param obj param to check
+ */
+export function isObject(obj: unknown): obj is Record<string, unknown> {
+  return typeof obj === "object" && obj !== null;
+}
+
+/**
+ * Check if catched error is from ZodValidator
+ * @param error error to check
+ */
+export function isZodValidationError(
+  error: unknown,
+): error is ZodValidationErrorPayload {
+  if (!isObject(error) || !isObject(error.error)) return false;
+
+  return (
+    error.success === false &&
+    error.error.name === "ZodError" &&
+    typeof error.error.message === "string"
+  );
+}
+
+/**
+ * Transform ZodValidator error messages to a Record with key being the path and value the message
+ * @param error Payload catched from ZodValidator
+ */
+export function parseZodValidationErrorToRecord(
+  error: ZodValidationErrorPayload,
+) {
+  const parsedError = JSON.parse(
+    error.error.message,
+  ) as ZodValidationErrorMessage[];
+
+  return Object.fromEntries(
+    parsedError.map((error) => [error.path[0], error.message]),
+  ) as Record<string, string>;
 }

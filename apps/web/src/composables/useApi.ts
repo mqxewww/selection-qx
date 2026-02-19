@@ -1,9 +1,14 @@
 import { ref } from "vue";
 import { useToast } from "~/composables/useToast.ts";
+import {
+  isZodValidationError,
+  parseZodValidationErrorToRecord,
+} from "~/libs/utils.ts";
 
 export function useApi<T>() {
   const loading = ref(false);
-  const error = ref<string | null>(null);
+  const validationErrors = ref<Record<string, string>>({});
+  const genericError = ref<string | null>(null);
   const data = ref<T | null>(null);
   const { showError, showSuccess } = useToast();
 
@@ -11,28 +16,31 @@ export function useApi<T>() {
     call: () => Promise<T>,
     options?: {
       successMessage?: string;
-      errorMessage?: string;
-      showSuccessToast?: boolean;
+      delay_ms?: number;
     },
   ): Promise<T> => {
     loading.value = true;
-    error.value = null;
+    genericError.value = null;
+    validationErrors.value = {};
+
+    if (options?.delay_ms)
+      await new Promise((resolve) => setTimeout(resolve, options.delay_ms));
 
     try {
       data.value = await call();
 
-      if (options?.showSuccessToast && options?.successMessage)
-        showSuccess(options.successMessage);
+      if (options?.successMessage) showSuccess(options.successMessage);
 
       return data.value;
     } catch (err) {
-      const errorMsg =
-        (err as Error)?.message ||
-        options?.errorMessage ||
-        "Une erreur est survenue";
+      if (isZodValidationError(err)) {
+        validationErrors.value = parseZodValidationErrorToRecord(err);
+      } else {
+        const errorMsg = (err as Error)?.message || "Une erreur est survenue";
 
-      error.value = errorMsg;
-      showError(errorMsg);
+        genericError.value = errorMsg;
+        showError(errorMsg);
+      }
 
       throw err;
     } finally {
@@ -42,7 +50,8 @@ export function useApi<T>() {
 
   return {
     loading,
-    error,
+    validationErrors,
+    genericError,
     data,
     execute,
   };

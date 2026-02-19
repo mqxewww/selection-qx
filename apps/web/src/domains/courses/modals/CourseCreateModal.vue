@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AlignLeft, Type, X } from "lucide-vue-next";
+import { computed, watch } from "vue";
 import ButtonComponent from "~/components/ButtonComponent.vue";
 import DatePickerComponent from "~/components/DatePickerComponent.vue";
 import InputComponent from "~/components/InputComponent.vue";
@@ -19,17 +20,47 @@ const { form, reset } = useForm({
   periodEnd: "",
 });
 
-const { loading, execute } = useApi();
+const { loading, execute, validationErrors } = useApi();
+
+watch(
+  form,
+  () => {
+    if (
+      validationErrors.value &&
+      Object.keys(validationErrors.value).length > 0
+    ) {
+      validationErrors.value = {};
+    }
+  },
+  { deep: true },
+);
 
 const handleSubmit = async () => {
   try {
-    await execute(() => coursesService.create(form));
+    await execute(() => coursesService.create(form), { delay_ms: 500 });
+
     emit("success");
     emit("close");
-  } finally {
+
     reset();
+  } catch (error) {
+    console.error(error);
   }
 };
+
+const isSubmitDisabled = computed(() => {
+  const hasErrors =
+    validationErrors.value && Object.keys(validationErrors.value).length > 0;
+
+  const isMissingData =
+    !form.title.trim() ||
+    !form.description.trim() ||
+    !form.capacity ||
+    !form.periodStart ||
+    !form.periodEnd;
+
+  return hasErrors || isMissingData;
+});
 </script>
 
 <template>
@@ -79,6 +110,7 @@ const handleSubmit = async () => {
                 label="Nom de la formation"
                 :icon="Type"
                 placeholder="Ex: Bachelor Développeur..."
+                :error="validationErrors.title"
               />
 
               <TextareaComponent
@@ -87,6 +119,7 @@ const handleSubmit = async () => {
                 :icon="AlignLeft"
                 :rows="3"
                 placeholder="Détails du programme..."
+                :error="validationErrors.description"
               />
 
               <InputComponent
@@ -94,16 +127,19 @@ const handleSubmit = async () => {
                 label="Capacité"
                 type="number"
                 :icon="Type"
+                :error="validationErrors.capacity"
               />
 
               <div class="grid grid-cols-2 gap-4">
                 <DatePickerComponent
                   v-model="form.periodStart"
                   label="Date de début"
+                  :error="validationErrors.periodStart"
                 />
                 <DatePickerComponent
                   v-model="form.periodEnd"
                   label="Date de fin"
+                  :error="validationErrors.periodEnd"
                 />
               </div>
             </div>
@@ -119,6 +155,7 @@ const handleSubmit = async () => {
                 type="submit"
                 variant="primary"
                 :loading="loading"
+                :disabled="isSubmitDisabled"
               >
                 {{ loading ? "Création..." : "Créer la formation" }}
               </ButtonComponent>
