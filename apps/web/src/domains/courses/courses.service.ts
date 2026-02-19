@@ -14,9 +14,10 @@ export type CourseResponse = InferResponseType<
 export type CourseCreateInput = {
   title: string;
   description: string;
-  capacity: number;
+  capacity: string;
   periodStart: string;
   periodEnd: string;
+  bgImage: File;
 };
 
 export const coursesService = {
@@ -37,7 +38,7 @@ export const coursesService = {
   },
 
   async create(data: CourseCreateInput) {
-    const res = await client.courses.$post({ json: data });
+    const res = await client.courses.$post({ form: data });
 
     if (!res.ok) throw await res.json();
 

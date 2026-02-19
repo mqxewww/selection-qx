@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { serveStatic } from "hono/bun";
 import { cors } from "hono/cors";
 import { config } from "~/config";
 import coursesRoute from "~/modules/courses/courses.route";
@@ -6,9 +7,7 @@ import criteriaRoute from "~/modules/criteria/criteria.route";
 
 const app = new Hono()
   .use(cors())
-  .get("/port", (c) => {
-    return c.json({ port: 2900 }, 200);
-  })
+  .use("/uploads/*", serveStatic({ root: "./public" }))
   .route("/courses", coursesRoute)
   .route("/criteria", criteriaRoute);
 

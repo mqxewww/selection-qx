@@ -60,6 +60,7 @@ onMounted(fetchCourses);
               new Date(course.periodEnd),
             )
           "
+          :bg-image="course.bgImage"
           class="h-full"
         />
       </RouterLink>

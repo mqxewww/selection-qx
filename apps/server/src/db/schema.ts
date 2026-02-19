@@ -17,6 +17,7 @@ export const coursesTable = sqliteTable("courses", {
     .notNull()
     .default(sql`(strftime('%s', 'now'))`),
   deletedAt: integer("deleted_at", { mode: "timestamp" }),
+  bgImagePath: text(),
 });
 
 export const criteriaTable = sqliteTable("criteria", {

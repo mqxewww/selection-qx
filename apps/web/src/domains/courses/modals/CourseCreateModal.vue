@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { AlignLeft, Type, X } from "lucide-vue-next";
+import { AlignLeft, Image, Type, X } from "lucide-vue-next";
 import { computed, watch } from "vue";
 import ButtonComponent from "~/components/ButtonComponent.vue";
 import DatePickerComponent from "~/components/DatePickerComponent.vue";
+import FileInputComponent from "~/components/FileInputComponent.vue";
 import InputComponent from "~/components/InputComponent.vue";
 import TextareaComponent from "~/components/TextareaComponent.vue";
 import { useApi } from "~/composables/useApi.ts";
 import { useForm } from "~/composables/useForm.ts";
-import { coursesService } from "~/domains/courses/courses.service.ts";
+import {
+  CourseCreateInput,
+  coursesService,
+} from "~/domains/courses/courses.service.ts";
 
 const emit = defineEmits(["close", "success"]);
 defineProps<{ isOpen: boolean }>();
@@ -15,9 +19,10 @@ defineProps<{ isOpen: boolean }>();
 const { form, reset } = useForm({
   title: "",
   description: "",
-  capacity: 0,
+  capacity: "",
   periodStart: "",
   periodEnd: "",
+  bgImage: null as File | null,
 });
 
 const { loading, execute, validationErrors } = useApi();
@@ -37,7 +42,11 @@ watch(
 
 const handleSubmit = async () => {
   try {
-    await execute(() => coursesService.create(form), { delay_ms: 500 });
+    if (form.bgImage === null) return;
+
+    await execute(() => coursesService.create(form as CourseCreateInput), {
+      delay_ms: 500,
+    });
 
     emit("success");
     emit("close");
@@ -46,6 +55,11 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const handleCloseModal = () => {
+  emit("close");
+  reset();
 };
 
 const isSubmitDisabled = computed(() => {
@@ -57,7 +71,8 @@ const isSubmitDisabled = computed(() => {
     !form.description.trim() ||
     !form.capacity ||
     !form.periodStart ||
-    !form.periodEnd;
+    !form.periodEnd ||
+    !form.bgImage;
 
   return hasErrors || isMissingData;
 });
@@ -97,7 +112,7 @@ const isSubmitDisabled = computed(() => {
             </h2>
             <button
               class="rounded-full p-1 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
-              @click="emit('close')"
+              @click="handleCloseModal()"
             >
               <X class="h-5 w-5" />
             </button>
@@ -125,7 +140,6 @@ const isSubmitDisabled = computed(() => {
               <InputComponent
                 v-model="form.capacity"
                 label="Capacité"
-                type="number"
                 :icon="Type"
                 :error="validationErrors.capacity"
               />
@@ -142,12 +156,20 @@ const isSubmitDisabled = computed(() => {
                   :error="validationErrors.periodEnd"
                 />
               </div>
+
+              <FileInputComponent
+                v-model="form.bgImage"
+                label="Image de couverture"
+                :icon="Image"
+                accept="image/png, image/jpeg, image/webp"
+                :error="validationErrors.bgImage"
+              />
             </div>
 
             <div
               class="flex items-center justify-end gap-3 border-t border-zinc-700/30 pt-4"
             >
-              <ButtonComponent variant="ghost" @click="emit('close')">
+              <ButtonComponent variant="ghost" @click="handleCloseModal()">
                 Annuler
               </ButtonComponent>
 

@@ -6,6 +6,7 @@ tmp/
 out-tsc/
 coverage/
 *.local
+public/
 
 # package managers
 logs

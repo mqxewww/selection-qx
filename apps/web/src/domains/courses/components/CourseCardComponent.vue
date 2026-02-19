@@ -7,9 +7,12 @@ type Props = {
   description: string;
   studentCount: number;
   duration: number;
+  bgImage: string | null;
 };
 
-const props = defineProps<Props>();
+defineProps<Props>();
+
+const backendUrl = import.meta.env.VITE_API_URL;
 </script>
 
 <template>
@@ -18,15 +21,19 @@ const props = defineProps<Props>();
   >
     <div class="relative h-48 w-full overflow-hidden bg-zinc-700">
       <img
-        src="https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop"
-        :alt="props.title"
+        :src="
+          bgImage
+            ? `${backendUrl}${bgImage}`
+            : 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop'
+        "
+        :alt="title"
         class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div class="absolute top-4 left-4">
         <span
           class="rounded-md bg-zinc-900/80 px-2.5 py-1 text-[10px] font-bold tracking-widest text-zinc-300 uppercase shadow-sm backdrop-blur-md"
         >
-          {{ generateTypeCode(props.title) }}
+          {{ generateTypeCode(title) }}
         </span>
       </div>
     </div>
@@ -35,13 +42,13 @@ const props = defineProps<Props>();
       <h2
         class="mb-2 text-base font-bold text-zinc-100 transition-colors group-hover:text-blue-300"
       >
-        {{ props.title }}
+        {{ title }}
       </h2>
 
       <p
         class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-zinc-400"
       >
-        {{ props.description }}
+        {{ description }}
       </p>
 
       <div
@@ -55,7 +62,7 @@ const props = defineProps<Props>();
           <div class="flex items-center gap-1.5">
             <Clock class="h-4 w-4" />
             <span class="text-xs font-semibold text-zinc-400">
-              {{ props.duration }} mois
+              {{ duration }} mois
             </span>
           </div>
         </div>

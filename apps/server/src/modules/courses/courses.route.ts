@@ -18,6 +18,7 @@ const app = new Hono()
         capacity: coursesTable.capacity,
         periodStart: coursesTable.periodStart,
         periodEnd: coursesTable.periodEnd,
+        bgImage: coursesTable.bgImagePath,
       })
       .from(coursesTable)
       .where(isNull(coursesTable.deletedAt));
@@ -62,10 +63,21 @@ const app = new Hono()
 
     return c.json(course);
   })
-  .post("/", zValidator("json", createCourseSchema), async (c) => {
-    const validated = c.req.valid("json");
+  .post("/", zValidator("form", createCourseSchema), async (c) => {
+    const validated = c.req.valid("form");
 
-    await db.insert(coursesTable).values(validated);
+    const file = validated.bgImage;
+    const extension = file.type.split("/")[1];
+    const fileName = `${crypto.randomUUID()}.${extension}`;
+
+    const filePath = `./public/uploads/${fileName}`;
+
+    await Bun.write(filePath, file);
+
+    await db.insert(coursesTable).values({
+      ...validated,
+      bgImagePath: filePath,
+    });
 
     return c.json({}, 201);
   })
