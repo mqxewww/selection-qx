@@ -11,13 +11,12 @@ import {
 import CourseCreateModal from "~/domains/courses/modals/CourseCreateModal.vue";
 import { getFullMonths } from "~/libs/utils.ts";
 
-const { loading, execute } = useApi<CoursesResponse>();
+const { loading, execute, data: courses } = useApi<CoursesResponse>();
 
-const courses = ref<CoursesResponse>([]);
 const isModalOpen = ref(false);
 
 const fetchCourses = async () => {
-  courses.value = await execute(() => coursesService.getAll());
+  await execute(() => coursesService.getAll());
 };
 
 onMounted(fetchCourses);

@@ -84,3 +84,16 @@ export function parseZodValidationErrorToRecord(
     parsedError.map((error) => [error.path[0], error.message]),
   ) as Record<string, string>;
 }
+
+/**
+ * Transforms an object by removing parameters whose value is “”.
+ * @param obj Object to transform
+ */
+export function transformEmptyToUndefined<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      value === "" ? undefined : value,
+    ]),
+  ) as T;
+}

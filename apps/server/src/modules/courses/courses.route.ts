@@ -6,6 +6,7 @@ import {
   createCourseSchema,
   getCourseSchema,
   patchCourseSchema,
+  putCourseBgImageSchema,
 } from "~/modules/courses/courses.schema";
 
 const app = new Hono()
@@ -37,6 +38,8 @@ const app = new Hono()
         capacity: true,
         periodStart: true,
         periodEnd: true,
+        createdAt: true,
+        bgImagePath: true,
       },
       with: {
         criteria: {
@@ -63,24 +66,41 @@ const app = new Hono()
 
     return c.json(course);
   })
-  .post("/", zValidator("form", createCourseSchema), async (c) => {
-    const validated = c.req.valid("form");
+  .post("/", zValidator("json", createCourseSchema), async (c) => {
+    const validated = c.req.valid("json");
 
-    const file = validated.bgImage;
-    const extension = file.type.split("/")[1];
-    const fileName = `${crypto.randomUUID()}.${extension}`;
-
-    const filePath = `./public/uploads/${fileName}`;
-
-    await Bun.write(filePath, file);
-
-    await db.insert(coursesTable).values({
-      ...validated,
-      bgImagePath: filePath,
-    });
+    await db.insert(coursesTable).values(validated);
 
     return c.json({}, 201);
   })
+  .put(
+    "/:id",
+    zValidator("param", getCourseSchema),
+    zValidator("form", putCourseBgImageSchema),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      const form = c.req.valid("form");
+
+      const file = form.bgImage as File;
+      const extension = file.type.split("/")[1];
+      const fileName = `${crypto.randomUUID()}.${extension}`;
+      const filePath = `/uploads/${fileName}`;
+
+      await Bun.write(`./public${filePath}`, file);
+
+      const updatedCourse = (
+        await db
+          .update(coursesTable)
+          .set({ bgImagePath: filePath })
+          .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+          .returning()
+      )[0];
+
+      return updatedCourse
+        ? c.json({}, 200)
+        : c.json({ error: { message: "Course not found" } }, 404);
+    },
+  )
   .patch(
     "/:id",
     zValidator("param", getCourseSchema),

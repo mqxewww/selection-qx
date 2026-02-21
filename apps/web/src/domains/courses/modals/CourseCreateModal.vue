@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { AlignLeft, Image, Type, X } from "lucide-vue-next";
+import { AlignLeft, Type, X } from "lucide-vue-next";
 import { computed, watch } from "vue";
 import ButtonComponent from "~/components/ButtonComponent.vue";
 import DatePickerComponent from "~/components/DatePickerComponent.vue";
-import FileInputComponent from "~/components/FileInputComponent.vue";
 import InputComponent from "~/components/InputComponent.vue";
 import TextareaComponent from "~/components/TextareaComponent.vue";
 import { useApi } from "~/composables/useApi.ts";
@@ -14,15 +13,14 @@ import {
 } from "~/domains/courses/courses.service.ts";
 
 const emit = defineEmits(["close", "success"]);
-defineProps<{ isOpen: boolean }>();
+const props = defineProps<{ isOpen: boolean }>();
 
-const { form, reset } = useForm({
+const { form, reset } = useForm<CourseCreateInput>({
   title: "",
   description: "",
   capacity: "",
   periodStart: "",
   periodEnd: "",
-  bgImage: null as File | null,
 });
 
 const { loading, execute, validationErrors } = useApi();
@@ -42,9 +40,7 @@ watch(
 
 const handleSubmit = async () => {
   try {
-    if (form.bgImage === null) return;
-
-    await execute(() => coursesService.create(form as CourseCreateInput), {
+    await execute(() => coursesService.create(form), {
       delay_ms: 500,
     });
 
@@ -71,8 +67,7 @@ const isSubmitDisabled = computed(() => {
     !form.description.trim() ||
     !form.capacity ||
     !form.periodStart ||
-    !form.periodEnd ||
-    !form.bgImage;
+    !form.periodEnd;
 
   return hasErrors || isMissingData;
 });
@@ -88,7 +83,7 @@ const isSubmitDisabled = computed(() => {
     leave-to-class="opacity-0"
   >
     <div
-      v-if="isOpen"
+      v-if="props.isOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       @click.self="emit('close')"
     >
@@ -122,9 +117,9 @@ const isSubmitDisabled = computed(() => {
             <div class="space-y-4">
               <InputComponent
                 v-model="form.title"
-                label="Nom de la formation"
+                label="Nom"
                 :icon="Type"
-                placeholder="Ex: Bachelor Développeur..."
+                placeholder="Ex: BTS Informatique"
                 :error="validationErrors.title"
               />
 
@@ -133,7 +128,7 @@ const isSubmitDisabled = computed(() => {
                 label="Description"
                 :icon="AlignLeft"
                 :rows="3"
-                placeholder="Détails du programme..."
+                placeholder="Détails de la formation..."
                 :error="validationErrors.description"
               />
 
@@ -141,6 +136,7 @@ const isSubmitDisabled = computed(() => {
                 v-model="form.capacity"
                 label="Capacité"
                 :icon="Type"
+                placeholder="27"
                 :error="validationErrors.capacity"
               />
 
@@ -156,14 +152,6 @@ const isSubmitDisabled = computed(() => {
                   :error="validationErrors.periodEnd"
                 />
               </div>
-
-              <FileInputComponent
-                v-model="form.bgImage"
-                label="Image de couverture"
-                :icon="Image"
-                accept="image/png, image/jpeg, image/webp"
-                :error="validationErrors.bgImage"
-              />
             </div>
 
             <div

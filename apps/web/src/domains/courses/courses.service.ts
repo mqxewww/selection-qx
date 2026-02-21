@@ -1,5 +1,6 @@
 import { InferResponseType } from "hono/client";
 import { client } from "~/libs/client.ts";
+import { transformEmptyToUndefined } from "~/libs/utils.ts";
 
 export type CoursesResponse = InferResponseType<
   typeof client.courses.$get,
@@ -17,8 +18,9 @@ export type CourseCreateInput = {
   capacity: string;
   periodStart: string;
   periodEnd: string;
-  bgImage: File;
 };
+
+export type CourseUpdateInput = CourseCreateInput;
 
 export const coursesService = {
   async getAll(): Promise<CoursesResponse> {
@@ -38,7 +40,31 @@ export const coursesService = {
   },
 
   async create(data: CourseCreateInput) {
-    const res = await client.courses.$post({ form: data });
+    const res = await client.courses.$post({ json: data });
+
+    if (!res.ok) throw await res.json();
+
+    return res.json();
+  },
+
+  async putBgImage(id: string, data: File) {
+    const res = await client.courses[":id"].$put({
+      param: { id },
+      form: { bgImage: data },
+    });
+
+    if (!res.ok) throw await res.json();
+
+    return res.json();
+  },
+
+  async patch(id: string, data: Partial<CourseUpdateInput>) {
+    const transformedData = transformEmptyToUndefined(data);
+
+    const res = await client.courses[":id"].$patch({
+      param: { id },
+      json: transformedData,
+    });
 
     if (!res.ok) throw await res.json();
 

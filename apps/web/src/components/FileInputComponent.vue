@@ -10,7 +10,7 @@ type Props = {
 
 defineProps<Props>();
 
-const model = defineModel<File | null>({ required: true });
+const model = defineModel<File | null | undefined>({ required: true });
 
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -36,12 +36,13 @@ const handleFileChange = (event: Event) => {
       <input
         type="file"
         :accept="accept"
-        class="w-full cursor-pointer rounded-xl bg-zinc-900/50 py-1.5 pr-4 pl-10 text-sm text-zinc-400 transition-all outline-none file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-zinc-800 file:px-4 file:py-1 file:text-xs file:font-semibold file:text-zinc-200 file:shadow-sm file:transition-all hover:file:bg-zinc-700 hover:file:text-white focus:ring-1"
-        :class="
+        class="w-full cursor-pointer rounded-xl bg-zinc-900/50 py-1.5 pr-4 pl-10 text-sm transition-all outline-none file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-zinc-800 file:px-4 file:py-1 file:text-xs file:font-semibold file:text-zinc-200 file:shadow-sm file:transition-all hover:file:bg-zinc-700 hover:file:text-white focus:ring-1"
+        :class="[
           error
             ? 'border border-red-500/50 focus:border-red-500 focus:ring-red-500/20'
-            : 'border border-zinc-700/50 focus:border-blue-500/50 focus:ring-blue-500/20'
-        "
+            : 'border border-zinc-700/50 focus:border-blue-500/50 focus:ring-blue-500/20',
+          model ? 'text-zinc-400' : 'text-transparent',
+        ]"
         @change="handleFileChange"
       />
     </div>

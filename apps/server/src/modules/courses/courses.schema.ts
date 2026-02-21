@@ -10,6 +10,9 @@ export const createCourseSchema = z.object({
   capacity: z.coerce.number().min(1),
   periodStart: z.iso.date(),
   periodEnd: z.iso.date(),
+});
+
+export const putCourseBgImageSchema = z.object({
   bgImage: z
     .any()
     .refine(
@@ -30,7 +33,7 @@ export const createCourseSchema = z.object({
 export const patchCourseSchema = z.object({
   title: z.string().nonempty().optional(),
   description: z.string().nonempty().optional(),
-  capacity: z.number().min(1).optional(),
+  capacity: z.coerce.number().min(1).optional(),
   periodStart: z.iso.date().optional(),
   periodEnd: z.iso.date().optional(),
 });
