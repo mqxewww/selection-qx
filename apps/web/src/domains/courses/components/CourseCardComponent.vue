@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChevronRight, Clock, Users } from "lucide-vue-next";
-import { generateTypeCode } from "~/libs/utils.ts";
+import { computed } from "vue";
+import { convertStringValueToCode } from "~/libs/utils.ts";
 
 type Props = {
   title: string;
@@ -10,9 +11,13 @@ type Props = {
   bgImage: string | null;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
-const backendUrl = import.meta.env.VITE_API_URL;
+const imageUrl = computed(() => {
+  return props.bgImage
+    ? `${import.meta.env.VITE_API_URL}${props.bgImage}`
+    : "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop";
+});
 </script>
 
 <template>
@@ -21,19 +26,15 @@ const backendUrl = import.meta.env.VITE_API_URL;
   >
     <div class="relative h-48 w-full overflow-hidden bg-zinc-700">
       <img
-        :src="
-          bgImage
-            ? `${backendUrl}${bgImage}`
-            : 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop'
-        "
-        :alt="title"
+        :src="imageUrl"
+        :alt="props.title"
         class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div class="absolute top-4 left-4">
         <span
           class="rounded-md bg-zinc-900/80 px-2.5 py-1 text-[10px] font-bold tracking-widest text-zinc-300 uppercase shadow-sm backdrop-blur-md"
         >
-          {{ generateTypeCode(title) }}
+          {{ convertStringValueToCode(props.title) }}
         </span>
       </div>
     </div>
@@ -42,13 +43,13 @@ const backendUrl = import.meta.env.VITE_API_URL;
       <h2
         class="mb-2 text-base font-bold text-zinc-100 transition-colors group-hover:text-blue-300"
       >
-        {{ title }}
+        {{ props.title }}
       </h2>
 
       <p
         class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-zinc-400"
       >
-        {{ description }}
+        {{ props.description }}
       </p>
 
       <div
@@ -57,12 +58,14 @@ const backendUrl = import.meta.env.VITE_API_URL;
         <div class="flex items-center gap-4 text-zinc-500">
           <div class="flex items-center gap-1.5">
             <Users class="h-4 w-4" />
-            <span class="text-xs font-semibold text-zinc-400">15</span>
+            <span class="text-xs font-semibold text-zinc-400">{{
+              props.studentCount
+            }}</span>
           </div>
           <div class="flex items-center gap-1.5">
             <Clock class="h-4 w-4" />
             <span class="text-xs font-semibold text-zinc-400">
-              {{ duration }} mois
+              {{ props.duration }} mois
             </span>
           </div>
         </div>

@@ -3,12 +3,14 @@ import {
   ZodValidationErrorPayload,
 } from "~/libs/client.ts";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 /**
- * Converts a character string into a code according to several rules.
- * @param title Character string to convert
+ * Converts a string value into a code according to several rules.
+ * @param value Value to convert
  */
-export function generateTypeCode(title: string): string {
-  const words = title.trim().split(/\s+/);
+export function convertStringValueToCode(value: string) {
+  const words = value.trim().split(/\s+/);
 
   if (words.length < 1) return "";
 
@@ -31,11 +33,33 @@ export function generateTypeCode(title: string): string {
 }
 
 /**
- * Calculate the number of full months between two dates.
+ * Converts a Unix timestamp (in milliseconds) to a French long date string.
+ * @param unixTs Unix timestamp to convert
+ */
+export function convertUnixTimestampToLongDate(unixTs: string) {
+  return new Date(unixTs).toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+/**
+ * Get the full image URL based on the provided path.
+ * @param imagePath Path returned from API (/uploads/*)
+ */
+export function getImageFullURL(imagePath?: string | null) {
+  return imagePath
+    ? `${API_URL}${imagePath}`
+    : "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&h=400&auto=format&fit=crop";
+}
+
+/**
+ * Get the number of full months between two dates.
  * @param start Starting date
  * @param end Ending date
  */
-export function getFullMonths(start: Date, end: Date): number {
+export function getFullMonths(start: Date, end: Date) {
   let months =
     (end.getFullYear() - start.getFullYear()) * 12 +
     (end.getMonth() - start.getMonth());
@@ -46,16 +70,16 @@ export function getFullMonths(start: Date, end: Date): number {
 }
 
 /**
- * Check if obj is an object.
- * @param obj param to check
+ * Check whether a value is a non-null object.
+ * @param value value to check
  */
-export function isObject(obj: unknown): obj is Record<string, unknown> {
-  return typeof obj === "object" && obj !== null;
+export function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 /**
- * Check if catched error is from ZodValidator
- * @param error error to check
+ * Check whether the error matches ZodValidationErrorPayload.
+ * @param error Error to check
  */
 export function isZodValidationError(
   error: unknown,
@@ -70,8 +94,8 @@ export function isZodValidationError(
 }
 
 /**
- * Transform ZodValidator error messages to a Record with key being the path and value the message
- * @param error Payload catched from ZodValidator
+ * Parse a ZodValidationErrorPayload error into a Record<string, string> with the key as the error path and the value as the validation error message.
+ * @param error Error to parse
  */
 export function parseZodValidationErrorToRecord(
   error: ZodValidationErrorPayload,
@@ -86,10 +110,10 @@ export function parseZodValidationErrorToRecord(
 }
 
 /**
- * Transforms an object by removing parameters whose value is “”.
+ * Transform all empty string values ("") from the given object to undefined.
  * @param obj Object to transform
  */
-export function transformEmptyToUndefined<T extends object>(obj: T): T {
+export function transformEmptyToUndefined<T extends object>(obj: T) {
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => [
       key,

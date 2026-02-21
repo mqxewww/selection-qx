@@ -26,11 +26,13 @@ import {
   coursesService,
   CourseUpdateInput,
 } from "~/domains/courses/courses.service.ts";
+import {
+  convertUnixTimestampToLongDate,
+  getImageFullURL,
+} from "~/libs/utils.ts";
 
 const props = defineProps<{ id: string }>();
 const router = useRouter();
-
-const isEditing = ref(false);
 
 const {
   loading: fetchLoading,
@@ -47,11 +49,11 @@ const {
   validationErrors: putBgImageValidationErrors,
 } = useApi();
 
-const { form, set } = useForm<CourseUpdateInput>(
+const { form, updateForm } = useForm<CourseUpdateInput>(
   {
     title: "",
     description: "",
-    capacity: "",
+    capacity: 0,
     periodStart: "",
     periodEnd: "",
   },
@@ -60,35 +62,18 @@ const { form, set } = useForm<CourseUpdateInput>(
 
     form.title = course.value.title;
     form.description = course.value.description;
-    form.capacity = course.value.capacity.toString();
+    form.capacity = course.value.capacity;
     form.periodStart = course.value.periodStart;
     form.periodEnd = course.value.periodEnd;
   },
 );
 
+const selectedFile = ref<File | undefined>(undefined);
+const isEditing = ref(false);
+
 const fetchCourse = async () => {
   await fetchExecute(() => coursesService.getById(props.id));
 };
-
-const toggleEdit = () => {
-  if (isEditing.value) validationErrors.value = {};
-
-  set();
-  isEditing.value = !isEditing.value;
-};
-
-watch(
-  form,
-  () => {
-    if (
-      validationErrors.value &&
-      Object.keys(validationErrors.value).length > 0
-    ) {
-      validationErrors.value = {};
-    }
-  },
-  { deep: true },
-);
 
 const handleSave = async () => {
   try {
@@ -102,38 +87,6 @@ const handleSave = async () => {
     console.error(error);
   }
 };
-
-const imageUrl = computed(() => {
-  return course.value?.bgImagePath
-    ? `${import.meta.env.VITE_API_URL}${course.value.bgImagePath}`
-    : "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&h=400&auto=format&fit=crop";
-});
-
-const formattedCreationDate = computed(() => {
-  if (!course.value?.createdAt) return "";
-
-  return new Date(course.value.createdAt).toLocaleDateString("fr-FR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-});
-
-const isSubmitDisabled = computed(() => {
-  const hasErrors =
-    validationErrors.value && Object.keys(validationErrors.value).length > 0;
-
-  const isMissingData =
-    !form.title.trim() ||
-    !form.description.trim() ||
-    !form.capacity ||
-    !form.periodStart ||
-    !form.periodEnd;
-
-  return hasErrors || isMissingData;
-});
-
-const selectedFile = ref<File | undefined>(undefined);
 
 const handleFileUpload = async () => {
   try {
@@ -153,18 +106,52 @@ const handleFileUpload = async () => {
   }
 };
 
-watch(selectedFile, (newFile) => {
-  if (newFile) {
+watch(
+  form,
+  () => {
     if (
-      putBgImageValidationErrors.value &&
-      Object.keys(putBgImageValidationErrors.value).length > 0
+      validationErrors.value &&
+      Object.keys(validationErrors.value).length > 0
     ) {
-      putBgImageValidationErrors.value = {};
+      validationErrors.value = {};
     }
+  },
+  { deep: true },
+);
 
+watch(selectedFile, (file) => {
+  if (
+    putBgImageValidationErrors.value &&
+    Object.keys(putBgImageValidationErrors.value).length > 0
+  ) {
+    putBgImageValidationErrors.value = {};
+  }
+
+  if (file) {
     handleFileUpload();
   }
 });
+
+const isSubmitDisabled = computed(() => {
+  const hasErrors =
+    validationErrors.value && Object.keys(validationErrors.value).length > 0;
+
+  const isMissingData =
+    !form.title.trim() ||
+    !form.description.trim() ||
+    !form.capacity ||
+    !form.periodStart ||
+    !form.periodEnd;
+
+  return hasErrors || isMissingData;
+});
+
+const toggleEdit = () => {
+  if (isEditing.value) validationErrors.value = {};
+
+  updateForm();
+  isEditing.value = !isEditing.value;
+};
 
 onMounted(fetchCourse);
 </script>
@@ -224,7 +211,7 @@ onMounted(fetchCourse);
       class="relative h-64 w-full overflow-hidden rounded-3xl border border-zinc-700/50 bg-zinc-800 shadow-xl"
     >
       <img
-        :src="imageUrl"
+        :src="getImageFullURL(course.bgImagePath)"
         alt="Cover"
         class="h-full w-full object-cover opacity-80"
       />
@@ -265,13 +252,13 @@ onMounted(fetchCourse);
           <div v-else class="w-full space-y-6">
             <InputComponent
               v-model="form.title"
-              label="Titre de la formation"
+              label="Nom"
               :icon="Type"
               :error="validationErrors.title"
             />
             <TextareaComponent
               v-model="form.description"
-              label="Description complète"
+              label="Description"
               :icon="AlignLeft"
               :rows="8"
               :error="validationErrors.description"
@@ -282,12 +269,6 @@ onMounted(fetchCourse);
 
       <div class="space-y-6">
         <div class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6">
-          <h3
-            class="mb-4 text-sm font-bold tracking-widest text-zinc-500 uppercase"
-          >
-            Configuration
-          </h3>
-
           <div v-if="!isEditing" class="space-y-5">
             <div class="flex items-center gap-4 text-zinc-300">
               <div
@@ -320,7 +301,7 @@ onMounted(fetchCourse);
           <div v-else class="w-full space-y-4">
             <InputComponent
               v-model="form.capacity"
-              label="Capacité (étudiants)"
+              label="Capacité"
               type="number"
               :icon="Users"
               :error="validationErrors.capacity"
@@ -355,7 +336,7 @@ onMounted(fetchCourse);
               <span
                 class="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-bold text-blue-400"
               >
-                22
+                Soon
               </span>
             </div>
             <div class="flex items-center justify-between">
@@ -364,7 +345,7 @@ onMounted(fetchCourse);
                 <span class="text-sm">Créée le</span>
               </div>
               <span class="text-sm font-medium text-zinc-300">
-                {{ formattedCreationDate }}
+                {{ convertUnixTimestampToLongDate(course.createdAt) }}
               </span>
             </div>
           </div>

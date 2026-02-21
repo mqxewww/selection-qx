@@ -15,7 +15,7 @@ export type CourseResponse = InferResponseType<
 export type CourseCreateInput = {
   title: string;
   description: string;
-  capacity: string;
+  capacity: number;
   periodStart: string;
   periodEnd: string;
 };
@@ -65,6 +65,14 @@ export const coursesService = {
       param: { id },
       json: transformedData,
     });
+
+    if (!res.ok) throw await res.json();
+
+    return res.json();
+  },
+
+  async delete(id: string) {
+    const res = await client.courses[":id"].$delete({ param: { id } });
 
     if (!res.ok) throw await res.json();
 

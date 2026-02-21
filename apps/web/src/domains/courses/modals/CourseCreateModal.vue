@@ -15,15 +15,15 @@ import {
 const emit = defineEmits(["close", "success"]);
 const props = defineProps<{ isOpen: boolean }>();
 
-const { form, reset } = useForm<CourseCreateInput>({
+const { loading, execute, validationErrors } = useApi();
+
+const { form, resetForm } = useForm<CourseCreateInput>({
   title: "",
   description: "",
-  capacity: "",
+  capacity: 0,
   periodStart: "",
   periodEnd: "",
 });
-
-const { loading, execute, validationErrors } = useApi();
 
 watch(
   form,
@@ -47,7 +47,7 @@ const handleSubmit = async () => {
     emit("success");
     emit("close");
 
-    reset();
+    resetForm();
   } catch (error) {
     console.error(error);
   }
@@ -55,7 +55,7 @@ const handleSubmit = async () => {
 
 const handleCloseModal = () => {
   emit("close");
-  reset();
+  resetForm();
 };
 
 const isSubmitDisabled = computed(() => {
@@ -167,7 +167,7 @@ const isSubmitDisabled = computed(() => {
                 :loading="loading"
                 :disabled="isSubmitDisabled"
               >
-                {{ loading ? "Création..." : "Créer la formation" }}
+                {{ loading ? "Enregistrement..." : "Enregistrer" }}
               </ButtonComponent>
             </div>
           </form>

@@ -6,6 +6,7 @@ export interface ZodValidationErrorMessage {
   message: string;
 }
 
+/** Body of the HTTP response when ZodValidator throws a server-side error.  */
 export interface ZodValidationErrorPayload {
   success: false;
   error: {

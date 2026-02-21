@@ -48,6 +48,6 @@ const classes = computed(() => {
     :disabled="props.disabled || props.loading"
   >
     <Loader2 v-if="props.loading" class="h-4 w-4 animate-spin" />
-    <slot v-else />
+    <slot />
   </button>
 </template>

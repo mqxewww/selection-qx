@@ -1,20 +1,27 @@
 import { Reactive, reactive } from "vue";
 
+/**
+ * Reactive form state initialized with the provided value.
+ * @param initialValue Value used to initialize and reset the form
+ * @param callback Optional callback function invoked when updateForm is called.
+ */
 export function useForm<T extends Record<string, unknown>>(
-  initialValues: T,
-  setForm?: (form: Reactive<T>) => void,
+  initialValue: T,
+  callback?: (form: Reactive<T>) => void,
 ) {
-  const form = reactive<T>({ ...initialValues });
+  const form = reactive<T>({ ...initialValue });
 
-  const reset = () => Object.assign(form, initialValues);
+  /** Reset the form state to its initial value. */
+  const resetForm = () => Object.assign(form, initialValue);
 
-  const set = () => {
-    if (setForm) setForm(form);
+  /** Invoke the optional callback function with the form value. */
+  const updateForm = () => {
+    if (callback) callback(form);
   };
 
   return {
     form,
-    reset,
-    set,
+    resetForm,
+    updateForm,
   };
 }
