@@ -22,9 +22,9 @@ const imageUrl = computed(() => {
 
 <template>
   <div
-    class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
+    class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800 transition-all duration-300 hover:-translate-y-1"
   >
-    <div class="relative h-48 w-full overflow-hidden bg-zinc-700">
+    <div class="relative h-48 w-full overflow-hidden">
       <img
         :src="imageUrl"
         :alt="props.title"
@@ -32,7 +32,7 @@ const imageUrl = computed(() => {
       />
       <div class="absolute top-4 left-4">
         <span
-          class="rounded-md bg-zinc-900/80 px-2.5 py-1 text-[10px] font-bold tracking-widest text-zinc-300 uppercase shadow-sm backdrop-blur-md"
+          class="rounded-md bg-zinc-900/80 px-2.5 py-1 text-xs font-bold tracking-widest text-zinc-300 uppercase"
         >
           {{ convertStringValueToCode(props.title) }}
         </span>
@@ -47,7 +47,7 @@ const imageUrl = computed(() => {
       </h2>
 
       <p
-        class="mb-5 line-clamp-2 text-xs leading-relaxed font-medium text-zinc-400"
+        class="mb-5 line-clamp-1 text-xs leading-relaxed font-medium text-zinc-400"
       >
         {{ props.description }}
       </p>

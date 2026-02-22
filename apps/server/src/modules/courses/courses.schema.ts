@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+export const getCoursesListSchema = z.object({
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(10),
+});
+
 export const getCourseSchema = z.object({
   id: z.string().transform(Number),
 });

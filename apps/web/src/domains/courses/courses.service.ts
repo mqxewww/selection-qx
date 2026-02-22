@@ -23,8 +23,15 @@ export type CourseCreateInput = {
 export type CourseUpdateInput = CourseCreateInput;
 
 export const coursesService = {
-  async getAll(): Promise<CoursesResponse> {
-    const res = await client.courses.$get();
+  async getAll(page?: number, limit?: number): Promise<CoursesResponse> {
+    const query = {
+      page: page ? page.toString() : undefined,
+      limit: limit ? limit.toString() : undefined,
+    };
+
+    const res = await client.courses.$get({
+      query,
+    });
 
     if (!res.ok) throw await res.json();
 

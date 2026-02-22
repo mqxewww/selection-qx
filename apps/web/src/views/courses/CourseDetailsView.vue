@@ -34,11 +34,7 @@ import {
 const props = defineProps<{ id: string }>();
 const router = useRouter();
 
-const {
-  loading: fetchLoading,
-  execute: fetchExecute,
-  data: course,
-} = useApi<CourseResponse>();
+const { execute: fetchExecute, data: course } = useApi<CourseResponse>();
 const {
   loading: saveLoading,
   execute: saveExecute,
@@ -153,24 +149,23 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value;
 };
 
+const goBack = () => {
+  if (window.history.state.back) {
+    router.back();
+  } else {
+    router.push("/courses");
+  }
+};
+
 onMounted(fetchCourse);
 </script>
 
 <template>
-  <div
-    v-if="fetchLoading && !course"
-    class="flex h-64 items-center justify-center"
-  >
-    <div
-      class="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
-    ></div>
-  </div>
-
-  <div v-else-if="course" class="mx-auto max-w-6xl space-y-6 pb-24">
+  <div v-if="course" class="mx-auto w-full max-w-6xl space-y-6 pb-24">
     <div class="flex items-center justify-between">
       <button
         class="group flex items-center gap-2 text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-100"
-        @click="router.push('/courses')"
+        @click="goBack"
       >
         <ArrowLeft
           class="h-4 w-4 transition-transform group-hover:-translate-x-1"

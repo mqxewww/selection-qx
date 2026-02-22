@@ -1,30 +1,49 @@
 import { zValidator } from "@hono/zod-validator";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, count, eq, isNull } from "drizzle-orm";
 import { Hono } from "hono";
 import { coursesTable, criteriaTable, criterionMarksTable, db } from "~/db";
 import {
   createCourseSchema,
   getCourseSchema,
+  getCoursesListSchema,
   patchCourseSchema,
   putCourseBgImageSchema,
 } from "~/modules/courses/courses.schema";
 
 const app = new Hono()
-  .get("/", async (c) => {
-    const courses = await db
-      .select({
-        id: coursesTable.id,
-        title: coursesTable.title,
-        description: coursesTable.description,
-        capacity: coursesTable.capacity,
-        periodStart: coursesTable.periodStart,
-        periodEnd: coursesTable.periodEnd,
-        bgImage: coursesTable.bgImagePath,
-      })
-      .from(coursesTable)
-      .where(isNull(coursesTable.deletedAt));
+  .get("/", zValidator("query", getCoursesListSchema), async (c) => {
+    const { page, limit } = c.req.valid("query");
 
-    return c.json(courses);
+    const [courses, totalResult] = await Promise.all([
+      db
+        .select({
+          id: coursesTable.id,
+          title: coursesTable.title,
+          description: coursesTable.description,
+          capacity: coursesTable.capacity,
+          periodStart: coursesTable.periodStart,
+          periodEnd: coursesTable.periodEnd,
+          bgImage: coursesTable.bgImagePath,
+        })
+        .from(coursesTable)
+        .where(isNull(coursesTable.deletedAt))
+        .offset((page - 1) * limit)
+        .limit(limit),
+
+      db
+        .select({ value: count() })
+        .from(coursesTable)
+        .where(isNull(coursesTable.deletedAt)),
+    ]);
+
+    const totalItems = totalResult[0].value;
+
+    return c.json({
+      items: courses,
+      meta: {
+        totalItems,
+      },
+    });
   })
   .get("/:id", zValidator("param", getCourseSchema), async (c) => {
     const { id } = c.req.valid("param");
