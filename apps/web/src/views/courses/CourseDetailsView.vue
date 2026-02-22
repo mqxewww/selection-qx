@@ -163,15 +163,12 @@ onMounted(fetchCourse);
 <template>
   <div v-if="course" class="mx-auto w-full max-w-6xl space-y-6 pb-24">
     <div class="flex items-center justify-between">
-      <button
-        class="group flex items-center gap-2 text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-100"
-        @click="goBack"
-      >
+      <ButtonComponent variant="ghost" @click="goBack">
         <ArrowLeft
           class="h-4 w-4 transition-transform group-hover:-translate-x-1"
         />
         Retour aux formations
-      </button>
+      </ButtonComponent>
 
       <div class="flex items-center gap-3">
         <template v-if="!isEditing">

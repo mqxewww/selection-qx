@@ -105,12 +105,9 @@ const isSubmitDisabled = computed(() => {
             <h2 class="text-base font-bold text-zinc-100">
               Nouvelle formation
             </h2>
-            <button
-              class="rounded-full p-1 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
-              @click="handleCloseModal()"
-            >
-              <X class="h-5 w-5" />
-            </button>
+            <ButtonComponent variant="ghost" @click="handleCloseModal()"
+              ><X class="h-5 w-5"
+            /></ButtonComponent>
           </div>
 
           <form class="space-y-6 p-6" @submit.prevent="handleSubmit">

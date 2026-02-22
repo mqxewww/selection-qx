@@ -67,9 +67,9 @@ onMounted(fetchCourses);
       </ButtonComponent>
     </div>
 
-    <div class="flex gap-4 pt-6">
+    <div class="flex h-175 gap-4 pt-6">
       <div class="min-w-0 flex-1">
-        <div v-if="loading" class="grid grid-cols-3 gap-4">
+        <div v-if="loading" class="grid grid-cols-3 content-start gap-4">
           <div
             v-for="n in 6"
             :key="n"
@@ -106,7 +106,7 @@ onMounted(fetchCourses);
           <CoursesEmptyListState />
         </div>
 
-        <div v-else class="grid grid-cols-3 gap-4">
+        <div v-else class="grid grid-cols-3 content-start gap-4">
           <RouterLink
             v-for="course in data.items"
             :key="course.id"
@@ -131,7 +131,7 @@ onMounted(fetchCourses);
 
       <div
         v-if="totalPages > 1"
-        class="flex flex-col items-center gap-2 self-center pl-2"
+        class="flex flex-col items-center justify-center gap-2 pl-2"
       >
         <ButtonComponent
           :disabled="currentPage === 1"
