@@ -135,6 +135,7 @@ const isSubmitDisabled = computed(() => {
                 :icon="Type"
                 placeholder="27"
                 :error="validationErrors.capacity"
+                type="number"
               />
 
               <div class="grid grid-cols-2 gap-4">

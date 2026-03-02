@@ -1,18 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  @apply bg-zinc-900;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-}
-
-html {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
+  @apply bg-zinc-900 text-zinc-100;
 }

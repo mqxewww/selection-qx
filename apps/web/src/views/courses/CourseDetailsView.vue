@@ -6,6 +6,7 @@ import {
   Clock,
   Pencil,
   Save,
+  Trash,
   TrendingUp,
   Type,
   Upload,
@@ -26,6 +27,7 @@ import {
   coursesService,
   CourseUpdateInput,
 } from "~/domains/courses/courses.service.ts";
+import CourseDeleteModal from "~/domains/courses/modals/CourseDeleteModal.vue";
 import {
   convertUnixTimestampToLongDate,
   getImageFullURL,
@@ -92,6 +94,7 @@ const handleFileUpload = async () => {
       () => coursesService.putBgImage(props.id, selectedFile.value!),
       {
         delay_ms: 500,
+        successMessage: "Nouvelle image correctement ajoutée !",
       },
     );
 
@@ -127,6 +130,8 @@ watch(selectedFile, (file) => {
     handleFileUpload();
   }
 });
+
+const isModalOpen = ref(false);
 
 const isSubmitDisabled = computed(() => {
   const hasErrors =
@@ -172,6 +177,10 @@ onMounted(fetchCourse);
 
       <div class="flex items-center gap-3">
         <template v-if="!isEditing">
+          <ButtonComponent variant="danger" @click="isModalOpen = true">
+            <Trash class="h-4 w-4" />
+            Supprimer
+          </ButtonComponent>
           <ButtonComponent variant="primary" @click="toggleEdit">
             <Pencil class="h-4 w-4" />
             Modifier
@@ -345,4 +354,11 @@ onMounted(fetchCourse);
       </div>
     </div>
   </div>
+
+  <CourseDeleteModal
+    :course-id="props.id"
+    :is-open="isModalOpen"
+    @close="isModalOpen = false"
+    @success="router.push('/courses')"
+  />
 </template>

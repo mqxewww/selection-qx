@@ -1,14 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+</script>
 
 <template>
-  <header class="fixed top-0 right-0 left-0 z-50 w-full">
+  <header
+    class="pointer-events-none fixed top-0 right-0 left-0 z-50 w-full select-none"
+  >
     <div class="flex justify-center px-4 pt-4">
       <nav
-        class="relative flex items-center gap-1 rounded-2xl border border-zinc-700/50 bg-zinc-900/80 px-2 py-2 shadow-xl shadow-black/30 backdrop-blur-md"
+        class="pointer-events-auto relative flex items-center gap-1 rounded-2xl border border-zinc-700/50 bg-zinc-900/80 px-2 py-2 shadow-xl shadow-black/30 backdrop-blur-md"
       >
         <RouterLink
           to="/courses"
           class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 transition-all duration-200 [&.router-link-active]:bg-zinc-800"
+          :class="{ 'router-link-active': route.path.startsWith('/courses') }"
         >
           <span
             class="text-[11px] font-bold tracking-widest text-zinc-400 uppercase transition-colors group-hover:text-zinc-200 group-[.router-link-active]:text-zinc-100"
@@ -36,6 +43,9 @@
         <RouterLink
           to="/applications"
           class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 transition-all duration-200 [&.router-link-active]:bg-zinc-800"
+          :class="{
+            'router-link-active': route.path.startsWith('/applications'),
+          }"
         >
           <span
             class="text-[11px] font-bold tracking-widest text-zinc-400 uppercase transition-colors group-hover:text-zinc-200 group-[.router-link-active]:text-zinc-100"

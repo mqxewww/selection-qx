@@ -67,7 +67,7 @@ onMounted(fetchCourses);
       </ButtonComponent>
     </div>
 
-    <div class="flex h-175 gap-4 pt-6">
+    <div class="flex min-h-175 gap-4 pt-6">
       <div class="min-w-0 flex-1">
         <div v-if="loading" class="grid grid-cols-3 content-start gap-4">
           <div
