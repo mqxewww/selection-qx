@@ -9,6 +9,7 @@
     "apps/*"
   ],
   "scripts": {
+    "dev": "bun -b --filter '*' dev",
     "dev:server": "cd apps/server && bun -b run dev",
     "dev:web": "cd apps/web && bun -b run dev",
     "build": "bun -b --filter '*' build",

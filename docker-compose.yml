@@ -1,0 +1,22 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server_prod
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/server/data:/app/apps/server/data
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web_prod
+      args:
+        - VITE_API_URL=http://localhost:3000
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
