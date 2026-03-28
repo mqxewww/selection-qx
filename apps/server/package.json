@@ -13,13 +13,13 @@
   "scripts": {
     "dev": "bun -b dev.ts",
     "build": "tsc -p tsconfig.build.json",
-    "db:generate": "bunx drizzle-kit generate",
-    "db:push": "bunx drizzle-kit push"
+    "db:generate": "drizzle-kit generate",
+    "db:push": "bun run src/db/migrate.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",
     "drizzle-orm": "^0.45.1",
-    "hono": "^4.12.4",
+    "hono": "^4.12.7",
     "zod": "^4.3.6"
   },
   "devDependencies": {

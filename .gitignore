@@ -45,9 +45,6 @@ Thumbs.db
 libpeerconnection.log
 testem.log
 
-# drizzle
-**/drizzle/
-
 # Cypress
 /cypress/videos/
 /cypress/screenshots/

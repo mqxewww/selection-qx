@@ -4,8 +4,8 @@
     <h1>SelectionQX</h1>
 </div>
 
-<h4 align="center">Web solution intended for school staff, designed to make it easier to manage applications received
-for courses.</h4>
+<h4 align="center">Web application intended for school staff, designed to make it easier to manage student
+applications.</h4>
 
 <div align="center">
 
@@ -25,6 +25,11 @@ $ git clone https://github.com/mqxewww/selection-qx.git
 # Install dependencies
 $ bun install
 ```
+
+### Environment variables
+
+- `@server` : Copy `.env.template` as `.env` (used for development).
+- `@web` : Copy `.env.template` as `.env` (used by vite build) and as `.env.development` (used by vite dev)
 
 ---
 <div align="center">
