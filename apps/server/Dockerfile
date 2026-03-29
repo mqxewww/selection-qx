@@ -10,10 +10,13 @@ RUN bun install
 
 COPY apps/server/ ./apps/server
 
+RUN mkdir -p /app/aps/server/public
 RUN mkdir -p /app/apps/server/data
 
 WORKDIR /app/apps/server
 ENV NODE_ENV=production
+
+RUN bun run type-check
 
 EXPOSE 3000
 

@@ -6,7 +6,7 @@ import {
   Info,
   X,
 } from "lucide-vue-next";
-import { useToast } from "~/composables/useToast.ts";
+import { useToast } from "~web/composables/useToast.ts";
 
 const { toasts, removeToast } = useToast();
 

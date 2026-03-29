@@ -1,9 +1,10 @@
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
-import AdminLayout from "~/layouts/AdminLayout.vue";
-import NonAdminLayout from "~/layouts/NonAdminLayout.vue";
-
+import AdminLayout from "~web/layouts/AdminLayout.vue";
+import NonAdminLayout from "~web/layouts/NonAdminLayout.vue";
 import App from "./App.vue";
+
+const metaTitle = (sfx: string) => `SelectionQX@${__APP_VERSION__} • ${sfx}`;
 
 const router = createRouter({
   history: createWebHistory(""),
@@ -14,21 +15,21 @@ const router = createRouter({
       children: [
         {
           path: "/",
-          component: () => import("~/views/admin/AdminHomeView.vue"),
-          meta: { title: "SelectionQX • Administration" },
+          component: () => import("~web/views/admin/AdminHomeView.vue"),
+          meta: { title: metaTitle("Administration") },
         },
         {
           path: "/create-user",
-          component: () => import("~/views/admin/AdminCreateUserView.vue"),
+          component: () => import("~web/views/admin/AdminCreateUserView.vue"),
           meta: {
-            title: "SelectionQX • Administration • Création utilisateur",
+            title: metaTitle("Administration"),
           },
         },
         {
           path: "/update-user",
-          component: () => import("~/views/admin/AdminUpdateUserView.vue"),
+          component: () => import("~web/views/admin/AdminUpdateUserView.vue"),
           meta: {
-            title: "SelectionQX • Administration • Modification utilisateur",
+            title: metaTitle("Administration"),
           },
         },
       ],
@@ -40,26 +41,26 @@ const router = createRouter({
         {
           path: "/applications",
           component: () =>
-            import("~/views/applications/ApplicationsListView.vue"),
-          meta: { title: "SelectionQX • Candidatures • Liste" },
+            import("~web/views/applications/ApplicationsListView.vue"),
+          meta: { title: metaTitle("Candidatures") },
         },
         {
           path: "/applications/:id",
           component: () =>
-            import("~/views/applications/ApplicationDetailsView.vue"),
+            import("~web/views/applications/ApplicationDetailsView.vue"),
           props: true,
-          meta: { title: "SelectionQX • Candidatures • Détails" },
+          meta: { title: metaTitle("Candidatures") },
         },
         {
           path: "/courses",
-          component: () => import("~/views/courses/CoursesListView.vue"),
-          meta: { title: "SelectionQX • Formations • Liste" },
+          component: () => import("~web/views/courses/CoursesListView.vue"),
+          meta: { title: metaTitle("Formations") },
         },
         {
           path: "/courses/:id",
-          component: () => import("~/views/courses/CourseDetailsView.vue"),
+          component: () => import("~web/views/courses/CourseDetailsView.vue"),
           props: true,
-          meta: { title: "SelectionQX • Formations • Détails" },
+          meta: { title: metaTitle("Formations") },
         },
       ],
     },

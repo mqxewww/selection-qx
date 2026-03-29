@@ -15,23 +15,23 @@ import {
 } from "lucide-vue-next";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import ButtonComponent from "~/components/ButtonComponent.vue";
-import DatePickerComponent from "~/components/DatePickerComponent.vue";
-import FileInputComponent from "~/components/FileInputComponent.vue";
-import InputComponent from "~/components/InputComponent.vue";
-import TextareaComponent from "~/components/TextareaComponent.vue";
-import { useApi } from "~/composables/useApi.ts";
-import { useForm } from "~/composables/useForm.ts";
+import ButtonComponent from "~web/components/ButtonComponent.vue";
+import DatePickerComponent from "~web/components/DatePickerComponent.vue";
+import FileInputComponent from "~web/components/FileInputComponent.vue";
+import InputComponent from "~web/components/InputComponent.vue";
+import TextareaComponent from "~web/components/TextareaComponent.vue";
+import { useApi } from "~web/composables/useApi.ts";
+import { useForm } from "~web/composables/useForm.ts";
 import {
   CourseResponse,
   coursesService,
   CourseUpdateInput,
-} from "~/domains/courses/courses.service.ts";
-import CourseDeleteModal from "~/domains/courses/modals/CourseDeleteModal.vue";
+} from "~web/domains/courses/courses.service.ts";
+import CourseDeleteModal from "~web/domains/courses/modals/CourseDeleteModal.vue";
 import {
   convertUnixTimestampToLongDate,
   getImageFullURL,
-} from "~/libs/utils.ts";
+} from "~web/libs/utils.ts";
 
 const props = defineProps<{ id: string }>();
 const router = useRouter();

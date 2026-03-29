@@ -2,17 +2,17 @@
 import { ChevronDown, ChevronUp, Plus } from "lucide-vue-next";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import ButtonComponent from "~/components/ButtonComponent.vue";
-import { useApi } from "~/composables/useApi.ts";
-import { usePagination } from "~/composables/usePagination.ts";
-import CourseCardComponent from "~/domains/courses/components/CourseCardComponent.vue";
-import CoursesEmptyListState from "~/domains/courses/components/CoursesEmptyListState.vue";
+import ButtonComponent from "~web/components/ButtonComponent.vue";
+import { useApi } from "~web/composables/useApi.ts";
+import { usePagination } from "~web/composables/usePagination.ts";
+import CourseCardComponent from "~web/domains/courses/components/CourseCardComponent.vue";
+import CoursesEmptyListState from "~web/domains/courses/components/CoursesEmptyListState.vue";
 import {
   CoursesResponse,
   coursesService,
-} from "~/domains/courses/courses.service.ts";
-import CourseCreateModal from "~/domains/courses/modals/CourseCreateModal.vue";
-import { getFullMonths } from "~/libs/utils.ts";
+} from "~web/domains/courses/courses.service.ts";
+import CourseCreateModal from "~web/domains/courses/modals/CourseCreateModal.vue";
+import { getFullMonths } from "~web/libs/utils.ts";
 
 const PAGE_SIZE = 6;
 

@@ -1,12 +1,17 @@
 import { zValidator } from "@hono/zod-validator";
 import { and, eq, isNull } from "drizzle-orm";
 import { Hono } from "hono";
-import { coursesTable, criteriaTable, criterionMarksTable, db } from "~/db";
+import {
+  coursesTable,
+  criteriaTable,
+  criterionMarksTable,
+  db,
+} from "~server/db";
 import {
   createCriteriaSchema,
   getCriteriaSchema,
   patchCriteriaSchema,
-} from "~/modules/criteria/criteria.schema";
+} from "~server/modules/criteria/criteria.schema";
 
 const app = new Hono()
   .post("/", zValidator("json", createCriteriaSchema), async (c) => {

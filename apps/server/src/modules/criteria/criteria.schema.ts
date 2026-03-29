@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   createCriterionMarkSchema,
   patchCriterionMarkSchema,
-} from "~/modules/criterion-marks/criterion-marks.schema";
+} from "~server/modules/criterion-marks/criterion-marks.schema";
 
 export const getCriteriaSchema = z.object({
   id: z.string().transform(Number),

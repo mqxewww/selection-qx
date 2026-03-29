@@ -1,9 +1,9 @@
 import { Ref, ref } from "vue";
-import { useToast } from "~/composables/useToast.ts";
+import { useToast } from "~web/composables/useToast.ts";
 import {
   isZodValidationError,
   parseZodValidationErrorToRecord,
-} from "~/libs/utils.ts";
+} from "~web/libs/utils.ts";
 
 type UseApiReturn<T> = {
   data: Ref<T>;

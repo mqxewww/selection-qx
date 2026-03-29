@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ChevronRight, Clock, Users } from "lucide-vue-next";
 import { computed } from "vue";
-import { convertStringValueToCode } from "~/libs/utils.ts";
+import { API_URL, convertStringValueToCode } from "~web/libs/utils.ts";
 
 type Props = {
   title: string;
@@ -15,7 +15,7 @@ const props = defineProps<Props>();
 
 const imageUrl = computed(() => {
   return props.bgImage
-    ? `${import.meta.env.VITE_API_URL}${props.bgImage}`
+    ? `${API_URL}${props.bgImage}`
     : "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&h=250&auto=format&fit=crop";
 });
 </script>

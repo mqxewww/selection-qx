@@ -11,7 +11,7 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
-RUN cd apps/server && bun run build
+RUN cd apps/web && bun run type-check
 RUN cd apps/web && bun run build
 
 FROM nginx:alpine

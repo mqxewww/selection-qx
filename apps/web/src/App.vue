@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ToastComponent from "~/components/ToastComponent.vue";
+import ToastComponent from "~web/components/ToastComponent.vue";
 import "./app.css";
 </script>
 

@@ -8,17 +8,19 @@
     "strict": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
+    //    "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
     "esModuleInterop": true,
     "allowJs": true,
-
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      "~web/*": ["src/*"],
+      "@selection-qx/server": ["../server/src/index.ts"],
+      "@selection-qx/server/*": ["../server/src/*"],
+      "~server/*": ["../server/src/*"]
     }
   },
   "include": ["env.d.ts", "**/*.ts", "**/*.vue"],

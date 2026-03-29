@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { AlignLeft, Type, X } from "lucide-vue-next";
 import { computed, watch } from "vue";
-import ButtonComponent from "~/components/ButtonComponent.vue";
-import DatePickerComponent from "~/components/DatePickerComponent.vue";
-import InputComponent from "~/components/InputComponent.vue";
-import TextareaComponent from "~/components/TextareaComponent.vue";
-import { useApi } from "~/composables/useApi.ts";
-import { useForm } from "~/composables/useForm.ts";
+import ButtonComponent from "~web/components/ButtonComponent.vue";
+import DatePickerComponent from "~web/components/DatePickerComponent.vue";
+import InputComponent from "~web/components/InputComponent.vue";
+import TextareaComponent from "~web/components/TextareaComponent.vue";
+import { useApi } from "~web/composables/useApi.ts";
+import { useForm } from "~web/composables/useForm.ts";
 import {
   CourseCreateInput,
   coursesService,
-} from "~/domains/courses/courses.service.ts";
+} from "~web/domains/courses/courses.service.ts";
 
 const emit = defineEmits(["close", "success"]);
 const props = defineProps<{ isOpen: boolean }>();

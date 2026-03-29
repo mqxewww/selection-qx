@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
-import ButtonComponent from "~/components/ButtonComponent.vue";
-import { useApi } from "~/composables/useApi.ts";
-import { coursesService } from "~/domains/courses/courses.service.ts";
+import ButtonComponent from "~web/components/ButtonComponent.vue";
+import { useApi } from "~web/composables/useApi.ts";
+import { coursesService } from "~web/domains/courses/courses.service.ts";
 
 const emit = defineEmits(["close", "success"]);
 const props = defineProps<{ isOpen: boolean; courseId: string }>();

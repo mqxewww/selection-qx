@@ -23,6 +23,7 @@ bun-error.log*
 *.sqlite
 *.sqlite-journal
 apps/server/data/
+apps/server/public/
 
 # IDEs and editors
 .idea/

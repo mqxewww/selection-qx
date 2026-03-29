@@ -1,6 +1,5 @@
 {
   "name": "selection-qx",
-  "version": "0.2.0",
   "description": "Web application intended for school staff, designed to make it easier to manage student applications.",
   "private": true,
   "license": "MIT",
@@ -9,12 +8,11 @@
     "apps/*"
   ],
   "scripts": {
-    "dev:server": "cd apps/server && bun -b run dev",
-    "dev:web": "cd apps/web && bun -b run dev",
+    "dev:server": "cd apps/server && bun run dev",
+    "dev:web": "cd apps/web && bun run dev",
     "build": "bun -b --filter '*' build",
-    "lint": "eslint \"**/*.{js,ts,html,vue,css,json}\"",
-    "format": "prettier --write \"**/*.{js,ts,html,vue,css,json}\"",
-    "check": "bun run lint && bun run format"
+    "lint": "bun --filter '*' type-check && bunx eslint \"**/*.{js,ts,html,vue,css,json}\"",
+    "format": "prettier --write \"**/*.{js,ts,html,vue,css,json}\""
   },
   "devDependencies": {
     "eslint": "^9.39.4",

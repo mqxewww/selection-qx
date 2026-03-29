@@ -1,14 +1,19 @@
 import { zValidator } from "@hono/zod-validator";
 import { and, count, eq, isNull } from "drizzle-orm";
 import { Hono } from "hono";
-import { coursesTable, criteriaTable, criterionMarksTable, db } from "~/db";
+import {
+  coursesTable,
+  criteriaTable,
+  criterionMarksTable,
+  db,
+} from "~server/db";
 import {
   createCourseSchema,
   getCourseSchema,
   getCoursesListSchema,
   patchCourseSchema,
   putCourseBgImageSchema,
-} from "~/modules/courses/courses.schema";
+} from "~server/modules/courses/courses.schema";
 
 const app = new Hono()
   .get("/", zValidator("query", getCoursesListSchema), async (c) => {

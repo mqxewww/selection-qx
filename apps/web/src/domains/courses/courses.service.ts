@@ -1,6 +1,6 @@
 import { InferResponseType } from "hono/client";
-import { client } from "~/libs/client.ts";
-import { transformEmptyToUndefined } from "~/libs/utils.ts";
+import { client } from "~web/libs/client.ts";
+import { transformEmptyToUndefined } from "~web/libs/utils.ts";
 
 export type CoursesResponse = InferResponseType<
   typeof client.courses.$get,

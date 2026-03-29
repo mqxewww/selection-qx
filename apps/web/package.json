@@ -1,10 +1,12 @@
 {
   "name": "@selection-qx/web",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "NODE_ENV=production vite build"
+    "build": "NODE_ENV=production vite build",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@selection-qx/server": "workspace:*",

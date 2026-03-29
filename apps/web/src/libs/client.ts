@@ -1,4 +1,6 @@
-import { hcWithType } from "@selection-qx/server/hc";
+import type { AppType } from "@selection-qx/server";
+import { hc } from "hono/client";
+import { API_URL } from "~web/libs/utils.ts";
 
 export interface ZodValidationErrorMessage {
   code: string;
@@ -15,4 +17,4 @@ export interface ZodValidationErrorPayload {
   };
 }
 
-export const client = hcWithType(import.meta.env.VITE_API_URL);
+export const client = hc<AppType>(API_URL);

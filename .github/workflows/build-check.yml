@@ -25,8 +25,8 @@ jobs:
       - name: Install Bun dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build @selection-qx/server
-        run: cd apps/server && bun run build
+      - name: Check typescript types & lint
+        run: bun run lint
 
       - name: Build @selection-qx/web
         run: cd apps/web && bun run build

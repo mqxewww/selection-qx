@@ -1,9 +1,9 @@
 import {
   ZodValidationErrorMessage,
   ZodValidationErrorPayload,
-} from "~/libs/client.ts";
+} from "~web/libs/client.ts";
 
-const API_URL = import.meta.env.VITE_API_URL;
+export const API_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Converts a string value into a code according to several rules.
