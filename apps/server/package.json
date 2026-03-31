@@ -1,6 +1,6 @@
 {
   "name": "@selection-qx/server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "exports": {
@@ -10,7 +10,8 @@
     }
   },
   "scripts": {
-    "dev": "bun --watch src/index.ts",
+    "dev": "bun --watch run src/index.ts",
+    "start": "NODE_ENV=production bun run src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:push": "bun run src/db/migrate.ts",
     "type-check": "tsc --noEmit"

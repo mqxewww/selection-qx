@@ -20,4 +20,4 @@ RUN bun run type-check
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "bun db:push && bun run src/index.ts"]
+CMD ["sh", "-c", "bun db:push && bun start"]

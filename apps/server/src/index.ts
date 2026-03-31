@@ -15,6 +15,7 @@ const app = new Hono()
 export type AppType = typeof app;
 
 const server = Bun.serve({
+  hostname: config.API_HOST,
   port: config.API_PORT,
   fetch: app.fetch,
 });

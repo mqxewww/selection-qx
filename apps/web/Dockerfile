@@ -14,7 +14,7 @@ COPY . .
 RUN cd apps/web && bun run type-check
 RUN cd apps/web && bun run build
 
-FROM nginx:alpine
+FROM nginx:1.29-alpine
 
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
