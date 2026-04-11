@@ -62,6 +62,12 @@ const router = createRouter({
           props: true,
           meta: { title: metaTitle("Formations") },
         },
+        {
+          path: "/courses/:id/criteria",
+          component: () => import("~web/views/courses/CourseCriteriaView.vue"),
+          props: true,
+          meta: { title: metaTitle("Formations") },
+        },
       ],
     },
   ],

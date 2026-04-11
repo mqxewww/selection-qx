@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Calendar,
   Clock,
+  ListTree,
   Pencil,
   Save,
   Trash,
@@ -154,21 +155,13 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value;
 };
 
-const goBack = () => {
-  if (window.history.state.back) {
-    router.back();
-  } else {
-    router.push("/courses");
-  }
-};
-
 onMounted(fetchCourse);
 </script>
 
 <template>
   <div v-if="course" class="mx-auto w-full max-w-6xl space-y-6 pb-24">
     <div class="flex items-center justify-between">
-      <ButtonComponent variant="ghost" @click="goBack">
+      <ButtonComponent variant="ghost" @click="router.push('/courses')">
         <ArrowLeft
           class="h-4 w-4 transition-transform group-hover:-translate-x-1"
         />
@@ -177,13 +170,20 @@ onMounted(fetchCourse);
 
       <div class="flex items-center gap-3">
         <template v-if="!isEditing">
-          <ButtonComponent variant="danger" @click="isModalOpen = true">
-            <Trash class="h-4 w-4" />
-            Supprimer
+          <ButtonComponent
+            variant="secondary"
+            @click="router.push(`/courses/${props.id}/criteria`)"
+          >
+            <ListTree class="h-4 w-4" />
+            Notations
           </ButtonComponent>
           <ButtonComponent variant="primary" @click="toggleEdit">
             <Pencil class="h-4 w-4" />
             Modifier
+          </ButtonComponent>
+          <ButtonComponent variant="danger" @click="isModalOpen = true">
+            <Trash class="h-4 w-4" />
+            Supprimer
           </ButtonComponent>
         </template>
         <template v-else>

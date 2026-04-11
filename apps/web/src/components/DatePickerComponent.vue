@@ -41,7 +41,7 @@ const openPicker = () => {
         required
         :min="min"
         :max="max"
-        class="w-full appearance-none rounded-xl bg-zinc-900/50 py-2.5 pr-4 pl-10 text-sm placeholder-zinc-600 [color-scheme:dark] transition-all outline-none focus:ring-1"
+        class="w-full appearance-none rounded-xl bg-zinc-900/50 py-2.5 pr-4 pl-10 text-sm placeholder-zinc-600 scheme-dark transition-all outline-none focus:ring-1"
         :class="
           error
             ? 'border border-red-500/50 text-zinc-100 focus:border-red-500 focus:ring-red-500/20'

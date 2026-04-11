@@ -14,6 +14,29 @@ import {
 } from "~server/modules/criteria/criteria.schema";
 
 const app = new Hono()
+  .get("/:id", zValidator("param", getCriteriaSchema), async (c) => {
+    const { id } = c.req.valid("param");
+
+    const criteria = await db.query.criteriaTable.findMany({
+      where: and(eq(criteriaTable.id, id), isNull(criteriaTable.deletedAt)),
+      columns: {
+        id: true,
+        title: true,
+      },
+      with: {
+        marks: {
+          where: isNull(criterionMarksTable.deletedAt),
+          columns: {
+            id: true,
+            label: true,
+            mark: true,
+          },
+        },
+      },
+    });
+
+    return c.json(criteria);
+  })
   .post("/", zValidator("json", createCriteriaSchema), async (c) => {
     const { title, courseId, marks } = c.req.valid("json");
 

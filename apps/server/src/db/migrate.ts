@@ -8,5 +8,3 @@ const sqlite = new Database(config.DB_FILE_NAME);
 const db = drizzle({ client: sqlite, schema });
 
 migrate(db, { migrationsFolder: "./drizzle" });
-
-console.log("Database successfully updated !");

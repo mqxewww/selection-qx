@@ -2,16 +2,23 @@
 import { X } from "lucide-vue-next";
 import ButtonComponent from "~web/components/ButtonComponent.vue";
 import { useApi } from "~web/composables/useApi.ts";
-import { coursesService } from "~web/domains/courses/courses.service.ts";
+import {
+  criteriaService,
+  Criterion,
+} from "~web/domains/criteria/criteria.service.ts";
 
 const emit = defineEmits(["close", "success"]);
-const props = defineProps<{ isOpen: boolean; courseId: string }>();
+const props = defineProps<{ criterion: Criterion | null }>();
 
 const { loading, execute } = useApi();
 
 const handleSubmit = async () => {
+  const criterionId = props.criterion?.id;
+
+  if (!criterionId) return;
+
   try {
-    await execute(() => coursesService.delete(props.courseId), {
+    await execute(() => criteriaService.delete(criterionId.toString()), {
       delay_ms: 500,
     });
 
@@ -40,7 +47,7 @@ const handleCloseModal = () => {
     leave-to-class="opacity-0"
   >
     <div
-      v-if="props.isOpen"
+      v-if="props.criterion"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       @click.self="emit('close')"
     >
@@ -61,7 +68,7 @@ const handleCloseModal = () => {
           >
             <div class="flex items-center gap-3">
               <h2 class="text-base font-bold text-zinc-100">
-                Supprimer cette formation
+                Supprimer ce critère de notation
               </h2>
             </div>
             <ButtonComponent variant="ghost" @click="handleCloseModal()">
@@ -72,8 +79,8 @@ const handleCloseModal = () => {
           <form class="p-6" @submit.prevent="handleSubmit">
             <div class="mb-8 space-y-2">
               <p class="text-sm leading-relaxed font-medium text-zinc-400">
-                Êtes-vous sûr de vouloir supprimer cette formation ? Cette
-                action est irréversible.
+                Êtes-vous sûr de vouloir supprimer ce critère de notation ?
+                Cette action est irréversible.
               </p>
             </div>
 
