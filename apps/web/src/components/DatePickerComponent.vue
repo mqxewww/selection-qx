@@ -10,7 +10,7 @@ type Props = {
   error?: string;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const model = defineModel<string>({ required: true });
 const inputRef = ref<HTMLInputElement | null>(null);
 
@@ -22,10 +22,10 @@ const openPicker = () => {
 <template>
   <div class="space-y-1.5">
     <label
-      v-if="label"
+      v-if="props.label"
       class="text-[11px] font-bold tracking-wider text-zinc-500 uppercase"
     >
-      {{ label }}
+      {{ props.label }}
     </label>
 
     <div class="relative cursor-pointer" @click="openPicker">
@@ -39,8 +39,8 @@ const openPicker = () => {
         v-model="model"
         type="date"
         required
-        :min="min"
-        :max="max"
+        :min="props.min"
+        :max="props.max"
         class="w-full appearance-none rounded-xl bg-zinc-900/50 py-2.5 pr-4 pl-10 text-sm placeholder-zinc-600 scheme-dark transition-all outline-none focus:ring-1"
         :class="
           error
@@ -54,8 +54,8 @@ const openPicker = () => {
       enter-from-class="opacity-0 -translate-y-1"
       enter-to-class="opacity-100 translate-y-0"
     >
-      <p v-if="error" class="text-xs font-medium text-red-400">
-        {{ error }}
+      <p v-if="props.error" class="text-xs font-medium text-red-400">
+        {{ props.error }}
       </p>
     </Transition>
   </div>

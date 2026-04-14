@@ -15,41 +15,41 @@ const emit = defineEmits(["close", "success"]);
 const props = defineProps<{
   isOpen: boolean;
   courseId: number;
-  criterionToEdit: Criterion | null;
+  criterion: Criterion | null;
 }>();
 
 const { loading, execute, validationErrors } = useApi();
 
 const { form, updateForm, resetForm } = useForm<CriteriaUpdateInput>(
-  {
+  () => ({
     title: "",
     courseId: props.courseId,
     marks: [],
-  },
+  }),
   (form) => {
-    if (!props.isOpen || !props.criterionToEdit) return;
+    if (!props.criterion) return;
 
-    form.title = props.criterionToEdit.title;
-    form.marks = props.criterionToEdit.marks.map((mark) => ({
+    form.title = props.criterion.title;
+    form.marks = props.criterion.marks.map((mark) => ({
       ...mark,
       shouldDelete: false,
     }));
   },
 );
 
+const visibleMarks = computed(() =>
+  form.marks.filter((mark) => !mark.shouldDelete),
+);
+
 watch(
   () => props.isOpen,
   (isOpen) => {
-    if (isOpen && props.criterionToEdit) {
+    if (isOpen) {
       updateForm();
-    } else if (isOpen) {
+    } else {
       resetForm();
     }
   },
-);
-
-const visibleMarks = computed(() =>
-  form.marks.filter((mark) => !mark.shouldDelete),
 );
 
 const addMark = () => {
@@ -65,49 +65,50 @@ const removeMark = (indexInVisible: number) => {
   const visibleMark = visibleMarks.value[indexInVisible];
   const realIndex = form.marks.findIndex((mark) => mark === visibleMark);
 
-  if (realIndex !== -1) {
-    if (form.marks[realIndex].id) {
-      form.marks[realIndex].shouldDelete = true;
-    } else {
-      form.marks.splice(realIndex, 1);
-    }
+  if (realIndex === -1) return;
+
+  if (form.marks[realIndex].id) {
+    form.marks[realIndex].shouldDelete = true;
+  } else {
+    form.marks.splice(realIndex, 1);
   }
 };
 
 const handleSubmit = async () => {
+  if (loading.value) return;
+
+  const criterionId = props.criterion ? `${props.criterion.id}` : null;
+
   try {
-    if (props.criterionToEdit) {
-      await execute(
-        () => criteriaService.patch(props.criterionToEdit!.id.toString(), form),
-        {
-          delay_ms: 500,
-        },
-      );
+    if (criterionId) {
+      await execute(() => criteriaService.patch(criterionId, form), {
+        delay_ms: 500,
+        successMessage: "Modifications enregistrées !",
+      });
     } else {
       await execute(() => criteriaService.create(form), {
         delay_ms: 500,
+        successMessage: "Nouveau critère ajouté !",
       });
     }
 
     emit("success");
     emit("close");
-    resetForm();
   } catch (error) {
     console.error(error);
   }
 };
 
-const handleCloseModal = () => {
-  emit("close");
-  resetForm();
-};
-
 const isSubmitDisabled = computed(() => {
-  return (
+  const hasErrors =
+    validationErrors.value && Object.keys(validationErrors.value).length > 0;
+
+  const isMissingData =
     !form.title.trim() ||
     visibleMarks.value.length === 0 ||
-    visibleMarks.value.some((m) => !m.label.trim() || m.mark === null)
-  );
+    visibleMarks.value.some((m) => !m.label.trim() || m.mark === null);
+
+  return hasErrors || isMissingData;
 });
 </script>
 
@@ -123,16 +124,16 @@ const isSubmitDisabled = computed(() => {
     <div
       v-if="props.isOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-      @click.self="handleCloseModal"
+      @click.self="emit('close')"
     >
       <Transition
         appear
-        enter-active-class="transition duration-300 ease-out delay-75"
-        enter-from-class="opacity-0 scale-95 translate-y-4"
-        enter-to-class="opacity-100 scale-100 translate-y-0"
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
         leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100 scale-100 translate-y-0"
-        leave-to-class="opacity-0 scale-95 translate-y-4"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
       >
         <div
           class="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-800 shadow-2xl shadow-black/50"
@@ -141,9 +142,9 @@ const isSubmitDisabled = computed(() => {
             class="flex items-center justify-between border-b border-zinc-700/50 px-6 py-4"
           >
             <h2 class="text-base font-bold text-zinc-100">
-              {{ criterionToEdit ? "Modifier le critère" : "Nouveau critère" }}
+              {{ criterion ? "Modifier le critère" : "Nouveau critère" }}
             </h2>
-            <ButtonComponent variant="ghost" @click="handleCloseModal">
+            <ButtonComponent variant="ghost" @click="emit('close')">
               <X class="h-5 w-5" />
             </ButtonComponent>
           </div>
@@ -220,25 +221,24 @@ const isSubmitDisabled = computed(() => {
                 </div>
               </div>
             </div>
-          </form>
 
-          <div
-            class="flex items-center justify-end gap-3 border-t border-zinc-700/30 px-6 py-4"
-          >
-            <ButtonComponent variant="ghost" @click="handleCloseModal">
-              Annuler
-            </ButtonComponent>
-
-            <ButtonComponent
-              type="submit"
-              variant="primary"
-              :loading="loading"
-              :disabled="isSubmitDisabled"
-              @click="handleSubmit"
+            <div
+              class="flex items-center justify-end gap-3 border-t border-zinc-700/30 pt-4"
             >
-              {{ loading ? "Enregistrement..." : "Enregistrer" }}
-            </ButtonComponent>
-          </div>
+              <ButtonComponent variant="ghost" @click="emit('close')">
+                Annuler
+              </ButtonComponent>
+
+              <ButtonComponent
+                type="submit"
+                variant="primary"
+                :loading="loading"
+                :disabled="isSubmitDisabled"
+              >
+                {{ loading ? "Enregistrement..." : "Enregistrer" }}
+              </ButtonComponent>
+            </div>
+          </form>
         </div>
       </Transition>
     </div>

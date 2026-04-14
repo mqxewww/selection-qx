@@ -18,7 +18,10 @@ const app = new Hono()
     const { id } = c.req.valid("param");
 
     const criteria = await db.query.criteriaTable.findMany({
-      where: and(eq(criteriaTable.id, id), isNull(criteriaTable.deletedAt)),
+      where: and(
+        eq(criteriaTable.courseId, id),
+        isNull(criteriaTable.deletedAt),
+      ),
       columns: {
         id: true,
         title: true,

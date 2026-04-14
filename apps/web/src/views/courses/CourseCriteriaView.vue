@@ -16,15 +16,13 @@ import CriterionDeleteModal from "~web/domains/criteria/modals/CriterionDeleteMo
 const props = defineProps<{ id: string }>();
 const router = useRouter();
 
-const { execute, data: criteriaList, loading } = useApi<CriteriaResponse>();
-
-const selectedCriterion = ref<Criterion | null>(null);
-const selectedCriterionToDelete = ref<Criterion | null>(null);
+const { execute, data, loading } = useApi<CriteriaResponse>();
 
 const fetchCriteria = async () => {
   await execute(() => criteriaService.getByCourseId(props.id));
 };
 
+const selectedCriterion = ref<Criterion | null>(null);
 const isCreateOrEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 
@@ -34,13 +32,14 @@ const openCreateOrEditModal = (criterion?: Criterion) => {
   isCreateOrEditModalOpen.value = true;
 };
 
-const closeCreateOrEditModal = () => {
+const closeModal = () => {
   selectedCriterion.value = null;
   isCreateOrEditModalOpen.value = false;
+  isDeleteModalOpen.value = false;
 };
 
 const openDeleteModal = (criterion: Criterion) => {
-  selectedCriterionToDelete.value = criterion;
+  selectedCriterion.value = criterion;
   isDeleteModalOpen.value = true;
 };
 
@@ -115,30 +114,15 @@ onMounted(fetchCriteria);
     </div>
 
     <div
-      v-else-if="!criteriaList || criteriaList.length === 0"
+      v-else-if="!data || data.length === 0"
       class="flex min-h-100 flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700/50 bg-zinc-800/30 py-24"
     >
-      <!--      <div class="mb-6 flex items-center justify-center">-->
-      <!--        <div-->
-      <!--          class="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-zinc-700/60 bg-zinc-800 shadow-lg shadow-black/30 backdrop-blur-sm"-->
-      <!--        >-->
-      <!--          <ListChecks class="h-9 w-9 text-zinc-500" />-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <div class="text-center">-->
-      <!--        <h2 class="text-xl font-bold tracking-tight text-zinc-200">-->
-      <!--          Aucun critère de notation défini-->
-      <!--        </h2>-->
-      <!--        <p class="mt-2 max-w-sm text-sm leading-relaxed text-zinc-500">-->
-      <!--          Cette formation ne possède pas encore de critères de notation.-->
-      <!--        </p>-->
-      <!--      </div>-->
       <CriteriaEmptyListState />
     </div>
 
     <div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       <div
-        v-for="criterion in criteriaList"
+        v-for="criterion in data"
         :key="criterion.id"
         class="group flex flex-col rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
       >
@@ -180,14 +164,15 @@ onMounted(fetchCriteria);
     <CriterionCreateOrEditModal
       :is-open="isCreateOrEditModalOpen"
       :course-id="Number(props.id)"
-      :criterion-to-edit="selectedCriterion"
-      @close="closeCreateOrEditModal()"
+      :criterion="selectedCriterion"
+      @close="closeModal()"
       @success="fetchCriteria()"
     />
 
     <CriterionDeleteModal
-      :criterion="selectedCriterionToDelete"
-      @close="selectedCriterionToDelete = null"
+      :is-open="isDeleteModalOpen"
+      :criterion="selectedCriterion"
+      @close="closeModal()"
       @success="fetchCriteria()"
     />
   </div>

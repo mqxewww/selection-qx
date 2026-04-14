@@ -17,13 +17,13 @@ const props = defineProps<{ isOpen: boolean }>();
 
 const { loading, execute, validationErrors } = useApi();
 
-const { form, resetForm } = useForm<CourseCreateInput>({
+const { form, resetForm } = useForm<CourseCreateInput>(() => ({
   title: "",
   description: "",
   capacity: 0,
   periodStart: "",
   periodEnd: "",
-});
+}));
 
 watch(
   form,
@@ -39,9 +39,12 @@ watch(
 );
 
 const handleSubmit = async () => {
+  if (loading.value) return;
+
   try {
     await execute(() => coursesService.create(form), {
       delay_ms: 500,
+      successMessage: "Nouvelle formation créé !",
     });
 
     emit("success");
@@ -85,16 +88,16 @@ const isSubmitDisabled = computed(() => {
     <div
       v-if="props.isOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-      @click.self="emit('close')"
+      @click.self="handleCloseModal()"
     >
       <Transition
         appear
-        enter-active-class="transition duration-300 ease-out delay-75"
-        enter-from-class="opacity-0 scale-95 translate-y-4"
-        enter-to-class="opacity-100 scale-100 translate-y-0"
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
         leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100 scale-100 translate-y-0"
-        leave-to-class="opacity-0 scale-95 translate-y-4"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
       >
         <div
           class="w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-800 shadow-2xl shadow-black/50"

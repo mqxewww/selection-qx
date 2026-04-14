@@ -24,6 +24,8 @@ const { loading, execute, data } = useApi<CoursesResponse>({
   meta: { totalItems: 0 },
 });
 
+const isModalOpen = ref(false);
+
 const { currentPage, totalPages, goToPage } = usePagination(
   PAGE_SIZE,
   computed(() => data.value.meta.totalItems),
@@ -38,8 +40,6 @@ watch(currentPage, (newPage) => {
 
   fetchCourses();
 });
-
-const isModalOpen = ref(false);
 
 if (route.query.page) {
   currentPage.value = Number(route.query.page);

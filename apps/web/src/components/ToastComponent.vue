@@ -6,39 +6,39 @@ import {
   Info,
   X,
 } from "lucide-vue-next";
-import { useToast } from "~web/composables/useToast.ts";
+import { ToastType, useToast } from "~web/composables/useToast.ts";
 
 const { toasts, removeToast } = useToast();
 
-const getIcon = (type: string) => {
+const getIcon = (type: ToastType) => {
   switch (type) {
-    case "success":
+    case ToastType.SUCCESS:
       return CheckCircle;
 
-    case "error":
+    case ToastType.ERROR:
       return AlertCircle;
 
-    case "warning":
+    case ToastType.WARNING:
       return AlertTriangle;
 
-    case "info":
+    case ToastType.INFO:
     default:
       return Info;
   }
 };
 
-const getColorClasses = (type: string) => {
+const getColorClasses = (type: ToastType) => {
   switch (type) {
-    case "success":
+    case ToastType.SUCCESS:
       return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
 
-    case "error":
+    case ToastType.ERROR:
       return "text-red-400 bg-red-500/10 border-red-500/20";
 
-    case "warning":
+    case ToastType.WARNING:
       return "text-amber-400 bg-amber-500/10 border-amber-500/20";
 
-    case "info":
+    case ToastType.INFO:
       return "text-blue-400 bg-blue-500/10 border-blue-500/20";
 
     default:
@@ -49,15 +49,15 @@ const getColorClasses = (type: string) => {
 
 <template>
   <div
-    class="pointer-events-none fixed right-4 bottom-4 z-100 flex flex-col gap-3 sm:right-6 sm:bottom-6"
+    class="top pointer-events-none fixed right-4 z-100 flex flex-col gap-3 sm:top-6 sm:right-6"
   >
     <TransitionGroup
       enter-active-class="transition duration-300 ease-out"
-      enter-from-class="translate-y-4 opacity-0 scale-95"
-      enter-to-class="translate-y-0 opacity-100 scale-100"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
       leave-active-class="transition duration-200 ease-in absolute right-0"
-      leave-from-class="opacity-100 scale-100 translate-y-0"
-      leave-to-class="opacity-0 scale-95 translate-y-2"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
       move-class="transition-transform duration-300"
     >
       <div
@@ -75,7 +75,7 @@ const getColorClasses = (type: string) => {
         </div>
 
         <div class="flex-1">
-          <p class="text-[13px] leading-relaxed font-medium text-zinc-200">
+          <p class="text-[15px] leading-relaxed font-medium text-zinc-200">
             {{ toast.message }}
           </p>
         </div>

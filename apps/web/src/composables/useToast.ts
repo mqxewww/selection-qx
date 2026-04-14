@@ -1,6 +1,11 @@
 import { ref } from "vue";
 
-export type ToastType = "success" | "error" | "info" | "warning";
+export enum ToastType {
+  SUCCESS,
+  ERROR,
+  INFO,
+  WARNING,
+}
 
 export interface Toast {
   id: number;
@@ -30,12 +35,12 @@ export function useToast() {
     toasts,
     removeToast,
     showSuccess: (msg: string, duration?: number) =>
-      addToast(msg, "success", duration),
+      addToast(msg, ToastType.SUCCESS, duration),
     showError: (msg: string, duration?: number) =>
-      addToast(msg, "error", duration),
+      addToast(msg, ToastType.ERROR, duration),
     showInfo: (msg: string, duration?: number) =>
-      addToast(msg, "info", duration),
+      addToast(msg, ToastType.INFO, duration),
     showWarning: (msg: string, duration?: number) =>
-      addToast(msg, "warning", duration),
+      addToast(msg, ToastType.WARNING, duration),
   };
 }

@@ -3,12 +3,13 @@ import { Loader2 } from "lucide-vue-next";
 import { computed } from "vue";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
+type ButtonType = "button" | "submit" | "reset";
 
 interface Props {
   variant?: ButtonVariant;
   loading?: boolean;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset";
+  type?: ButtonType;
   class?: string;
 }
 

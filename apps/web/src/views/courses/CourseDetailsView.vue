@@ -49,13 +49,13 @@ const {
 } = useApi();
 
 const { form, updateForm } = useForm<CourseUpdateInput>(
-  {
+  () => ({
     title: "",
     description: "",
     capacity: 0,
     periodStart: "",
     periodEnd: "",
-  },
+  }),
   (form) => {
     if (!course.value) return;
 
@@ -69,6 +69,7 @@ const { form, updateForm } = useForm<CourseUpdateInput>(
 
 const selectedFile = ref<File | undefined>(undefined);
 const isEditing = ref(false);
+const isModalOpen = ref(false);
 
 const fetchCourse = async () => {
   await fetchExecute(() => coursesService.getById(props.id));
@@ -78,6 +79,7 @@ const handleSave = async () => {
   try {
     await saveExecute(() => coursesService.patch(props.id, form), {
       delay_ms: 500,
+      successMessage: "Modifications enregistrées !",
     });
 
     await fetchCourse();
@@ -127,12 +129,8 @@ watch(selectedFile, (file) => {
     putBgImageValidationErrors.value = {};
   }
 
-  if (file) {
-    handleFileUpload();
-  }
+  if (file) handleFileUpload();
 });
-
-const isModalOpen = ref(false);
 
 const isSubmitDisabled = computed(() => {
   const hasErrors =

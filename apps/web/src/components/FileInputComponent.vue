@@ -8,37 +8,38 @@ type Props = {
   error?: string;
 };
 
-defineProps<Props>();
-
+const props = defineProps<Props>();
 const model = defineModel<File | null | undefined>({ required: true });
 
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   model.value =
-    target.files && target.files?.length > 0 ? target.files[0]! : null;
+    target.files && target.files.length > 0 ? target.files[0] : null;
 };
 </script>
 
 <template>
   <div class="space-y-1.5">
     <label class="text-[11px] font-bold tracking-wider text-zinc-500 uppercase">
-      {{ label }}
+      {{ props.label }}
     </label>
 
     <div class="relative">
       <component
-        :is="icon"
+        :is="props.icon"
         class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors"
-        :class="error ? 'text-red-400' : 'pointer-events-none text-zinc-500'"
+        :class="
+          props.error ? 'text-red-400' : 'pointer-events-none text-zinc-500'
+        "
       />
 
       <input
         type="file"
-        :accept="accept"
+        :accept="props.accept"
         class="w-full cursor-pointer rounded-xl bg-zinc-900/50 py-1.5 pr-4 pl-10 text-sm transition-all outline-none file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-zinc-800 file:px-4 file:py-1 file:text-xs file:font-semibold file:text-zinc-200 file:shadow-sm file:transition-all hover:file:bg-zinc-700 hover:file:text-white focus:ring-1"
         :class="[
-          error
+          props.error
             ? 'border border-red-500/50 focus:border-red-500 focus:ring-red-500/20'
             : 'border border-zinc-700/50 focus:border-blue-500/50 focus:ring-blue-500/20',
           model ? 'text-zinc-400' : 'text-transparent',
@@ -52,8 +53,8 @@ const handleFileChange = (event: Event) => {
       enter-from-class="opacity-0 -translate-y-1"
       enter-to-class="opacity-100 translate-y-0"
     >
-      <p v-if="error" class="text-xs font-medium text-red-400">
-        {{ error }}
+      <p v-if="props.error" class="text-xs font-medium text-red-400">
+        {{ props.error }}
       </p>
     </Transition>
   </div>
