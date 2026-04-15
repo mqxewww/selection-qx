@@ -29,10 +29,7 @@ import {
   CourseUpdateInput,
 } from "~web/domains/courses/courses.service.ts";
 import CourseDeleteModal from "~web/domains/courses/modals/CourseDeleteModal.vue";
-import {
-  convertUnixTimestampToLongDate,
-  getImageFullURL,
-} from "~web/libs/utils.ts";
+import { getImageFullURL } from "~web/libs/utils.ts";
 
 const props = defineProps<{ id: string }>();
 const router = useRouter();
@@ -344,7 +341,7 @@ onMounted(fetchCourse);
                 <span class="text-sm">Créée le</span>
               </div>
               <span class="text-sm font-medium text-zinc-300">
-                {{ convertUnixTimestampToLongDate(course.createdAt) }}
+                {{ new Date(course.createdAt).toLocaleString() }}
               </span>
             </div>
           </div>

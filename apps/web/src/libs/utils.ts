@@ -33,25 +33,11 @@ export function convertStringValueToCode(value: string) {
 }
 
 /**
- * Converts a Unix timestamp (in milliseconds) to a French long date string.
- * @param unixTs Unix timestamp to convert
- */
-export function convertUnixTimestampToLongDate(unixTs: string) {
-  return new Date(unixTs).toLocaleDateString("fr-FR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-/**
  * Get the full image URL based on the provided path.
  * @param imagePath Path returned from API (/uploads/*)
  */
-export function getImageFullURL(imagePath?: string | null) {
-  return imagePath
-    ? `${API_URL}${imagePath}`
-    : "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&h=400&auto=format&fit=crop";
+export function getImageFullURL(imagePath: string) {
+  return `${API_URL}${imagePath}`;
 }
 
 /**

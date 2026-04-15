@@ -1,11 +1,12 @@
 import { InferResponseType } from "hono/client";
 import { client } from "~web/libs/client.ts";
 
-export type Criterion = CriteriaResponse[number];
-
 export type CriteriaResponse = InferResponseType<
-  (typeof client.criteria)[":id"]["$get"]
+  (typeof client.criteria)[":id"]["$get"],
+  200
 >;
+
+export type Criterion = CriteriaResponse["criteria"][number];
 
 export type CriteriaCreateInput = {
   title: string;

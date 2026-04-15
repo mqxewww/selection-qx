@@ -1,6 +1,6 @@
 {
   "name": "@selection-qx/web",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,20 +10,20 @@
   },
   "dependencies": {
     "@selection-qx/server": "workspace:*",
-    "hono": "^4.12.7",
+    "hono": "^4.12.14",
     "lucide-vue-next": "^0.563.0",
-    "vue": "^3.5.29",
+    "vue": "^3.5.32",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.2.1",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/bun": "latest",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "tailwindcss": "^4.2.1",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
+    "vite": "^7.3.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "vue-tsc": "^3.2.5"
+    "vue-tsc": "^3.2.6"
   },
   "prettier": {
     "plugins": [

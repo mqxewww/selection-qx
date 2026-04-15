@@ -70,10 +70,15 @@ onMounted(fetchCriteria);
     <div class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6 md:p-8">
       <div class="flex flex-col">
         <span
+          v-if="data"
           class="mb-2 text-[11px] font-bold tracking-widest text-zinc-500 uppercase"
         >
-          Titre de la formation
+          {{ data.title }}
         </span>
+        <div
+          v-else
+          class="mb-2 h-5 w-20 animate-pulse rounded-md bg-zinc-700/50"
+        />
 
         <h1 class="text-3xl font-extrabold tracking-tight text-zinc-100">
           Critères de notation
@@ -114,7 +119,7 @@ onMounted(fetchCriteria);
     </div>
 
     <div
-      v-else-if="!data || data.length === 0"
+      v-else-if="!data || data.criteria.length === 0"
       class="flex min-h-100 flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700/50 bg-zinc-800/30 py-24"
     >
       <CriteriaEmptyListState />
@@ -122,7 +127,7 @@ onMounted(fetchCriteria);
 
     <div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       <div
-        v-for="criterion in data"
+        v-for="criterion in data.criteria"
         :key="criterion.id"
         class="group flex flex-col rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
       >

@@ -1,12 +1,12 @@
 import { zValidator } from "@hono/zod-validator";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { Hono } from "hono";
+import { db } from "~server/db";
 import {
   coursesTable,
   criteriaTable,
   criterionMarksTable,
-  db,
-} from "~server/db";
+} from "~server/db/schema";
 import {
   createCriteriaSchema,
   getCriteriaSchema,
@@ -17,55 +17,51 @@ const app = new Hono()
   .get("/:id", zValidator("param", getCriteriaSchema), async (c) => {
     const { id } = c.req.valid("param");
 
-    const criteria = await db.query.criteriaTable.findMany({
-      where: and(
-        eq(criteriaTable.courseId, id),
-        isNull(criteriaTable.deletedAt),
-      ),
+    const courseWithCriteria = await db.query.coursesTable.findFirst({
+      where: and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)),
       columns: {
-        id: true,
         title: true,
       },
       with: {
-        marks: {
-          where: isNull(criterionMarksTable.deletedAt),
+        criteria: {
+          where: isNull(criteriaTable.deletedAt),
           columns: {
             id: true,
-            label: true,
-            mark: true,
+            title: true,
+          },
+          with: {
+            marks: {
+              where: isNull(criterionMarksTable.deletedAt),
+              columns: {
+                id: true,
+                label: true,
+                mark: true,
+              },
+            },
           },
         },
       },
     });
 
-    return c.json(criteria);
+    if (!courseWithCriteria)
+      return c.json({ error: { message: "Course not found" } }, 404);
+
+    return c.json(courseWithCriteria);
   })
   .post("/", zValidator("json", createCriteriaSchema), async (c) => {
-    const { title, courseId, marks } = c.req.valid("json");
-
-    const course = (
-      await db
-        .select({ id: coursesTable.id })
-        .from(coursesTable)
-        .where(
-          and(eq(coursesTable.id, courseId), isNull(coursesTable.deletedAt)),
-        )
-    )[0];
-
-    if (!course) return c.json({ error: { message: "Course not found" } }, 404);
+    const validated = c.req.valid("json");
 
     await db.transaction(async (tx) => {
-      const newCriterion = (
-        await tx
-          .insert(criteriaTable)
-          .values({
-            title,
-            courseId,
-          })
-          .returning()
-      )[0];
+      const newCriterion = tx
+        .insert(criteriaTable)
+        .values({
+          title: validated.title,
+          courseId: validated.courseId,
+        })
+        .returning()
+        .get();
 
-      const marksToInsert = marks.map((m) => ({
+      const marksToInsert = validated.marks.map((m) => ({
         label: m.label,
         mark: m.mark,
         criterionId: newCriterion.id,
@@ -82,32 +78,22 @@ const app = new Hono()
     zValidator("json", patchCriteriaSchema),
     async (c) => {
       const { id } = c.req.valid("param");
-      const { title, marks } = c.req.valid("json");
-
-      const criterion = (
-        await db
-          .select()
-          .from(criteriaTable)
-          .where(and(eq(criteriaTable.id, id), isNull(criteriaTable.deletedAt)))
-      )[0];
-
-      if (!criterion)
-        return c.json({ error: { message: "Criterion not found" } }, 404);
+      const validated = c.req.valid("json");
 
       await db.transaction(async (tx) => {
-        if (title) {
+        if (validated.title) {
           await tx
             .update(criteriaTable)
-            .set({ title })
+            .set({ title: validated.title })
             .where(eq(criteriaTable.id, id));
         }
 
-        for (const mark of marks) {
+        for (const mark of validated.marks) {
           if (mark.id) {
             if (mark.shouldDelete) {
               await tx
                 .update(criterionMarksTable)
-                .set({ deletedAt: new Date() })
+                .set({ deletedAt: sql`(current_timestamp)` })
                 .where(eq(criterionMarksTable.id, mark.id));
 
               continue;
@@ -148,16 +134,15 @@ const app = new Hono()
     const deletedCriterion = await db.transaction(async (tx) => {
       await tx
         .update(criterionMarksTable)
-        .set({ deletedAt: new Date() })
+        .set({ deletedAt: sql`(current_timestamp)` })
         .where(eq(criterionMarksTable.criterionId, id));
 
-      return (
-        await tx
-          .update(criteriaTable)
-          .set({ deletedAt: new Date() })
-          .where(and(eq(criteriaTable.id, id), isNull(criteriaTable.deletedAt)))
-          .returning()
-      )[0];
+      return tx
+        .update(criteriaTable)
+        .set({ deletedAt: sql`(current_timestamp)` })
+        .where(and(eq(criteriaTable.id, id), isNull(criteriaTable.deletedAt)))
+        .returning()
+        .get();
     });
 
     return deletedCriterion

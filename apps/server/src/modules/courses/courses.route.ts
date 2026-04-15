@@ -1,12 +1,12 @@
 import { zValidator } from "@hono/zod-validator";
-import { and, count, eq, isNull } from "drizzle-orm";
+import { and, count, eq, isNull, sql } from "drizzle-orm";
 import { Hono } from "hono";
+import { db } from "~server/db";
 import {
   coursesTable,
   criteriaTable,
   criterionMarksTable,
-  db,
-} from "~server/db";
+} from "~server/db/schema";
 import {
   createCourseSchema,
   getCourseSchema,
@@ -19,34 +19,35 @@ const app = new Hono()
   .get("/", zValidator("query", getCoursesListSchema), async (c) => {
     const { page, limit } = c.req.valid("query");
 
-    const [courses, totalResult] = await Promise.all([
+    const [courses, metaData] = await Promise.all([
+      db.query.coursesTable.findMany({
+        where: isNull(coursesTable.deletedAt),
+        columns: {
+          id: true,
+          title: true,
+          description: true,
+          capacity: true,
+          periodStart: true,
+          periodEnd: true,
+          bgImagePath: true,
+        },
+        offset: (page - 1) * limit,
+        limit: limit,
+      }),
+
       db
-        .select({
-          id: coursesTable.id,
-          title: coursesTable.title,
-          description: coursesTable.description,
-          capacity: coursesTable.capacity,
-          periodStart: coursesTable.periodStart,
-          periodEnd: coursesTable.periodEnd,
-          bgImage: coursesTable.bgImagePath,
-        })
+        .select({ count: count() })
         .from(coursesTable)
         .where(isNull(coursesTable.deletedAt))
-        .offset((page - 1) * limit)
-        .limit(limit),
-
-      db
-        .select({ value: count() })
-        .from(coursesTable)
-        .where(isNull(coursesTable.deletedAt)),
+        .get(),
     ]);
 
-    const totalItems = totalResult[0].value;
+    const totalItems = metaData ? metaData.count : 0;
 
     return c.json({
       items: courses,
       meta: {
-        totalItems,
+        totalItems: totalItems,
       },
     });
   })
@@ -93,7 +94,11 @@ const app = new Hono()
   .post("/", zValidator("json", createCourseSchema), async (c) => {
     const validated = c.req.valid("json");
 
-    await db.insert(coursesTable).values(validated);
+    const defaultBgImagePath = "/uploads/default.jpeg";
+
+    await db
+      .insert(coursesTable)
+      .values({ ...validated, bgImagePath: defaultBgImagePath });
 
     return c.json({}, 201);
   })
@@ -112,13 +117,12 @@ const app = new Hono()
 
       await Bun.write(`./public${filePath}`, file);
 
-      const updatedCourse = (
-        await db
-          .update(coursesTable)
-          .set({ bgImagePath: filePath })
-          .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-          .returning()
-      )[0];
+      const updatedCourse = db
+        .update(coursesTable)
+        .set({ bgImagePath: filePath })
+        .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+        .returning()
+        .get();
 
       return updatedCourse
         ? c.json({}, 200)
@@ -136,13 +140,12 @@ const app = new Hono()
       if (Object.keys(updates).length === 0)
         return c.json({ error: { message: "No changes provided" } }, 400);
 
-      const updatedCourse = (
-        await db
-          .update(coursesTable)
-          .set(updates)
-          .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-          .returning()
-      )[0];
+      const updatedCourse = db
+        .update(coursesTable)
+        .set(updates)
+        .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+        .returning()
+        .get();
 
       return updatedCourse
         ? c.json({}, 200)
@@ -152,13 +155,12 @@ const app = new Hono()
   .delete("/:id", zValidator("param", getCourseSchema), async (c) => {
     const { id } = c.req.valid("param");
 
-    const deletedCourse = (
-      await db
-        .update(coursesTable)
-        .set({ deletedAt: new Date() })
-        .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
-        .returning()
-    )[0];
+    const deletedCourse = db
+      .update(coursesTable)
+      .set({ deletedAt: sql`(current_timestamp)` })
+      .where(and(eq(coursesTable.id, id), isNull(coursesTable.deletedAt)))
+      .returning()
+      .get();
 
     return deletedCourse
       ? c.json({}, 200)

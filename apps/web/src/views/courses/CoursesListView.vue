@@ -123,7 +123,7 @@ onMounted(fetchCourses);
                   new Date(course.periodEnd),
                 )
               "
-              :bg-image="course.bgImage"
+              :bg-image="course.bgImagePath"
             />
           </RouterLink>
         </div>

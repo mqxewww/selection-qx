@@ -6,7 +6,13 @@ tmp/
 out-tsc/
 coverage/
 *.local
-public/
+
+# public folders
+**/web/public/
+**/server/public/*
+!**/server/public/uploads/
+**/server/public/uploads/*
+!**/server/public/uploads/default.jpeg
 
 # package managers
 logs
