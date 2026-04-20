@@ -31,6 +31,7 @@ const app = new Hono()
           periodEnd: true,
           bgImagePath: true,
         },
+        orderBy: coursesTable.title,
         offset: (page - 1) * limit,
         limit: limit,
       }),

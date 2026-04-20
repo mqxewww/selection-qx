@@ -6,6 +6,7 @@ import { config } from "~server/config";
 import { logger } from "~server/middlewares/logger";
 import coursesRoute from "~server/modules/courses/courses.route";
 import criteriaRoute from "~server/modules/criteria/criteria.route";
+import usersRoute from "~server/modules/users/users.route";
 import serverPackage from "../package.json";
 
 const app = new Hono()
@@ -17,7 +18,8 @@ const app = new Hono()
   )
   .use("/uploads/*", serveStatic({ root: "./public" }))
   .route("/courses", coursesRoute)
-  .route("/criteria", criteriaRoute);
+  .route("/criteria", criteriaRoute)
+  .route("/users", usersRoute);
 
 export type AppType = typeof app;
 

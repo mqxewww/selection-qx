@@ -14,23 +14,9 @@ const router = createRouter({
       component: AdminLayout,
       children: [
         {
-          path: "/",
+          path: "",
           component: () => import("~web/views/admin/AdminHomeView.vue"),
           meta: { title: metaTitle("Administration") },
-        },
-        {
-          path: "/create-user",
-          component: () => import("~web/views/admin/AdminCreateUserView.vue"),
-          meta: {
-            title: metaTitle("Administration"),
-          },
-        },
-        {
-          path: "/update-user",
-          component: () => import("~web/views/admin/AdminUpdateUserView.vue"),
-          meta: {
-            title: metaTitle("Administration"),
-          },
         },
       ],
     },
@@ -39,31 +25,31 @@ const router = createRouter({
       component: NonAdminLayout,
       children: [
         {
-          path: "/applications",
+          path: "applications",
           component: () =>
             import("~web/views/applications/ApplicationsListView.vue"),
           meta: { title: metaTitle("Candidatures") },
         },
         {
-          path: "/applications/:id",
+          path: "applications/:id",
           component: () =>
             import("~web/views/applications/ApplicationDetailsView.vue"),
           props: true,
           meta: { title: metaTitle("Candidatures") },
         },
         {
-          path: "/courses",
+          path: "courses",
           component: () => import("~web/views/courses/CoursesListView.vue"),
           meta: { title: metaTitle("Formations") },
         },
         {
-          path: "/courses/:id",
+          path: "courses/:id",
           component: () => import("~web/views/courses/CourseDetailsView.vue"),
           props: true,
           meta: { title: metaTitle("Formations") },
         },
         {
-          path: "/courses/:id/criteria",
+          path: "courses/:id/criteria",
           component: () => import("~web/views/courses/CourseCriteriaView.vue"),
           props: true,
           meta: { title: metaTitle("Formations") },
