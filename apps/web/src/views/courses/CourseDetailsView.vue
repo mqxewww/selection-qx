@@ -2,6 +2,7 @@
 import {
   AlignLeft,
   ArrowLeft,
+  BookOpen,
   Calendar,
   Clock,
   ListTree,
@@ -18,11 +19,13 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ButtonComponent from "~web/components/ButtonComponent.vue";
 import DatePickerComponent from "~web/components/DatePickerComponent.vue";
+import EmptyOrErrorComponent from "~web/components/EmptyOrErrorComponent.vue";
 import FileInputComponent from "~web/components/FileInputComponent.vue";
 import InputComponent from "~web/components/InputComponent.vue";
 import TextareaComponent from "~web/components/TextareaComponent.vue";
 import { useApi } from "~web/composables/useApi.ts";
 import { useForm } from "~web/composables/useForm.ts";
+import CourseLoadingSkeleton from "~web/domains/courses/components/skeletons/CourseLoadingSkeleton.vue";
 import {
   CourseResponse,
   coursesService,
@@ -34,7 +37,12 @@ import { getImageFullURL } from "~web/libs/utils.ts";
 const props = defineProps<{ id: string }>();
 const router = useRouter();
 
-const { execute: fetchExecute, data: course } = useApi<CourseResponse>();
+const {
+  loading: fetchLoading,
+  execute: fetchExecute,
+  data: course,
+  genericError: fetchError,
+} = useApi<CourseResponse>();
 const {
   loading: saveLoading,
   execute: saveExecute,
@@ -138,7 +146,9 @@ const isSubmitDisabled = computed(() => {
     !form.description.trim() ||
     !form.capacity ||
     !form.periodStart ||
-    !form.periodEnd;
+    !form.periodEnd ||
+    fetchLoading.value ||
+    !!fetchError.value;
 
   return hasErrors || isMissingData;
 });
@@ -154,7 +164,7 @@ onMounted(fetchCourse);
 </script>
 
 <template>
-  <div v-if="course" class="mx-auto w-full max-w-6xl space-y-6 pb-24">
+  <div class="mx-auto w-full max-w-6xl space-y-6 pb-24">
     <div class="flex items-center justify-between">
       <ButtonComponent variant="ghost" @click="router.push('/courses')">
         <ArrowLeft
@@ -167,16 +177,25 @@ onMounted(fetchCourse);
         <template v-if="!isEditing">
           <ButtonComponent
             variant="secondary"
+            :disabled="fetchLoading || !!fetchError"
             @click="router.push(`/courses/${props.id}/criteria`)"
           >
             <ListTree class="h-4 w-4" />
             Notations
           </ButtonComponent>
-          <ButtonComponent variant="primary" @click="toggleEdit">
+          <ButtonComponent
+            variant="primary"
+            :disabled="fetchLoading || !!fetchError"
+            @click="toggleEdit"
+          >
             <Pencil class="h-4 w-4" />
             Modifier
           </ButtonComponent>
-          <ButtonComponent variant="danger" @click="isModalOpen = true">
+          <ButtonComponent
+            variant="danger"
+            :disabled="fetchLoading || !!fetchError"
+            @click="isModalOpen = true"
+          >
             <Trash class="h-4 w-4" />
             Supprimer
           </ButtonComponent>
@@ -184,7 +203,7 @@ onMounted(fetchCourse);
         <template v-else>
           <ButtonComponent
             variant="ghost"
-            :disabled="saveLoading"
+            :disabled="fetchLoading || saveLoading || !!fetchError"
             @click="toggleEdit"
           >
             <X class="h-4 w-4" />
@@ -203,151 +222,159 @@ onMounted(fetchCourse);
       </div>
     </div>
 
-    <div
-      class="relative h-64 w-full overflow-hidden rounded-3xl border border-zinc-700/50 bg-zinc-800 shadow-xl"
-    >
-      <img
-        :src="getImageFullURL(course.bgImagePath)"
-        alt="Cover"
-        class="h-full w-full object-cover opacity-80"
-      />
-      <div
-        class="pointer-events-none absolute inset-0 bg-linear-to-t from-zinc-900 via-transparent to-transparent"
-      ></div>
-
-      <div
-        v-if="!isEditing"
-        class="absolute right-4 bottom-4 z-10 w-72 rounded-xl bg-zinc-900/80 px-4 pt-2.5 pb-3.5 shadow-lg backdrop-blur-md"
-      >
-        <FileInputComponent
-          v-model="selectedFile"
-          label="Modifier la couverture"
-          :icon="Upload"
-          accept="image/*"
-          :error="validationErrors.bgImage"
-        />
-      </div>
+    <div v-if="!!fetchError" class="flex h-full items-center justify-center">
+      <EmptyOrErrorComponent :icon="BookOpen" />
     </div>
 
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-      <div class="space-y-6 lg:col-span-2">
-        <div
-          class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6 md:p-8"
-        >
-          <div v-if="!isEditing" class="space-y-6">
-            <h1 class="text-3xl font-extrabold tracking-tight text-zinc-100">
-              {{ course.title }}
-            </h1>
-            <div class="prose prose-invert max-w-none">
-              <p class="leading-relaxed whitespace-pre-line text-zinc-300">
-                {{ course.description }}
-              </p>
-            </div>
-          </div>
+    <CourseLoadingSkeleton v-else-if="fetchLoading || !course" />
 
-          <div v-else class="w-full space-y-6">
-            <InputComponent
-              v-model="form.title"
-              label="Nom"
-              :icon="Type"
-              :error="validationErrors.title"
-            />
-            <TextareaComponent
-              v-model="form.description"
-              label="Description"
-              :icon="AlignLeft"
-              :rows="8"
-              :error="validationErrors.description"
-            />
-          </div>
+    <template v-else>
+      <div
+        class="relative h-64 w-full overflow-hidden rounded-3xl border border-zinc-700/50 bg-zinc-800 shadow-xl"
+      >
+        <img
+          :src="getImageFullURL(course.bgImagePath)"
+          alt="Cover"
+          class="h-full w-full object-cover opacity-80"
+        />
+        <div
+          class="pointer-events-none absolute inset-0 bg-linear-to-t from-zinc-900 via-transparent to-transparent"
+        ></div>
+
+        <div
+          v-if="!isEditing"
+          class="absolute right-4 bottom-4 z-10 w-72 rounded-xl bg-zinc-900/80 px-4 pt-2.5 pb-3.5 shadow-lg backdrop-blur-md"
+        >
+          <FileInputComponent
+            v-model="selectedFile"
+            label="Modifier la couverture"
+            :icon="Upload"
+            accept="image/*"
+            :error="validationErrors.bgImagePath"
+          />
         </div>
       </div>
 
-      <div class="space-y-6">
-        <div class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6">
-          <div v-if="!isEditing" class="space-y-5">
-            <div class="flex items-center gap-4 text-zinc-300">
-              <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 text-blue-400"
-              >
-                <Users class="h-5 w-5" />
-              </div>
-              <div>
-                <p class="text-xs text-zinc-500">Capacité maximale</p>
-                <p class="font-semibold">{{ course.capacity }} étudiants</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-4 text-zinc-300">
-              <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 text-blue-400"
-              >
-                <Calendar class="h-5 w-5" />
-              </div>
-              <div>
-                <p class="text-xs text-zinc-500">Période</p>
-                <p class="text-sm font-semibold">
-                  {{ new Date(course.periodStart).toLocaleDateString() }} -
-                  {{ new Date(course.periodEnd).toLocaleDateString() }}
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div class="space-y-6 lg:col-span-2">
+          <div
+            class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6 md:p-8"
+          >
+            <div v-if="!isEditing" class="space-y-6">
+              <h1 class="text-3xl font-extrabold tracking-tight text-zinc-100">
+                {{ course.title }}
+              </h1>
+              <div class="prose prose-invert max-w-none">
+                <p class="leading-relaxed whitespace-pre-line text-zinc-300">
+                  {{ course.description }}
                 </p>
               </div>
             </div>
-          </div>
 
-          <div v-else class="w-full space-y-4">
-            <InputComponent
-              v-model="form.capacity"
-              label="Capacité"
-              type="number"
-              :icon="Users"
-              :error="validationErrors.capacity"
-            />
-            <DatePickerComponent
-              v-model="form.periodStart"
-              label="Date de début"
-              :error="validationErrors.periodStart"
-            />
-            <DatePickerComponent
-              v-model="form.periodEnd"
-              label="Date de fin"
-              :error="validationErrors.periodEnd"
-            />
+            <div v-else class="w-full space-y-6">
+              <InputComponent
+                v-model="form.title"
+                label="Nom"
+                :icon="Type"
+                :error="validationErrors.title"
+              />
+              <TextareaComponent
+                v-model="form.description"
+                label="Description"
+                :icon="AlignLeft"
+                :rows="8"
+                :error="validationErrors.description"
+              />
+            </div>
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-zinc-700/50 bg-zinc-800/50 px-6 py-5"
-        >
-          <h3
-            class="mb-4 text-sm font-bold tracking-widest text-zinc-500 uppercase"
-          >
-            Statistiques
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-zinc-400">
-                <TrendingUp class="h-4 w-4" />
-                <span class="text-sm">Candidatures</span>
+        <div class="space-y-6">
+          <div class="rounded-2xl border border-zinc-700/50 bg-zinc-800 p-6">
+            <div v-if="!isEditing" class="space-y-5">
+              <div class="flex items-center gap-4 text-zinc-300">
+                <div
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 text-blue-400"
+                >
+                  <Users class="h-5 w-5" />
+                </div>
+                <div>
+                  <p class="text-xs text-zinc-500">Capacité maximale</p>
+                  <p class="font-semibold">{{ course.capacity }} étudiants</p>
+                </div>
               </div>
-              <span
-                class="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-bold text-blue-400"
-              >
-                Soon
-              </span>
+
+              <div class="flex items-center gap-4 text-zinc-300">
+                <div
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 text-blue-400"
+                >
+                  <Calendar class="h-5 w-5" />
+                </div>
+                <div>
+                  <p class="text-xs text-zinc-500">Période</p>
+                  <p class="text-sm font-semibold">
+                    {{ new Date(course.periodStart).toLocaleDateString() }} -
+                    {{ new Date(course.periodEnd).toLocaleDateString() }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-zinc-400">
-                <Clock class="h-4 w-4" />
-                <span class="text-sm">Créée le</span>
+
+            <div v-else class="w-full space-y-4">
+              <InputComponent
+                v-model="form.capacity"
+                label="Capacité"
+                type="number"
+                :icon="Users"
+                :error="validationErrors.capacity"
+              />
+              <DatePickerComponent
+                v-model="form.periodStart"
+                label="Date de début"
+                :error="validationErrors.periodStart"
+              />
+              <DatePickerComponent
+                v-model="form.periodEnd"
+                label="Date de fin"
+                :error="validationErrors.periodEnd"
+              />
+            </div>
+          </div>
+
+          <div
+            class="rounded-2xl border border-zinc-700/50 bg-zinc-800/50 px-6 py-5"
+          >
+            <h3
+              class="mb-4 text-sm font-bold tracking-widest text-zinc-500 uppercase"
+            >
+              Statistiques
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-zinc-400">
+                  <TrendingUp class="h-4 w-4" />
+                  <span class="text-sm">Candidatures</span>
+                </div>
+                <span
+                  class="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-bold text-blue-400"
+                >
+                  Soon
+                </span>
               </div>
-              <span class="text-sm font-medium text-zinc-300">
-                {{ new Date(course.createdAt).toLocaleString() }}
-              </span>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-zinc-400">
+                  <Clock class="h-4 w-4" />
+                  <span class="text-sm">Créée le</span>
+                </div>
+                <span class="text-sm font-medium text-zinc-300">
+                  {{ new Date(course.createdAt).toLocaleString() }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 
   <CourseDeleteModal

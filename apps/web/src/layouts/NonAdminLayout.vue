@@ -5,7 +5,7 @@ import HeaderComponent from "~web/layouts/components/HeaderComponent.vue";
 <template>
   <HeaderComponent />
 
-  <main class="flex w-full flex-1 flex-col px-4 pt-20 pb-12 sm:px-6 lg:px-8">
+  <main class="flex w-full flex-1 flex-col px-8 pt-20 pb-12">
     <router-view />
   </main>
 </template>

@@ -41,7 +41,7 @@ const imageUrl = computed(() => {
 
     <div class="flex flex-1 flex-col p-5">
       <h2
-        class="mb-2 line-clamp-2 text-base font-bold text-zinc-100 transition-colors group-hover:text-blue-300"
+        class="mb-2 line-clamp-1 text-base font-bold text-zinc-100 transition-colors group-hover:text-blue-300"
       >
         {{ props.title }}
       </h2>

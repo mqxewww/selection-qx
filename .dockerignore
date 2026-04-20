@@ -7,6 +7,10 @@ out-tsc/
 coverage/
 *.local
 
+# public folders
+**/server/public/*
+!**/server/public/uploads/default.jpeg
+
 # package managers
 logs
 *.log
@@ -19,11 +23,10 @@ bun-error.log*
 
 # environment & security
 .env*
-!apps/web/.env
 *.sqlite
 *.sqlite-journal
-apps/server/data/
-apps/server/public/
+!**/web/.env
+**/server/data/*
 
 # IDEs and editors
 .idea/

@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { BookOpen } from "lucide-vue-next";
+import { LucideProps } from "lucide-vue-next";
+import { FunctionalComponent } from "vue";
 
 type Props = {
-  isError?: boolean;
+  icon: FunctionalComponent<LucideProps>;
+  customTitle?: string;
+  customDesc?: string;
 };
 
-const props = defineProps<Props>();
+const {
+  icon,
+  customTitle = "Une erreur est survenue",
+  customDesc = "Impossible de récupérer les informations. Vérifiez votre connexion ou réessayez dans quelques instants.",
+} = defineProps<Props>();
 </script>
 
 <template>
@@ -14,7 +21,7 @@ const props = defineProps<Props>();
       <div
         class="flex h-20 w-20 items-center justify-center rounded-2xl border border-zinc-700/60 bg-zinc-800/80 shadow-lg shadow-black/30 backdrop-blur-sm"
       >
-        <BookOpen class="h-9 w-9 text-zinc-500" />
+        <Component :is="icon" class="h-9 w-9 text-zinc-500" />
 
         <span
           class="absolute -top-1 -left-1 h-2 w-2 rounded-full bg-zinc-700"
@@ -33,18 +40,10 @@ const props = defineProps<Props>();
 
     <div class="text-center">
       <h2 class="text-xl font-bold tracking-tight text-zinc-200">
-        {{
-          props.isError
-            ? "Une erreur est survenue"
-            : "Aucune formation disponible"
-        }}
+        {{ customTitle }}
       </h2>
       <p class="mt-2 max-w-sm text-sm leading-relaxed text-zinc-500">
-        {{
-          props.isError
-            ? "Impossible de récupérer les formations. Vérifiez votre connexion ou réessayez dans quelques instants."
-            : "Le catalogue est vide pour le moment. Commencez par créer votre première formation."
-        }}
+        {{ customDesc }}
       </p>
     </div>
 

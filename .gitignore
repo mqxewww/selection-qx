@@ -8,11 +8,8 @@ coverage/
 *.local
 
 # public folders
-**/web/public/
-**/server/public/*
-!**/server/public/uploads/
-**/server/public/uploads/*
-!**/server/public/uploads/default.jpeg
+apps/server/public/*
+!apps/server/public/uploads/default.jpeg
 
 # package managers
 logs

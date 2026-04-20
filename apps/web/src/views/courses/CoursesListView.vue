@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ChevronDown, ChevronUp, Plus } from "lucide-vue-next";
+import { BookOpen, ChevronDown, ChevronUp, Plus } from "lucide-vue-next";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import ButtonComponent from "~web/components/ButtonComponent.vue";
+import EmptyOrErrorComponent from "~web/components/EmptyOrErrorComponent.vue";
 import { useApi } from "~web/composables/useApi.ts";
 import { usePagination } from "~web/composables/usePagination.ts";
 import CourseCardComponent from "~web/domains/courses/components/CourseCardComponent.vue";
-import CoursesEmptyListState from "~web/domains/courses/components/CoursesEmptyListState.vue";
+import CoursesLoadingSkeleton from "~web/domains/courses/components/skeletons/CoursesLoadingSkeleton.vue";
 import {
   CoursesResponse,
   coursesService,
@@ -19,7 +20,7 @@ const PAGE_SIZE = 6;
 const route = useRoute();
 const router = useRouter();
 
-const { loading, execute, data } = useApi<CoursesResponse>({
+const { loading, execute, data, genericError } = useApi<CoursesResponse>({
   items: [],
   meta: { totalItems: 0 },
 });
@@ -61,7 +62,10 @@ onMounted(fetchCourses);
           Observez le catalogue des formations disponibles.
         </p>
       </div>
-      <ButtonComponent :disabled="loading" @click="isModalOpen = true">
+      <ButtonComponent
+        :disabled="loading || !!genericError"
+        @click="isModalOpen = true"
+      >
         <Plus class="h-4 w-4" />
         Nouvelle formation
       </ButtonComponent>
@@ -69,41 +73,24 @@ onMounted(fetchCourses);
 
     <div class="flex min-h-175 gap-4 pt-6">
       <div class="min-w-0 flex-1">
-        <div v-if="loading" class="grid grid-cols-3 content-start gap-4">
-          <div
-            v-for="n in 6"
-            :key="n"
-            class="flex flex-col overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800"
-          >
-            <div class="h-40 w-full animate-pulse bg-zinc-700" />
-            <div class="flex flex-1 flex-col p-4">
-              <div
-                class="mb-2 h-5 w-2/3 animate-pulse rounded-md bg-zinc-700"
-              />
-              <div
-                class="mb-1 h-3 w-full animate-pulse rounded-md bg-zinc-700"
-              />
-              <div
-                class="mb-4 h-3 w-4/5 animate-pulse rounded-md bg-zinc-700"
-              />
-              <div
-                class="mt-auto flex items-center justify-between border-t border-zinc-700/50 pt-3"
-              >
-                <div class="flex gap-3">
-                  <div class="h-4 w-12 animate-pulse rounded-md bg-zinc-700" />
-                  <div class="h-4 w-16 animate-pulse rounded-md bg-zinc-700" />
-                </div>
-                <div class="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
-              </div>
-            </div>
-          </div>
+        <CoursesLoadingSkeleton v-if="loading" />
+
+        <div
+          v-else-if="genericError"
+          class="flex h-full items-center justify-center"
+        >
+          <EmptyOrErrorComponent :icon="BookOpen" />
         </div>
 
         <div
-          v-else-if="!data.items.length"
+          v-else-if="data.items.length === 0"
           class="flex h-full items-center justify-center"
         >
-          <CoursesEmptyListState />
+          <EmptyOrErrorComponent
+            :icon="BookOpen"
+            custom-title="Aucune formation disponible"
+            custom-desc="Le catalogue est vide pour le moment. Commencez par créer votre première formation."
+          />
         </div>
 
         <div v-else class="grid grid-cols-3 content-start gap-4">
